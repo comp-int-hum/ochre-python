@@ -1,0 +1,330 @@
+{
+    "metadata" : {},
+    "predefined" : [
+	{
+	    "type" : "data",
+	    "subject" : {"type" : "uri", "namespace" : "cdh", "value" : "documentary_hypothesis_source_E"},
+	    "predicate" : {"type" : "uri", "namespace" : "wdp", "value" : "P460"},
+	    "object" : {"type" : "uri", "namespace" : "wde", "value" : "Q659765"}
+	},
+	{
+	    "type" : "data",
+	    "subject" : {"type" : "uri", "namespace" : "cdh", "value" : "documentary_hypothesis_source_J"},
+	    "predicate" : {"type" : "uri", "namespace" : "wdp", "value" : "P460"},
+	    "object" : {"type" : "uri", "namespace" : "wde", "value" : "Q1099313"}
+	},
+	{
+	    "type" : "data",
+	    "subject" : {"type" : "uri", "namespace" : "cdh", "value" : "documentary_hypothesis_source_P"},
+	    "predicate" : {"type" : "uri", "namespace" : "wdp", "value" : "P460"},
+	    "object" : {"type" : "uri", "namespace" : "wde", "value" : "Q514434"}
+	},
+	{
+	    "type" : "data",
+	    "subject" : {"type" : "uri", "namespace" : "cdh", "value" : "documentary_hypothesis_source_R"},
+	    "predicate" : {"type" : "uri", "namespace" : "wdp", "value" : "P2561"},
+	    "object" : {"type" : "literal", "value" : "Redactor", "language" : "en"}
+	},
+	{
+	    "type" : "data",
+	    "subject" : {"type" : "uri", "namespace" : "cdh", "value" : "documentary_hypothesis_source_O"},
+	    "predicate" : {"type" : "uri", "namespace" : "wdp", "value" : "P2561"},
+	    "object" : {"type" : "literal", "language" : "en", "value" : "Other texts"}
+	},
+	{
+	    "type" : "data",
+	    "subject" : {"type" : "uri", "namespace" : "cdh", "value" : "documentary_hypothesis_source_Dn"},
+	    "predicate" : {"type" : "uri", "namespace" : "wdp", "value" : "P2561"},
+	    "object" : {"type" : "literal", "language" : "en", "value" : "Deuteronomic law code"}
+	},
+	{
+	    "type" : "data",
+	    "subject" : {"type" : "uri", "namespace" : "cdh", "value" : "documentary_hypothesis_source_D1"},
+	    "predicate" : {"type" : "uri", "namespace" : "wdp", "value" : "P2561"},
+	    "object" : {"type" : "literal", "language" : "en", "value" : "First deuteronomic source"} 
+	},
+	{
+	    "type" : "data",
+	    "subject" : {"type" : "uri", "namespace" : "cdh", "value" : "documentary_hypothesis_source_D2"},
+	    "predicate" : {"type" : "uri", "namespace" : "wdp", "value" : "P2561"},
+	    "object" : {"type" : "literal", "language" : "en", "value" : "Second deuteronomic source"}
+	}
+    ],
+    "namespaces" : {
+        "cdh" : "https://cdh.jhu.edu/",
+        "xsd" : "http://www.w3.org/2001/XMLSchema#",
+        "rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
+        "shacl" : "http://www.w3.org/ns/shacl#",
+        "sdo" : "https://schema.org/",
+        "wde" : "https://www.wikidata.org/wiki/",
+        "wdp" : "https://www.wikidata.org/wiki/Property:",
+        "owl" : "http://www.w3.org/2002/07/owl#",
+        "qb" : "http://purl.org/linked-data/cube#",
+        "prov" : "http://www.w3.org/ns/prov#",
+        "geo" : "http://www.opengis.net/ont/geosparql#"
+    },
+    "rules" : [
+        {
+            "match" : {
+                "event_type" : "end",
+                "tag" : "book"
+            },
+            "create" : [
+		{
+                    "type" : "data",
+                    "subject" : {
+			"type" : "uri",
+			"value" : "{}",
+			"namespace" : "cdh"
+                    },
+		    "predicate_objects" : [
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P31",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "uri",
+				"value" : "Q29154430",
+				"namespace" : "wde"
+			    }
+			},
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P361",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "uri",
+				"value" : "Q83367",
+				"namespace" : "wde"
+			    }
+			}		
+		    ]
+		}
+	    ]
+        },
+        {
+            "match" : {
+                "event_type" : "end",
+                "tag" : "name",
+                "location" : [		 
+                    {"tag" : "book"},
+                    {"tag" : "names"}
+                ]
+            },
+            "create" : [
+		{
+                    "type" : "data",
+                    "subject" : {
+			"type" : "uri",
+			"value" : "{location[1]['id']}"
+                    },
+                    "predicate" : {
+			"type" : "uri",
+			"value" : "P2561",
+			"namespace" : "wdp"
+                    },
+                    "object" : {
+			"type" : "literal",
+			"value" : "{text}",
+			"language" : "en"
+                    }
+		}
+	    ]
+        },
+        {
+            "match" : {
+                "event_type" : "end",
+                "tag" : "c"
+            },
+            "create" : [
+		{
+                    "type" : "data",
+                    "subject" : {
+			"type" : "uri",
+			"value" : "{}",
+			"namespace" : "cdh"
+                    },
+		    "predicate_objects" : [
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P361",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "uri",
+				"value" : "{location[0]['id']}"
+			    }
+			},
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P31",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "uri",
+				"value" : "Q29154515",
+				"namespace" : "wde"
+			    }
+			},
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P1545",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "literal",
+				"value" : "{attributes['n']}",
+				"datatype" : "integer"
+			    }
+			}
+		    ]
+		}
+	    ]
+        },
+        {
+            "match" : {
+                "event_type" : "end",
+                "tag" : "v"
+            },
+            "create" : [
+		{
+                    "type" : "data",
+                    "subject" : {
+			"type" : "uri",
+			"value" : "{}",
+			"namespace" : "cdh"
+                    },
+		    "predicate_objects" : [
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P361",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "uri",
+				"value" : "{location[0]['id']}"
+			    }
+			},
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P31",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "uri",
+				"value" : "Q29154550",
+				"namespace" : "wde"
+			    }
+			},
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P1545",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "literal",
+				"value" : "{attributes['n']}",
+				"datatype" : "integer"
+			    }
+			}			
+		    ]
+		}
+	    ]
+        },
+        {
+            "match" : {
+                "event_type" : "end",
+                "tag" : "w"
+            },
+            "create" : [
+		{
+                    "type" : "data",
+                    "subject" : {
+			"type" : "uri",
+			"value" : "{}",
+			"namespace" : "cdh"
+                    },
+		    "predicate_objects" : [
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P2561",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "literal",
+				"value" : "{text}",
+				"language" : "he"
+			    }
+			},
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P31",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "uri",
+				"value" : "Q82837422",
+				"namespace" : "wde"
+			    }
+			},
+			{
+			    "predicate" : {
+				"type" : "uri",
+				"value" : "P1545",
+				"namespace" : "wdp"
+			    },
+			    "object" : {
+				"type" : "literal",
+				"value" : "{index}",
+				"datatype" : "integer"
+			    }
+			}			
+
+		    ]
+		}
+	    ]
+        },
+	{
+	    "match" : {
+		"event_type" : "end",
+		"tag" : ["book", "c", "v", "w"],
+		"attributes" : {
+		    "s" : ["J", "E", "P", "R", "D1", "D2", "Dn", "O"]
+		}
+	    },
+	    "create" : [
+		{
+		    "type" : "data",
+		    "subject" : {
+			"type" : "uri",
+			"value" : "{}",
+			"namespace" : "cdh"
+		    },
+		    "predicate" : {
+			"type" : "uri",
+			"value" : "P50",
+			"namespace" : "wdp"
+		    },
+		    "object" : {
+			"type" : "uri",
+			"value" : "documentary_hypothesis_source_{attributes['s']}",
+			"namespace" : "cdh"
+		    }
+		}
+	    ]
+	}
+    ]
+}

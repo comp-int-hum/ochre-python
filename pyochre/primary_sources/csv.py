@@ -13,16 +13,16 @@ default_dialect = {
   "encoding": "utf-8",
   "lineTerminators": ["\r\n", "\n"],
   "quoteChar": "\"",
-  "doubleQuote": true,
+  "doubleQuote": True,
   "skipRows": 0,
   "commentPrefix": "#",
-  "header": true,
+  "header": True,
   "headerRowCount": 1,
   "delimiter": ",",
   "skipColumns": 0,
-  "skipBlankRows": false,
-  "skipInitialSpace": false,
-  "trim": false
+  "skipBlankRows": False,
+  "skipInitialSpace": False,
+  "trim": False
 }
 
 

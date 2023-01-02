@@ -1,0 +1,30 @@
+{% if not style.editable and field.write_only %}
+{% elif field.name == "name" and not style.editable %}
+{% else%}
+<div
+  class="form-group {% if field.errors %}has-error{% endif %}"
+  endpoint_url="{{style.endpoint_url}}"
+  detector_type="{{style.detector_type}}"
+  >
+  {% if field.label %}
+    <label {% if style.hide_label %}class="sr-only"{% endif %}>{{ field.label }}</label>
+    {% endif %}
+    <label>Select an image file:</label>
+    <input type="file" class="ochre-image-interaction"></input>
+    <img style="display: none;"></img>
+    <canvas>
+    </canvas>
+    {% comment %}
+    <input class="ochre-image-annotation-threshold" type="range" id="threshold_{{ uid }}" name="threshold" min="0" max="100" value="100"></input>
+    {% endcomment %}
+  {% if field.errors %}
+    {% for error in field.errors %}
+      <span class="help-block">{{ error }}</span>
+    {% endfor %}
+  {% endif %}
+
+  {% if field.help_text %}
+    <span class="help-block">{{ field.help_text|safe }}</span>
+  {% endif %}
+</div>
+{% endif %}

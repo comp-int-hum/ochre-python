@@ -8,6 +8,7 @@ import sys
 import csv
 from pyochre.primary_sources import Processor
 
+csv.field_size_limit(1000000)
 
 default_dialect = {
   "encoding": "utf-8",
@@ -29,17 +30,36 @@ default_dialect = {
 class XsvProcessor(Processor):
 
     def generate_events(self, fd):
-        header = self.schema.get("settings", {}).get("header", False)
-        delimiter = self.schema.get("settings", {}).get("delimiter", self.default_delimiter)
-        c = csv.DictReader(fd, delimiter=delimiter) if header else csv.reader(fd, delimiter=delimiter)
-        yield ("start", ("document", {}))
+        header = self.schema.get(
+            "metadata",
+            {}
+        ).get(
+            "header",
+            False
+        )
+        delimiter = self.schema.get(
+            "metadata",
+            {}
+        ).get(
+            "delimiter",
+            self.default_delimiter
+        )
+        c = csv.DictReader(
+            fd,
+            delimiter=delimiter
+        ) if header else csv.reader(
+            fd,
+            delimiter=delimiter
+        )
+        yield ("start", "document", {}, None)
         for i, row in enumerate(c, 1):
-            yield ("start", ("row", {"id" : i}))
+            yield ("start", "row", {"id" : i}, None)
             for k, v in row.items() if header else enumerate(row, 1):
-                yield ("start", ("cell", {"id" : k, "value" : v}))
-                yield ("end", ("cell", {}))
-            yield ("end", ("row", {}))
-        yield ("end", ("document", {}))        
+                if v.strip() != "" or True:
+                    yield ("start", "cell", {"id" : k, "value" : v}, None)
+                    yield ("end", "cell", {}, None)
+            yield ("end", "row", {}, None)
+        yield ("end", "document", {}, None)        
 
 
 class CsvProcessor(XsvProcessor):

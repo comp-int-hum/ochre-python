@@ -1,5 +1,13 @@
 *pyc
 *~
+*#
 temp
+temp1
+temp2
+temp3
+temp4
 local
+logs
 pyochre.egg*
+package-lock.json
+package.json

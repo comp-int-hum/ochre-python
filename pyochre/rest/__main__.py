@@ -7,14 +7,14 @@ logger = logging.getLogger("pyochre.rest")
 
 
 def info(config, args, connection):
-    connection = Connection(config)
+    connection = Connection(args)
     logger.info("End-points")
     for endpoint_name, endpoint_url in connection.endpoints.items():
         logger.info("'%s' endpoint is '%s'", endpoint_name, endpoint_url)
 
 
 def list_objects(config, args, connection):
-    connection = Connection(config)
+    connection = Connection(args)
     logger.info("Models and objects")
     for endpoint_name, endpoint_url in connection.endpoints.items():
         logger.info("'%s' endpoint is '%s'", endpoint_name, endpoint_url)

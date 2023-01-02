@@ -1,0 +1,7 @@
+include pyochre/server/ochre/templates/*
+include pyochre/server/ochre/templates/*/*
+include pyochre/server/ochre/templates/*/*/*
+include pyochre/server/ochre/static/*
+include pyochre/server/ochre/static/*/*
+include pyochre/server/ochre/static/*/*/*
+include pyochre/server/ochre/static/*/*/*/*

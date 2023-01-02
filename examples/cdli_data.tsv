@@ -1,0 +1,700 @@
+id	object_remarks	provenience	condition_description	published_collation	external_id	join_information	elevation	atf_up	material	translation_source	id_text	photo_up	google_earth_provenience	dumb2	accession_no	google_earth_collection	period_remarks	period	subgenre_remarks	object_preservation	collection	findspot_remarks	acquisition_history	width	date_remarks	object_type	alternative_years	surface_preservation	author_remarks	author	date_updated	dates_referenced	findspot_square	date_of_origin	atf_source	provenience_remarks	db_source	designation	id_text2	text_remarks	seal_information	cdli_collation	language	citation	excavation_no	genre	thickness	ark_number	seal_id	composite_id	museum_no	lineart_up	primary_publication	cdli_comments	electronic_publication	dumb	publication_history	stratigraphic_level	subgenre	date_entered	height	publication_date	accounting_period	content
+000001		Uruk (mod. Warka)							clay	no translation	1							Uruk III (ca. 3200-3000 BC)			Vorderasiatisches Museum, Berlin, Germany	auf Hügeloberfläche in der Nähe des Südbaues		61		tablet			31x61x18; Lú A 14-16.30-32.48-50; M XVIII, auf Hügeloberfläche in der Nähe des Irigal; veröffentlicht in: ATU 1, 594; vgl. ATU 1, S. 44-45.	CDLI	3/14/2020	00.00.00.00	M XVIII,?	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000002, ex. 065	0				undetermined		W 06435,a	Lexical	18	21198/zz001q0dtm		Q000002	VAT 01533	150ppi 20160630	CDLI Lexical 000002, ex. 065				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 011, W 6435,a; ATU 1, 594		Archaic Lu2 A (witness)	12/4/2001	31	2015ff.		"
+#atf: lang qpc
+@tablet
+@obverse
+@column 1
+$ beginning broken
+1'. 1(N01) , [...]
+>>Q000002 014
+2'. 1(N01) , TIM ABGAL#
+>>Q000002 015
+3'. 1(N01) , KINGAL#
+>>Q000002 016
+@column 2
+$ beginning broken
+1'. 1(N01) , [...]
+>>Q000002 030
+2'. 1(N01) , GAL~a# UMUN2#
+>>Q000002 031
+3'. 1(N01) , GAL~a UMUN2 KU3~a
+>>Q000002 032
+@column 3
+$ beginning broken
+1'. 1(N01) , DUB~a SANGA~a#
+>>Q000002 048
+2'. 1(N01) , SUG5# SAG#
+>>Q000002 049
+3'. 1(N01) , UB SAG#
+>>Q000002 050
+@reverse
+1. [N] , [...]
+>>Q000002 colophon
+"
+000002		Uruk (mod. Warka)							clay	no translation	2							Uruk III (ca. 3200-3000 BC)			Vorderasiatisches Museum, Berlin, Germany	auf der Hügeloberfläche in der Nähe des Südbaues		48		tablet			30x48x13; Lú A 13-15.23-25.?; Fundstelle wie W 6435,a; veröffentlicht in: ATU 1, 595; vgl. ATU 1, S. 44-45.	CDLI	10/20/2018	00.00.00.00	M XVIII,?	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000002, ex. 066	0				undetermined		W 06435,b	Lexical	13	21198/zz001q0dv4		Q000002	VAT 15263	150ppi 20160630	CDLI Lexical 000002, ex. 066				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 011, W 6435,b; ATU 1, 595		Archaic Lu2 A (witness)	12/4/2001	30	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+$ beginning broken 
+1'. [1(N01)] , [...] 
+>>Q000002 013 
+2'. [1(N01)] , GAL~a# SZITA~a1 
+>>Q000002 014 
+3'. [1(N01)] , ABGAL# 
+>>Q000002 015 
+$ rest broken 
+@column 2 
+$ beginning broken 
+1'. [1(N01)] , [...] NIM~a#? 
+>>Q000002 023 
+2'. 1(N01) , GAL~a SILA4~b 
+>>Q000002 024 
+3'. 1(N01) , GAL~a SZAB~a 
+>>Q000002 025 
+$ rest broken 
+@column 3 
+$ beginning broken 
+1'. [1(N01)] , [...] 
+>>Q000002 n 
+$ rest broken 
+@reverse 
+1. [N] , [...] 
+>>Q000002 colophon 
+"
+000003		Uruk (mod. Warka)							clay	no translation	3							Uruk IV (ca. 3350-3200 BC)	Text category: 15-09; Foreign ID: LVO 9		Vorderasiatisches Museum, Berlin, Germany	unter der Abgleichung der Schicht III, 1,5 m über der Höhe des Kalksteinsockels// (t.a.q. IIIc)		53		tablet			42x53x19; Vocabulary 9; Qa XVI,2, unter der Abgleichung der Schicht III, 1,5 m über der Höhe des Kalksteinsockels (t.a.q. IIIc); veröffentlicht in: ATU 1, 539; bereits kommentiert von A. Falkenstein, UVB 3, 12 und ATU 1, S. 43-45.	Englund, Robert K. & Nissen, Hans J.	1/26/2020		Qa XVI,2		Englund, Robert K.		20011204 protocuneiform_catalogue	ATU 3, pl. 081, W 9123,d	0				undetermined		W 09123,d	Lexical	19	21198/zz001q0dwn			VAT 15253	150ppi 20160630	ATU 3, pl. 081, W 9123,d				ATU 1, 539		Archaic Vocabulary (witness)	12/4/2001	42	1993		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+$ beginning broken 
+1'. 1(N01) , NI~b# 
+2'. 1(N01) , |NI~bxX| 
+3'. 1(N01) , IR~a# 
+4'. 1(N01) , BIR~a 
+5'. 1(N01) , BIR~c 
+@column 2 
+$ beginning broken 
+1'. 1(N01) , [...] X 
+2'. 1(N01) , SZU2# 
+3'. 1(N01) , 1(N57) 
+4'. 1(N01) , ME~a 
+5'. 1(N01) , ME~b 
+6'. 1(N01) , NU@g# 
+@column 3 
+$ beginning broken 
+1'. 1(N01) , [...] X 
+2'. 1(N01) , DUR2 
+3'. 1(N01) , DIB 
+4'. 1(N01) , |LAGAB~axME~a| 
+5'. 1(N01) , |LAGAB~axZATU753| 
+@column 4 
+$ beginning broken 
+1'. 1(N01) , TAG~a4#? 
+2'. 1(N01) , |GA2~a1xX|# 
+3'. 1(N01) , |GA2~a1xHAL|? 
+4'. 1(N01) , |GA2~a1xKU6~a|#? 
+5'. 1(N01) , |GA2~a1xGISZ@t| SUKKAL 
+@column 5 
+$ beginning broken 
+1'. 1(N01) , [...] X 
+2'. 1(N01) , UNUG~a@s 
+3'. 1(N01) , NAM2 
+4'. 1(N01) , X 
+@reverse 
+1. [...] , X X [...] 
+$ (design, colophon) 
+"
+000004		Uruk (mod. Warka)							clay	no translation	4							Uruk IV (ca. 3350-3200 BC)			Vorderasiatisches Museum, Berlin, Germany	unter der Abgleichung der Schicht III, 1,5 m über der Höhe des Kalksteinsockels// (t.a.q. IIIc)		23		tablet			26x23x23; Lú A 9-10.?.?; Fundstelle wie W 9123,d; veröffentlicht in: ATU 1, 489.	CDLI	10/20/2018	00.00.00.00	Qa XVI,2	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000002, ex. 051	0				undetermined		W 09169,d	Lexical	23	21198/zz001q0dx5		Q000002	VAT 15168	150ppi 20160630	CDLI Lexical 000002, ex. 051				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 009, W 9169,d; ATU 1, 489		Archaic Lu2 A (witness)	12/4/2001	26	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+$ beginning broken 
+1'. 1(N01) , |SZE~a.NAM2|# 
+>>Q000002 009 
+2'. 1(N01) , PA~a#? [...] 
+>>Q000002 010 
+$ rest broken 
+@reverse 
+$ beginning broken 
+1'. 1(N01) , [...] 
+>>Q000002 n 
+2'. 1(N01) , [...] 
+>>Q000002 n 
+$ rest broken 
+"
+000005		Uruk (mod. Warka)							clay	no translation	5							Uruk IV (ca. 3350-3200 BC)			Vorderasiatisches Museum, Berlin, Germany	unter der Abgleichung der Schicht III, 1,5 m über der Höhe des Kalksteinsockels// (t.a.q. IIIc)		36		tablet			29x36x20; Lú A Vorläufer; Qa XVI,2, unter der Abgleichung der Schicht III; veröffentlicht in: ATU 1, 390; der Uruk IV-zeitliche Text enthält die Anfangszeilen von Lú A ohne NAM2.	CDLI	10/20/2018	00.00.00.00	Qa XVI,2	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000002, ex. 172	0				undetermined		W 09206,k	Lexical	20	21198/zz001q0dzp		Q000002	VAT 15153	150ppi 20160630	CDLI Lexical 000002, ex. 172				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 023, W 9206,k; ATU 1, 390		Archaic Lu2 A (witness)	12/4/2001	29	2015ff.		"
+#atf: lang qpc
+@tablet
+@obverse
+@column 1
+1. 1(N01) , ESZDA#
+2. 1(N01) , KAB
+3. 1(N01) , DI@t?
+$ rest broken
+@column 2
+1. 1(N01) , EN~b
+2. 1(N01) , NUN~a
+3. 1(N01) , DU6~c
+4. 1(N01) , SZITA~a1
+$ rest broken
+@column 3
+1. 1(N01) , SZITA~a3?
+2. 1(N01) , X
+3. 1(N01) , [...]
+$ rest broken
+@reverse
+1. [N] , [...]
+>>Q000002 colophon
+"
+000006		Uruk (mod. Warka)							clay	no translation	6							Uruk IV (ca. 3350-3200 BC)			Vorderasiatisches Museum, Berlin, Germany	unter der Abgleichung der Schicht III, 1,5 m über der Höhe des Kalksteinsockels// (t.a.q. IIIc)		62		tablet			82x62x19; Lú A Vorläufer; Fundstelle wie W 9123,d; veröffentlicht in: ATU 1, 340; s. A. Vaiman, ActAnt. 22 (1974) 25.	CDLI	10/20/2018	00.00.00.00	Qa XVI,2	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000002, ex. 173	0				undetermined		W 09656,h1	Lexical	19	21198/zz001q0f0p		Q000002	VAT 15003	150ppi 20160630	CDLI Lexical 000002, ex. 173				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 023, W 9656,h1; ATU 1, 340; s. A. Vaiman, ActAnt. 22, 1974, 25; Frühe Schrift p. 153, no. 16.1; Woods, Christpher, OIMP 32 (2015) 074		Archaic Lu2 A (witness)	12/4/2001	82	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+1. 1(N01) , [...] 
+>>Q000002 n 
+2. 1(N01) , NAMESZDA#? 
+3. 1(N01) , KAB NAM2 
+4. 1(N01) , NAM2 NAM2 
+5. 1(N01) , NAM2 URU~a1 
+6. 1(N01) , NAM2 DI# 
+7. 1(N01) , NAM2 ERIN 
+8. 1(N01) , NAM2 LA~b? 
+9. 1(N01) , AB~a# [...] 
+@column 2 
+1. 1(N01) , [...] SZITA~a1# 
+2. 1(N01) , TE 
+3. 1(N01) , KINGAL 
+4. 1(N01) , UKKIN~a GESZTU~b 
+5. 1(N01) , UKKIN~a NUN~a 
+6. 1(N01) , GA~a GAL~b 
+7. 1(N01) , GA~a GESZTU~b 
+8. 1(N01) , GA~a NUN~a 
+9. 1(N01) , UMUN2# [...] 
+@column 3 
+1. 1(N01) , ZATU693 EN~a 
+2. 1(N01) , ZATU693 UKKIN~a 
+3. 1(N01) , ZATU693 NAGA~b 
+4. 1(N01) , SUKKAL# USZ~a# 
+5. 1(N01) , X [...] 
+6. 1(N01) , X KASZ~b 
+7. 1(N01) , ISZ~a 
+8. 1(N01) , NIM~a 
+9. 1(N01) , NIM~a#? [...] 
+10. 1(N01) , |GURUSZ~ax2(N14)| 
+11. 1(N01) , SZITA~a1 
+@column 4 
+1. 1(N01) , KISAL~b1# NUN~a 
+2. 1(N01) , KISAL~b1 GESZTU~b 
+3. 1(N01) , ERIN? UMUN2 
+4. 1(N01) , BUR2? 
+5. 1(N01) , BUR2? SUHUR# 
+@column 5 
+1. 1(N01) , NESAG2~a# 
+2. 1(N01) , TUR3~a 
+3. 1(N01) , AL#? 
+4. 1(N01) , [...] 
+@reverse 
+@column 1 
+1. 1(N01) , [...] 
+>>Q000002 n 
+2. 1(N01) , GUB3~a? 
+3. 1(N01) , SUHUR 
+4. 1(N01) , X [...] 
+5. 1(N01) , X [...] 
+6. 1(N01) , KISAL~b1# [...] 
+7. 1(N01) , [...] 
+@column 2 
+1. 1(N01) , GIR3~a# 
+2. 1(N01) , GIR3@g~a#? 
+3. 1(N01) , ZATU736~b 
+4. 1(N01) , DA~b 
+5. 1(N01) , PA~a GIR3~a 
+6. 1(N01) , SZEG9 
+7. 1(N01) , GI [...] 
+8. 1(N01) , X [...] 
+@column 3 
+1. 1(N01) , |AB2x2(N14)| 
+2. 1(N01) , DARA3~c 
+3. 1(N01) , DIN 
+4. 1(N01) , GURUSZDA# 
+5. 1(N01) , GI#? RAD~b 
+6. 1(N01) , PA~a RAD~b 
+7. 1(N01) , ADAB 
+8. 1(N01) , NIR~b 
+9. 1(N01) , BU~a [...] 
+@column 4 
+1. 1(N01) , [...] X 
+2. 1(N01) , SZUM PA~a 
+3. 1(N01) , X ZATU693 X 
+4. 1(N01) , UTUL~b 
+5. 1(N01) , |USZ~b&USZ~b| 
+"
+000007		Uruk (mod. Warka)							clay	no translation	7							Uruk IV (ca. 3350-3200 BC)			Vorderasiatisches Museum, Berlin, Germany	unter der Abgleichung der Schicht III, 1,5 m über der Höhe des Kalksteinsockels// (t.a.q. IIIc)		36		tablet			56x36x29; Lú A Vorläufer; Fundstelle wie W 9123,d; veröffentlicht in: ATU 1, 522.	CDLI	10/20/2018	00.00.00.00	Qa XVI,2	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000002, ex. 174	0				undetermined		W 09656,x	Lexical	29	21198/zz001q0f16		Q000002	VAT 15111	150ppi 20160630	CDLI Lexical 000002, ex. 174				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 023, W 9656,x; ATU 1, 522		Archaic Lu2 A (witness)	12/4/2001	56	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+$ beginning broken 
+1'. 1(N01) , X [...] 
+2'. 1(N01) , |SZE~a.NAM2| 
+3'. 1(N01) , PAP~b 
+4'. 1(N01) , |1(N58).BAD~b| 
+@column 2 
+$ beginning broken 
+1'. 1(N01) , AB~a 
+2'. 1(N01) , X AB2#? 
+3'. 1(N01) , [...] 
+@column 3 
+$ beginning broken 
+1'. 1(N01) , [...] 
+2'. 1(N01) , |USZ~b&USZ~b|#? 
+3'. 1(N01) , TE 
+4'. 1(N01) , GA~a 
+@column 4 
+$ beginning broken 
+1'. 1(N01) , [...] 
+2'. 1(N01) , NIM~a 
+@reverse 
+1. 1(N01) , NIM~a# [...] 
+"
+000008		Uruk (mod. Warka)							clay	no translation	8							Uruk III (ca. 3200-3000 BC)			Vorderasiatisches Museum, Berlin, Germany	+19.50 m, 3 m nordwestlich vom Festpunkt 19.60		26		tablet			39x26x9; Unidentified 1; Pb XVII,1, +19.50 m, 3 m nordwestlich vom Festpunkt 19.60.	CDLI	10/20/2018		Pb XVII,1		Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical Archaic Unidentified, ex. 003	0				undetermined		W 11985,e	Lexical	9	21198/zz001q0f2q			VAT 17684	150ppi 20160630	CDLI Lexical Archaic Unidentified, ex. 003				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 085, W 11985,e		Archaic Unidentified (witness)	12/4/2001	39	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+@column 1' 
+$ beginning broken 
+1'. [1(N01)] , SILA3~a#? ISZ~b# [...] 
+2'. [1(N01)] , NI~b TUR 
+3'. 1(N01) , SAL ZATU750 
+$ rest broken 
+@reverse 
+$ broken 
+"
+000009		Uruk (mod. Warka)							clay	no translation	9							Uruk III (ca. 3200-3000 BC)			Vorderasiatisches Museum, Berlin, Germany	+19.50 m, 3 m nordwestlich vom Festpunkt 19.60		46		tablet			54x46x?; Lú A 95-98.111-113; Fundstelle wie W 11985,e; den in ATU 2 als A2-4.J1-3 zitierten Fächern entsprechen die Zeilen 95.98, 111-113.	CDLI	10/20/2018	00.00.00.00	Pb XVII,1	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000002, ex. 160	0				undetermined		W 11985,f	Lexical	0	21198/zz001q0f37		Q000002	VAT 17702	150ppi 20160630	CDLI Lexical 000002, ex. 160				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 022, W 11985,f		Archaic Lu2 A (witness)	12/4/2001	54	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+$ beginning broken 
+1'. 1(N01) , GAL~a# [...] 
+>>Q000002 095 
+2'. 1(N01) , GAL~a# GURUSZDA#? 
+>>Q000002 096 
+3'. 1(N01) , SANGA~a# GURUSZDA# 
+>>Q000002 097 
+4'. 1(N01) , [...] 
+>>Q000002 098 
+@column 2 
+$ beginning broken 
+1'. 1(N01) , GAL~a [...] 
+>>Q000002 111 
+2'. 1(N01) , [...] MUSZ#? 
+>>Q000002 112 
+3'. 1(N01) , GAL~a#? MUNU3#? 
+>>Q000002 113 
+@reverse 
+1. [N] , [...] 
+>>Q000002 colophon 
+"
+000010		Uruk (mod. Warka)							clay	no translation	10							Uruk III (ca. 3200-3000 BC)			Vorderasiatisches Museum, Berlin, Germany	+19.50 m, 3 m nordwestlich vom Festpunkt 19.60		25		tablet			23x25x19; Officials 16-18.66-68.?-?; Fundstelle wie W 11985,e.	CDLI	10/20/2018		Pb XVII,1		Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000007, ex. 006	0				undetermined		W 11985,g	Lexical	19	21198/zz001q0f4r		Q000007	VAT 17709	150ppi 20160630	CDLI Lexical 000007, ex. 006				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 026, W 11985,g		Archaic Officials (witness)	12/4/2001	23	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+$ beginning broken 
+1'. 1(N01) , [...] EN~a# NUN~a 
+>>Q000007 016 
+2'. 1(N01) , X EN~a AMAR 
+>>Q000007 017 
+3'. 1(N01) , X |SZU2.EN~a|# [...] 
+>>Q000007 018 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. 1(N01) , [...] 
+>>Q000007 066 
+2'. 1(N01) , X IB~a ZATU686~a 
+>>Q000007 067 
+3'. 1(N01) , X [...] 
+>>Q000007 068 
+$ rest broken 
+@column 2 
+$ beginning broken 
+1'. 1(N01) , [...] 
+>>Q000007 n 
+2'. 1(N01) , [...] 
+>>Q000007 n 
+$ rest broken 
+@column 3 
+1. [N] , [...] 
+>>Q000007 colophon 
+"
+000011		Uruk (mod. Warka)							clay	no translation	11							Uruk III (ca. 3200-3000 BC)			Vorderasiatisches Museum, Berlin, Germany	+19.50 m, 3 m nordwestlich vom Festpunkt 19.60		56		tablet			"66x56x24; Lú A + Metal 3-8.15-21.?-? + 44-50.57-62; Fundstelle wie W 11985,e; ""Lú A"" befindet sich auf der Vs., ""Metal"" auf der Rs."	CDLI	10/20/2018	00.00.00.00	Pb XVII,1	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000002, ex. 017 & 000026, ex. 054	0				undetermined		W 11986,a	Lexical	24	21198/zz001q0f58		Q000002, Q000026	VAT 17685	150ppi 20160630	CDLI Lexical 000002, ex. 017 & 000026, ex. 054				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 004, W 11986,a		Archaic Lu2 A (witness); Archaic Metal (witness)	12/4/2001	66	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+$ beginning broken 
+1'. 1(N01) , NAM2# DI 
+>>Q000002 003 
+2'. 1(N01) , NAM2 NAM2 
+>>Q000002 004 
+3'. 1(N01) , NAM2 URU~a1 
+>>Q000002 005 
+4'. 1(N01) , NAM2 ERIN 
+>>Q000002 006 
+5'. 1(N01) , GAL~a SZUBUR# 
+>>Q000002 007 
+6'. 1(N01) , [...] 
+>>Q000002 008 
+$ rest broken 
+@column 2 
+$ beginning broken 
+1'. 1(N01) , ABGAL# 
+>>Q000002 015 
+2'. 1(N01) , KINGAL# 
+>>Q000002 016 
+3'. 1(N01) , GAL~a TE 
+>>Q000002 017 
+4'. 1(N01) , GAL~a SUKKAL 
+>>Q000002 018 
+5'. 1(N01) , GADA~a SUKKAL 
+>>Q000002 019 
+6'. 1(N01) , GAL~a# GA~a# 
+>>Q000002 020 
+7'. 1(N01) , [...] 
+>>Q000002 021 
+$ rest broken 
+@column 3 
+$ beginning broken 
+1'. 1(N01) , [...] 
+>>Q000002 n 
+2'. 1(N01) , [...] 
+>>Q000002 n 
+3'. 1(N01) , [...] 
+>>Q000002 n 
+$ rest broken 
+@reverse 
+@column 1 
+$ beginning broken 
+1'. 1(N01) , [...] 
+>>Q000026 044 
+2'. 1(N01) , AN# BAR# USZ~a#? 
+>>Q000026 045 
+3'. 1(N01) , NU# A# 
+>>Q000026 046 
+4'. 1(N01) , AN# NU# A# 
+>>Q000026 047 
+5'. 1(N01) , NU# GIR~a#? 
+>>Q000026 048 
+6'. 1(N01) , [...] NU# GIR~a# 
+>>Q000026 049 
+7'. 1(N01) , [...] X 
+>>Q000026 050 
+$ rest broken 
+@column 2 
+$ beginning broken 
+1'. 1(N01) , [...] 
+>>Q000026 057 
+2'. 1(N01) , [...] A#? 
+>>Q000026 058 
+3'. 1(N01) , [...] A#? 
+>>Q000026 059 
+4'. 1(N01) , [...] GUG2 
+>>Q000026 060 
+5'. 1(N01) , [...] 
+>>Q000026 061 
+6'. 1(N01) , [...] 
+>>Q000026 062 
+$ rest broken 
+"
+000012		Uruk (mod. Warka)							clay	no translation	12							Uruk III (ca. 3200-3000 BC)			Vorderasiatisches Museum, Berlin, Germany	+19.50 m, 3 m nordwestlich vom Festpunkt 19.60		31		tablet			41x31x14; Lú A 65-66.71-72.93.86-88 mit Kolophon; Fundstelle wie W 11985,e.	CDLI	10/20/2018	00.00.00.00	Pb XVII,1	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000002, ex. 136	0				undetermined		W 11986,c	Lexical	14	21198/zz001q0f6s		Q000002	VAT 17619	150ppi 20160630	CDLI Lexical 000002, ex. 136				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 019, W 11986,c		Archaic Lu2 A (witness)	12/4/2001	41	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+1. 1(N01) , [...] NIMGIR 
+>>Q000002 065 
+2. 1(N01) , NIMGIR# SIG7 
+>>Q000002 066 
+3. 1(N01) , [...] SUHUR 
+>>Q000002 071 
+4. 1(N01) , [...] SUHUR# 
+>>Q000002 072 
+$ rest broken 
+@column 2 
+1. 1(N01) , TAR~a UTUL~a# 
+>>Q000002 093 
+2. 1(N01) , GAL~a DU6~b 
+>>Q000002 086 
+3. 1(N01) , KUR~a [...] 
+>>Q000002 087 
+4. 1(N01) , [...] 
+>>Q000002 088 
+$ rest broken 
+@reverse 
+1. [N] 1(N01) , X [...] 
+>>Q000002 colophon 
+"
+000013		Uruk (mod. Warka)							clay	no translation	13							Uruk III (ca. 3200-3000 BC)			Vorderasiatisches Museum, Berlin, Germany	+19.00 m, 7 m südwestlich vom Festpunkt 19.60		38		tablet			30x38x16; Unidentified 2; Fundstelle wie W 11985,e.	CDLI	10/20/2018		Pb XVII,1		Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical Archaic Unidentified, ex. 004	0				undetermined		W 11988,d	Lexical	16	21198/zz001q0f79			VAT 17729	150ppi 20160630	CDLI Lexical Archaic Unidentified, ex. 004				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 085, W 11988,d		Archaic Unidentified (witness)	12/4/2001	30	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+$ beginning broken 
+@column 1' 
+$ beginning broken 
+1'. [1(N01)] , [...] X 
+2'. 1(N01) , EN~a# ERIM~a NE~a NUN~a# 
+3'. [1(N01)] , [...] ERIN# 
+$ rest broken 
+@column 2' 
+$ beginning broken 
+1'. 1(N01) , GAL~a# [...] 
+2'. 1(N01) , GAL~a# [...] 
+$ rest broken 
+@reverse 
+$ broken 
+"
+000014		Uruk (mod. Warka)							clay	no translation	14							Uruk III (ca. 3200-3000 BC)	Text category: 06.01; Text commentary: 01-58 KOL; Foreign ID: L$U A		Vorderasiatisches Museum, Berlin, Germany	+19.80 m, über der Tempelmauer von IVa, südwestlich vom Labyrinth		51		tablet			76x51x15; Swine 1-58 mit Kolophon; Oe XVI,4, +19.80 m, über der Tempelmauer von IVa, südwestlich vom Labyrinth; veröffentlicht in: UVB 6; Tafel gedreht um die vertikale Achse.	Englund, Robert K. & Nissen, Hans J.	1/26/2020		Oe XVI,4		Englund, Robert K.		20011204 protocuneiform_catalogue	ATU 3, pl. 036, W 12139	0				undetermined		W 12139	Lexical	15	21198/zz001q0f8t			VAT 16773	150ppi 20160630	ATU 3, pl. 036, W 12139				UVB 6; R. Englund, Fs Boehmer (Mainz 1995) 130 fig. 6; R. Englund in J. Bauer, R. Englund and M. Krebernik, OBO 160/1 (Freiburg Switzerland 1998) 173 fig. 63		Archaic Pigs (witness)	12/4/2001	76	1993		"
+#atf: lang qpc 
+@tablet 
+@obverse 
+@column 1 
+1. 1(N01) , SZUBUR 
+2. 1(N01) , |1(N57).SZUBUR| 
+# = P000456 obv. ii 1 
+3. 1(N01) , |2(N57).SZUBUR| 
+4. 1(N01) , U4 SZUBUR# 
+5. 1(N01) , KAB#? [...] 
+6. 1(N01) , ME~a |SILA3~axGARA2~a|#? SZUBUR 
+7. 1(N01) , RAD~a@g SZUBUR 
+8. 1(N01) , KU3~a# SZUBUR 
+9. 1(N01) , ZATU686~a BU~a SZUBUR 
+10. 1(N01) , BU~a SZUBUR 
+@column 2 
+1. 1(N01) , MUSZEN# SZUBUR# 
+2. 1(N01) , PAP~a SZUBUR# 
+3. 1(N01) , UH3~a? SZUBUR# 
+4. 1(N01) , HI? NUN~a# SZUBUR 
+5. 1(N01) , KASKAL SZUBUR 
+6. 1(N01) , LAM~b SZUBUR 
+7. 1(N01) , KA~a#? SZUBUR 
+8. 1(N01) , ADAB# SZUBUR 
+# = P000456 obv. iii 1 
+9. 1(N01) , SILA4~b# SZUBUR 
+10. 1(N01) , UB SZUBUR 
+11. 1(N01) , MUSZEN SZUBUR 
+@column 3 
+1. 1(N01) , TUM~a SZUBUR 
+2. 1(N01) , GI SZUBUR 
+3. 1(N01) , UR~a SZUBUR 
+4. 1(N01) , SZA3~a1 SZUBUR 
+# = P000456 obv. ii 3 
+5. 1(N01) , GAN2 SZUBUR 
+6. 1(N01) , SZE~a# SZUBUR 
+7. 1(N01) , GURUSZDA SZUBUR 
+8. 1(N01) , A SZUBUR 
+9. 1(N01) , SAGSZU SZUBUR 
+@reverse 
+@column 1 
+1. 1(N01) , BAHAR2~a SZUBUR 
+2. 1(N01) , SZUBUR AB2 
+# = P000456 obv. iii 3 
+3. 1(N01) , SZUBUR# NE~a# 
+4. 1(N01) , SZUBUR# [...] 
+5. 1(N01) , SZUBUR |BU~a+DU6~a| 
+6. 1(N01) , SZUBUR LAGAB~a 
+7. 1(N01) , SZUBUR GI6 
+8. 1(N01) , SZUBUR# U4 
+9. 1(N01) , BU~a SZUBUR 
+10. 1(N01) , URI3~a SZUBUR 
+@column 2 
+1. 1(N01) , KAL~b1 SZUBUR 
+2. 1(N01) , 1(N57) SZUBUR 
+3. 1(N01) , SZUBUR KU6~a 
+4. 1(N01) , SZUBUR SI#? 
+5. 1(N01) , SZUBUR# EN~a 
+6. 1(N01) , SZUBUR SUHUR 
+7. 1(N01) , SZUBUR MU 
+8. 1(N01) , TE SZUBUR 
+9. 1(N01) , ZATU758 SZUBUR 
+10. 1(N01) , GAL~b# SZUBUR# 
+@column 3 
+1. 1(N01) , BAHAR2~a SZUBUR 
+2. 1(N01) , AN SZUBUR 
+3. 1(N01) , SZUBUR GIR3~a 
+4. 1(N01) , |3(N57).SZUBUR| 
+5. 1(N01) , SZE3 SZUBUR 
+6. 1(N01) , NIM~a# [...] 
+7. 1(N01) , SZUBUR X 
+8. 1(N01) , SZUBUR MAH~a 
+@left 
+1. 5(N14) 8(N01) , 
+"
+000015		Uruk (mod. Warka)				P000015 lead, single entry			clay	no translation	15							Uruk III (ca. 3200-3000 BC)			Vorderasiatisches Museum, Berlin, Germany	1 m über der Hofmauerkante IVa, 50 cm davor		99		tablet			"101x99x30; Vessels Vorläufer; Oe XVI,5, 1 m über der Hofmauerkante, 50 cm davor; veröffentlicht in: ATU 2, Taf. 46; die Tafel enthält einen Vorläufer der Liste ""Vessels"" auf der Vs., der Liste ""Metal"" auf der Rs., die Angabe der Breite hat eine 7-spaltige"	CDLI	1/26/2020	00.00.00.00	Oe XVI,5	00.00.00.00	Englund, Robert K.		20011204 protocuneiform_catalogue	CDLI Lexical 000023, ex. 091	0				undetermined		W 12256,i + W 12256,k + W 12256,l + W 12256,o	Lexical	30	21198/zz001q0f9b		Q000023	VAT 17858 + VAT 17886	150ppi 20160630	CDLI Lexical 000023, ex. 091				Englund, Robert K. & Nissen, Hans J., ATU 3 (1993) pl. 066, W 12256,i+; ATU 2, plate 46		Archaic Vessels & Garments (witness)	12/4/2001	101	2015ff.		"
+#atf: lang qpc 
+@tablet 
+@tablet 
+@obverse 
+@column 1 
+1. [1(N01)] , [...] 
+>>Q000023 001 
+2. 1(N01)# , DUG~b 
+>>Q000023 002 
+3. 1(N01) , DUG~c 
+>>Q000023 003 
+4. 1(N01) , |DUG+ASZ~c| 
+>>Q000023 004 
+5. 1(N01) , UKKIN~b 
+>>Q000023 005 
+6. 1(N01) , MUD3~a 
+>>Q000023 006 
+7. 1(N01) , LAHTAN2# 
+>>Q000023 007 
+8. 1(N01) , KISIM~b 
+>>Q000023 008 
+9. 1(N01) , NI~b 
+>>Q000023 009 
+10. 1(N01) , IR~b 
+>>Q000023 012 
+11. 1(N01) , HI IR~b 
+>>Q000023 010 
+12. 1(N01) , [...] MUSZEN# 
+>>Q000023 011 
+13. [1(N01)] , [...] 
+>>Q000023 013 
+$ rest broken 
+@column 2 
+1. [1(N01)] , [...] 
+>>Q000023 014 
+2. 1(N01) , E2~a#? SU~a NI~b 
+>>Q000023 015 
+3. 1(N01) , 3(N57) SU~a NI~b 
+>>Q000023 016 
+4. 1(N01) , |DUG~bxSZE~a| 
+>>Q000023 021 
+5. 1(N01) , |DUG~bxBALA~a|#? 
+>>Q000023 022 
+6. 1(N01) , |DUG~bxKASKAL| 
+>>Q000023 023 
+7. 1(N01) , KASZ~b 
+>>Q000023 024 
+8. 1(N01) , |DUG~bxGESZTU~b| 
+>>Q000023 025 
+9. 1(N01) , |DUG~bxU2~b|#? 
+>>Q000023 026 
+10. 1(N01) , |DUG~bxNAGA~a| 
+>>Q000023 028 
+11. 1(N01) , |DUG~bx(SZE~a.NAM2)|? 
+>>Q000023 029 
+12. 1(N01)# , |DUG~bxX|# 
+>>Q000023 030 
+13. 1(N01)# , |DUG~bxX|# 
+>>Q000023 031 
+@column 3 
+1. 1(N01)# , |DUG~bxX|# 
+>>Q000023 037 
+2. 1(N01) , |DUG~bxX|# 
+>>Q000023 038 
+3. 1(N01)# , |DUG~bxX|# 
+>>Q000023 039 
+4. 1(N01)# , [...] 
+>>Q000023 040 
+5. 1(N01) , |DUG~bxX|# 
+>>Q000023 041 
+6. 1(N01) , |DUG~bxX|# 
+>>Q000023 042 
+7. 1(N01) , |DUG~bxX| 
+>>Q000023 043 
+8. 1(N01) , |DUG~bxGISZ| 
+>>Q000023 044 
+9. 1(N01) , GISZ |DUG~bxGISZ| 
+>>Q000023 045 
+10. 1(N01) , LA2 ERIM~b2 |DUG~bxX|# 
+>>Q000023 n 
+11. 1(N01) , SIG2~d1 
+>>Q000023 n 
+12. 1(N01) , U4 SIG2~d1# 
+>>Q000023 n 
+13. 1(N01)# , [...] 
+>>Q000022 n 
+@column 4 
+1. 1(N01) , [...] SIG2~d1 
+>>Q000023 n 
+2. 1(N01) , NI~b SIG2~d1 
+>>Q000023 n 
+3. 1(N01) , KU6~a SIG2~d1 
+>>Q000023 n 
+4. 1(N01) , [...] SIG2~d1# 
+>>Q000023 n 
+5. [1(N01)] , [...] X 
+>>Q000023 n 
+6. [1(N01)] , [...] 
+>>Q000023 n 
+7. [1(N01)] , [...] 
+>>Q000023 n 
+8. [1(N01)] , [...] 
+>>Q000023 n 
+9. 1(N01) , SI SIG2~d1 
+>>Q000023 n 
+10. 1(N01)# , GI? SIG2~d1 
+>>Q000023 n 
+11. 1(N01)# , SAG SIG2~d1 
+>>Q000023 n 
+12. [1(N01)] , [...] EZEN~a SIG2~d1 
+>>Q000023 n 
+@column 5 
+1. 1(N01)# , [...] 
+>>Q000026 n 
+2. 1(N01) , X [...] 
+>>Q000026 n 
+3. 1(N01) , MUD3~c 
+>>Q000026 003 
+4. 1(N01) , MIR~b#? 
+>>Q000026 005 
+5. 1(N01)# , [...] 
+>>Q000026 n 
+6. [1(N01)] , [...] 
+>>Q000026 n 
+7. [1(N01)] , [...] 
+>>Q000026 n 
+8. [1(N01)] , [...] 
+>>Q000026 n 
+9. 1(N01) , GAL~a TUN3~b# 
+>>Q000026 023 
+10. 1(N01) , 1(N57) TAK4~a TUN3~b 
+>>Q000026 024 
+11. 1(N01) , 3(N57) TAK4~a TUN3~b 
+>>Q000026 025 
+12. 1(N01) , NAGAR~a 
+>>Q000026 028 
+@column 6 
+$ beginning broken 
+1'. [1(N01)] , [...] SZITA~a1 X 
+>>Q000026 n 
+2'. [1(N01)] , [...] X AN SZITA~a1 
+>>Q000026 n 
+3'. [1(N01)] , [...] X 
+>>Q000026 n 
+4'. [1(N01)] , [...] 
+>>Q000026 n 
+5'. 1(N01) , X [...] 
+>>Q000026 n 
+@column 7 
+$ beginning broken 
+1'. 1(N01)# , 1(N57) TAK4~a [...] 
+>>Q000026 n 
+2'. 1(N01) , TUG2~a#? 
+>>Q000026 n 
+3'. 1(N01)# , [...] 
+>>Q000026 n 
+$ rest broken 
+@reverse 
+1. 1(N34) [...] , NI~a# SZA3~a2 [...] 
+>>Q000023 colophon 
+"

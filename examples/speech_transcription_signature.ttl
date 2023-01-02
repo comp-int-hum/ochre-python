@@ -1,0 +1,18 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix wdt: <http://www.wikidata.org/prop/direct/> .
+@prefix ochre: <urn:ochre:> .
+
+
+ochre:Input
+    a sh:NodeShape ;
+    a wd:Q26987229 . # audio file
+
+ochre:Output
+    a sh:NodeShape ;
+    sh:property ochre:transcriptionProperty .
+
+ochre:textProperty
+    sh:path ochre:transcription ;
+    sh:datatype xsd:string .

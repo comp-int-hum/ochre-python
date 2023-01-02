@@ -1,0 +1,51 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix wdt: <http://www.wikidata.org/prop/direct/> .
+@prefix ochre: <urn:ochre:> .
+
+ochre:Input
+    a sh:NodeShape ;
+    a wd:Q860625 . # image file
+
+ochre:Output
+    a sh:NodeShape ;
+    sh:property ochre:regionProperty .
+
+ochre:regionProperty
+    sh:path ochre:identified ;
+    sh:class ochre:Region .
+
+ochre:BoundingBox
+    a sh:NodeShape ;
+    a wd:Q6865426 ;
+    sh:property ochre:probabilityProperty ;
+    sh:property ochre:labelProperty ;
+    sh:property ochre:coordinateProperty .
+
+ochre:labelProperty
+    sh:path ochre:label ;
+    sh:datatype xsd:string .
+
+ochre:probabilityProperty
+    sh:path ochre:probability ;
+    sh:datatype xsd:float .
+
+ochre:coordinateProperty
+    sh:path ochre:coordinate ;
+    sh:class ochre:Coordinate .
+
+ochre:Coordinate
+    a sh:NodeShape ;
+    a wd:Q3250736 ;
+    sh:property ochre:xProperty ;
+    sh:property ochre:yProperty .
+
+ochre:xProperty
+    sh:path ochre:x ;
+    sh:datatype xsd:integer .
+
+ochre:yProperty
+    sh:path ochre:y ;
+    sh:datatype xsd:integer .
+

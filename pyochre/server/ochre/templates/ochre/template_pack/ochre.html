@@ -1,0 +1,19 @@
+{% extends "ochre/index.html" %}
+{% load ochre %}
+
+{% block content %}
+fdsads
+<div
+  model_name="{{model_name}}"
+  app_label="{{app_label}}"
+  pk="{{pk}}"
+  id="container-{{uid}}"
+  >
+  <div
+    class="container w-100 ochre-{{mode}}"
+    >
+    {% ochre_render_form serializer template_pack="ochre/template_pack" mode=mode uid=uid %}
+  </div>
+</div>
+
+{% endblock %}

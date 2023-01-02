@@ -1,0 +1,162 @@
+{
+    "metadata" : {
+	"header" : true,
+	"delimiter" : "\t",
+	"aliases" : {
+	    "properties" : {
+		"instance_of" : "P31",
+		"author" : "P50",
+		"name" : "P2561",
+		"part_of" : "P361",
+		"ordinal" : "P1545",
+		"image" : "P18",
+		"genre" : "P136",
+		"based_on" : "P144",
+		"discoverer" : "P61",
+		"editor" : "P98",
+		"measurement" : "P111",
+		"publisher" : "P123",
+		"owned_by" : "P127",
+		"creator" : "P170",
+		"made_from" : "P186",
+		"collection" : "P195",
+		"inventory_number" : "P217",
+		"has_use" : "P366",
+		"time_discovered" : "P575",
+		"publication_date" : "P577",
+		"commissioned_by" : "P88",
+		"condition" : "P5816",
+		"elevation" : "P2044",
+		"width" : "P2049",
+		"height" : "P2048",
+		"language" : "P407",
+		"thickness" : "P2610",
+		"transliteration" : "P2440"
+	    },
+	    "entities" : {
+		"inscription" : "Q1640824",
+		"line_drawing" : "Q99887548",
+		"photo" : "Q125191"
+	    }
+	}
+    },
+    "rules" : [
+        {
+            "match" : {"tag" : "row"},
+            "create" : [
+		{
+                    "subject" : {
+			"type" : "uri",
+			"value" : "{}"
+                    },
+		    "predicate_objects" : [
+			{
+			    "predicate" : "instance_of",
+			    "object" : "inscription"
+			}
+		    ]
+		}
+	    ]
+        },
+	{
+	    "match" : {"tag" : "cell", "attributes" : {"id" : ["content"]}},
+	    "create" : [
+		{
+		    "subject" : {
+			"type" : "uri",
+			"value" : "{location[0]['uid']}"
+		    },
+		    "predicate_objects" : [
+			{
+			    "predicate" : "transliteration",
+			    "object" : {
+				"type" : "literal",
+				"value" : "{attributes['value']}"
+			    }
+			}
+		    ]
+		}
+	    ]
+	},
+	{
+	    "match" : {"tag" : "cell", "attributes" : {"id" : ["language"]}},
+	    "create" : [
+		{
+		    "subject" : {
+			"type" : "uri",
+			"value" : "{location[0]['uid']}"
+		    },
+		    "predicate_objects" : [
+			{
+			    "predicate" : "language",
+			    "object" : {
+				"type" : "literal",
+				"value" : "{attributes['value']}"
+			    }
+			}
+		    ]
+		}
+	    ]
+	},
+	{
+	    "match" : {"tag" : "cell", "attributes" : {"id" : ["genre"]}},
+	    "create" : [
+		{
+		    "subject" : {
+			"type" : "uri",
+			"value" : "{location[0]['uid']}"
+		    },
+		    "predicate_objects" : [
+			{
+			    "predicate" : "genre",
+			    "object" : {
+				"type" : "literal",
+				"value" : "{attributes['value']}"
+			    }
+			}
+		    ]
+		}
+	    ]
+	},
+	{
+	    "match" : {"tag" : "cell", "attributes" : {"id" : ["id"]}},
+	    "create" : [
+		{
+		    "subject" : {
+			"type" : "uri",
+			"value" : "{location[0]['uid']}"
+		    },
+		    "predicate_objects" : [
+			{
+			    "predicate" : "name",
+			    "object" : {
+				"type" : "literal",
+				"value" : "P{attributes['value']}"
+			    }
+			},
+			{
+			    "file" : "P{attributes['value']}_photo.jpg",
+			    "file_type" : "image/jpg",			    
+			    "predicate" : "image",
+			    "object_type" : "photo",
+			    "object" : {
+				"type" : "uri",
+				"value" : "{}_photo"
+			    }			    
+			},
+			{
+			    "file" : "P{attributes['value']}_line.jpg",
+			    "file_type" : "image/jpg",
+			    "predicate" : "image",
+			    "object_type" : "line_drawing",
+			    "object" : {
+				"type" : "uri",
+				"value" : "{}_line_drawing"
+			    }
+			}			
+		    ]
+		}
+	    ]
+	}
+    ]
+}

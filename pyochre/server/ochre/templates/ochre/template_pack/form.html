@@ -1,0 +1,12 @@
+{% load rest_framework %}
+{% if style.tab_view %}
+{% include "ochre/template_pack/tabs.html" with tabs=form style=style uid=style.uid %}
+{% else %}
+{% for field in form %}
+  {% if not field.read_only and not field.style.hidden %}
+{% render_field field style=style %}
+{% else %}
+<input name="{{ field.name }}" value="{{ field.value }}" type="hidden" >
+  {% endif %}
+{% endfor %}
+{% endif %}

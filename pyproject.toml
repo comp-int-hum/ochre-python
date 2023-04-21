@@ -63,7 +63,7 @@ dependencies = [
         "transformers",
 	"uritemplate",
         "watchdog",
-        "https://github.com/django-wiki/django-wiki.git",
+        "wiki @ https://github.com/django-wiki/django-wiki/archive/refs/heads/main.zip",
         "wikidata"
 ]
 

@@ -1,0 +1,39 @@
+{% extends "ochre/index.html" %}
+{% load static %}
+{% load guardian_tags %}
+{% get_obj_perms request.user for slide_model as "perms" %}
+{% block content %}
+
+<div class="container-fluid">
+  <div id="slides_{{uid}}" class="carousel carousel-dark slide ochre-carousel">
+    <div class="carousel-indicators">
+      {% for item in items %}
+      <button type="button" data-bs-target="#slides_{{uid}}" data-bs-slide-to="{{forloop.counter0}}" {% if forloop.counter == 1 %}class="active" aria-current="true"{% endif %} aria-label="Slide {{forloop.counter}}"></button>
+      {% endfor %}
+    </div>  
+    <div class="carousel-inner slide">
+      {% for item in items %}
+      <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %} mt-0 mb-0">
+	{% include "ochre/template_pack/slide.html" with item=item index=forloop.counter uid=uid %}
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#slides_{{uid}}" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#slides_{{uid}}" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+
+
+<div class="container w-75">
+  {% if slide_model.get_add_perm in perms %}
+  {% include "ochre/template_pack/modal.html" with mode="create" uid=uid index="0" csrf_token=csrf_token item=slide_model serializer=serializer %}
+  {% endif %}
+</div>
+
+{% endblock %}      

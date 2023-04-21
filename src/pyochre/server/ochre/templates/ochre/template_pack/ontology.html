@@ -1,0 +1,11 @@
+{% extends "ochre/index.html" %}
+{% load ochre %}
+
+
+{% block content %}
+<table>
+  {% for term, props in terms %}
+  <tr><td>{{term}}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

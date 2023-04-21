@@ -1,0 +1,29 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+
+_:ObjectRecognitionInput
+    a ochre:Input ;
+    a sh:NodeShape ;
+    sh:targetClass ochre:Image .
+
+
+_:ObjectRecognitionOutput
+    a ochre:Output ;
+    sh:property [
+        sh:path ochre:region ;
+        sh:class ochre:BoundingBox ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path ochre:category ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] .
+
+
+_:ObjectRecognitionWidget
+    ochre:isA ochre:ImageRecorder ;
+    ochre:hasDescription "Upload an image" .

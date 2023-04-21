@@ -2,12 +2,14 @@
 *~
 *#
 temp
-temp1
 temp2
 temp3
 temp4
+temp5
 local
 logs
 pyochre.egg*
 package-lock.json
 package.json
+build
+dist

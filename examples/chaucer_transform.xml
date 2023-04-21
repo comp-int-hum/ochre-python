@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:transform
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:ochre="urn:ochre:"
+    version="1.0"
+    >
+  <xsl:output method="xml" indent="yes"/>
+
+  <xsl:variable name="ochre">https://cdh.jhu.edu/ontology/</xsl:variable>
+  <xsl:variable name="materials-dir"></xsl:variable>
+  <xsl:variable name="xsd">http://www.w3.org/2001/XMLSchema#</xsl:variable>
+
+  <!-- do nothing with random text -->
+  <xsl:template match="text()|@*"/>
+  
+  <xsl:template match="/">
+    <rdf:RDF xml:base="{$ochre}">
+      <xsl:apply-templates select="document/object/property"/>
+    </rdf:RDF>
+  </xsl:template>
+
+  <!-- story -->
+  <xsl:template match="/document/object/property">
+    <rdf:Description>
+      <isA rdf:resource="Story" />
+      <hasOrdinal rdf:datatype="{$xsd}integer">
+	<xsl:value-of select="object/property[@name='group_ordinal']/text()" />
+      </hasOrdinal>
+      <hasTag rdf:datatype="{$xsd}string">
+	<xsl:value-of select="object/property[@name='group_name']/text()" />
+      </hasTag>
+      <hasLabel rdf:datatype="{$xsd}string">
+	<xsl:value-of select="@name" />
+      </hasLabel>
+      <xsl:apply-templates select="object/property[@name='content']/object/property" />
+    </rdf:Description>
+  </xsl:template>
+
+  <!-- line -->
+  <xsl:template match="/document/object/property/object/property[@name='content']/object/property">
+    <hasPart rdf:parseType="Resource">
+      <isA rdf:resource="LineOfVerse" />
+      <hasOrdinal rdf:datatype="{$xsd}integer">
+	<xsl:value-of select="@name"/>
+      </hasOrdinal>
+      <xsl:apply-templates select="object/property" />
+    </hasPart>
+  </xsl:template>
+
+  <!-- token -->
+  <xsl:template match="/document/object/property/object/property[@name='content']/object/property/object/property">    
+    <hasPart rdf:parseType="Resource">
+      <isA rdf:resource="Token" />
+      <hasLabel>
+	<xsl:value-of select="object/property[@name='token']/text()" />
+      </hasLabel>
+      <hasOrdinal rdf:datatype="{$xsd}integer">
+	<xsl:value-of select="@name"/>
+      </hasOrdinal>
+      <!--
+      <xsl:apply-templates select="object/property[@name='annotations']/list/item/object/property[@name='type' and text()='grammar']" />
+
+      <xsl:apply-templates select="property[@name='annotations']/list/item/object/property[@name='type' and text()='vowel_clusters']" />
+
+      <xsl:apply-templates select="property[@name='annotations']/list/item/object/property[@name='type' and text()='scansion']" />
+      -->
+    </hasPart>
+  </xsl:template>
+    
+  <!-- token grammar -->
+  <!--
+  <xsl:template match="property[@name='type' and text()='grammar']">
+    <hasPart rdf:parseType="Resource">
+      <isA rdf:resource="GrammaticalTag" />
+      <hasLabel>
+	<xsl:value-of select="../property[@name='value']/text()" />
+      </hasLabel>
+    </hasPart>
+  </xsl:template>
+  -->
+  
+  <!-- token vowel clusters -->
+  <!--
+  <xsl:template match="property[@name='type' and text()='vowel_clusters']">
+    <hasPart rdf:parseType="Resource">
+      <isA rdf:resource="Syllable" />
+      <hasLabel>
+	<xsl:value-of select="../property[@name='value']/text()" />
+      </hasLabel>      
+    </hasPart>
+  </xsl:template>
+  -->
+  <!-- token scansion -->
+  <!--
+  <xsl:template match="property[@name='type' and text()='scansion']">
+    <hasPart rdf:parseType="Resource">
+      <isA rdf:resource="Stress" />
+      <hasLabel>
+	<xsl:value-of select="../property[@name='value']/text()" />
+      </hasLabel>      
+    </hasPart>
+  </xsl:template>
+  -->
+</xsl:transform>

@@ -1,0 +1,173 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix owl2: <http://www.w3.org/2006/12/owl2#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix wde: <http://www.wikidata.org/entity/> .
+@prefix wdp: <http://www.wikidata.org/prop/direct/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+
+# <https://cdh.jhu.edu/ochre> rdf:type owl:Ontology .
+
+# Object properties
+
+# Data properties
+
+# Classes
+#ochre:Input rdf:type owl:Class .
+#ochre:Output rdf:type owl:Class .
+#ochre:Label rdf:type owl:Class .
+
+#ochre:Output rdf:type owl:Class .
+#ochre:Input rdf:type owl:Class .
+#ochre:Output rdf:type owl:Class .
+#ochre:Input rdf:type owl:Class .
+#ochre:Output rdf:type owl:Class .
+
+# textarea wde:Q94100419
+# text file wde:Q86920
+# categorical distribution
+#
+
+# Axioms
+#ochre:htmlElement rdfs:subPropertyOf wdp:_ .
+
+ochre:Input rdfs:subClassOf wde:Q1125955 .
+ochre:Output rdfs:subClassOf wde:Q778569 .
+ochre:Property rdfs:subClassOf wde:Q937228 .
+
+ochre:Widget rdfs:subClassOf wde:Q605117 .
+ochre:MachineLearningWidget rdfs:subClassOf ochre:Widget .
+ochre:TabularVisualization ochre:isA ochre:MachineLearningWidget .
+ochre:VegaVisualization ochre:isA ochre:MachineLearningWidget .
+ochre:TextEditor ochre:isA ochre:MachineLearningWidget .
+ochre:AudioRecorder ochre:isA ochre:MachineLearningWidget .
+ochre:ImageRecorder ochre:isA ochre:MachineLearningWidget .
+
+ochre:Topic rdfs:subClassOf ochre:CategoricalDistribution .
+
+ochre:isA owl:equivalentProperty wdp:P31 .
+ochre:isA owl:equivalentProperty rdf:type .
+ochre:hasLabel owl:equivalentProperty rdfs:label .
+ochre:hasLabel owl:equivalentProperty wdp:P2561 .
+ochre:hasValue owl:equivalentProperty rdf:value .
+ochre:hasDescription owl:equivalentProperty dc:description .
+ochre:isSubClassOf owl:equivalentProperty rdfs:subClassOf .
+ochre:hasOrdinal owl:equivalentProperty wdp:P1545 .
+ochre:hasProbability owl:equivalentProperty wdp:P2844 .
+ochre:hasMaterialId rdfs:subPropertyOf rdfs:seeAlso .
+ochre:hasPart owl:equivalentProperty rdfs:P527 .
+ochre:partOf owl:equivalentProperty rdfs:P361 .
+ochre:hasAuthor owl:equivalentProperty wdp:P50 .
+ochre:inLanguage owl:equivalentProperty wdp:P407 .
+ochre:basedOn owl:equivalentProperty wdp:P144 .
+ochre:hasGenre owl:equivalentProperty wdp:P136 .
+ochre:hasEditor owl:equivalentProperty wdp:P98 .
+ochre:hasPublisher owl:equivalentProperty wdp:P123 .
+ochre:hasOwner owl:equivalentProperty wdp:P127 .
+ochre:madeFrom owl:equivalentProperty wdp:P186 .
+ochre:hasUse owl:equivalentProperty wdp:P366 .
+	     #     "measurement" : "P111",
+	     #     "creator" : "P170",
+	     #     "collection" : "P195",
+	     #     "inventory_number" : "P217",
+	     #     "has_use" : "P366",
+	     #     "time_discovered" : "P575",
+	     #     "publication_date" : "P577",
+	     #     "commissioned_by" : "P88",
+	     #     "condition" : "P5816",
+	     #     "elevation" : "P2044",
+	     #     "width" : "P2049",
+	     #     "height" : "P2048",
+	     #     "language" : "P407",
+	     #     "thickness" : "P2610",
+
+	     # },
+	     # "entities" : {
+
+#ochre:Widget
+#ochre:AudioWidget, ochre:ImageWidget, ochre:TextWidget, ochre:
+#ochre:Signature
+#    a owl:Class ;
+#    a sh:NodeShape ;
+#    sh:property [
+#        sh:path ochre:input ;
+#        sh:maxCount 1 ;
+#        sh:class ochre:Input ;
+#    ] ;
+#    sh:property [
+#        sh:path ochre:output ;
+#        sh:maxCount 1 ;
+#        sh:class ochre:Output ;
+#    ] .
+
+# Probability
+ochre:CategoricalDistribution owl:equivalentClass wde:Q5051810 .
+ochre:hasProbability rdfs:subPropertyOf wdp:P1181 .
+ochre:Probability owl:equivalentClass wde:Q9492 .
+
+# Linguistics
+ochre:TextFile owl:equivalentClass wde:Q86920 .
+ochre:Text owl:equivalentClass wde:Q234460 .
+ochre:Word owl:equivalentClass wde:Q8171 .
+ochre:Token owl:equivalentClass wde:Q82837422 .
+ochre:Lemma owl:equivalentClass wde:Q18514 .
+ochre:Morpheme owl:equivalentClass wde:Q43249 .
+ochre:Character owl:equivalentClass wde:Q3241972 .
+ochre:Sentence owl:equivalentClass wde:Q41796 .
+ochre:GrammaticalTag owl:equivalentClass wde:Q658349 .
+ochre:Stress owl:equivalentClass wde:Q181767 .
+ochre:Syllable owl:equivalentClass wde:Q8188 .
+
+#ochre:Paragraph owl:equivalentClass wde:Q194431 .
+
+# Narrative
+ochre:Story owl:equivalentClass wde:Q1318295 .
+ochre:LineOfVerse owl:equivalentClass wde:Q285573 .
+
+# Near East Studies/Classics/Archeology
+ochre:hasDiscoverer owl:equivalentProperty wdp:P61 .
+ochre:hasTransliteration owl:equivalentProperty wdp:P2440 .
+ochre:Inscription owl:equivalentClass wde:Q1640824 .
+ochre:LineDrawing owl:equivalentClass wde:Q99887548 .
+ochre:Photo owl:equivalentClass wde:Q125191 .
+
+# Vision
+ochre:ImageFile owl:equivalentClass wde:Q860625 .
+ochre:Image owl:equivalentClass wde:Q478798 .
+ochre:hasImage owl:equivalentProperty wdp:P18 .
+ochre:hasRegion owl:equivalentProperty wdp:P8276 .
+ochre:Coordinate
+    owl:equivalentClass wde:Q3250736 ;
+    sh:property [
+        sh:path ochre:x ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+    ] ;
+    sh:property [
+        sh:path ochre:y ;
+        sh:datatype xsd:integer ;
+        sh:minInclusive 0 ;
+    ] .
+
+ochre:BoundingBox
+    a owl:Class ;
+    a sh:NodeShape ;
+    sh:property [
+        sh:path ochre:topLeft ;
+        sh:class ochre:Coordinate ;
+    ] ;
+    sh:property [
+        sh:path ochre:bottomRight ;
+        sh:class ochre:Coordinate ;
+    ] .
+
+# Audio
+ochre:AudioFile owl:equivalentClass wde:Q26987229 .
+ochre:Audio owl:equivalentClass wde:Q3302947 .
+
+# Video
+ochre:VideoFile owl:equivalentClass wde:Q98405806 .
+ochre:Video owl:equivalentClass wde:Q98069877 .
+

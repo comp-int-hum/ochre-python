@@ -108,6 +108,12 @@ OCHRE has provisionally adopted the `MLSchema specification <http://ml-schema.gi
 
 Ideally, signatures are generated as models are assembled and trained.  In particular, OCHRE will be integrating the `Starcoder project <https://github.com/starcoder/starcoder-python>`_ to automatically generate, train, and reuse `graph neural networks <https://en.wikipedia.org/wiki/Graph_neural_network>`_ based on primary sources and scholarly knowledge, with signatures capturing the structural and semantic relationships.
 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Model signatures and input/output
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Inputs and outputs of an OCHRE model are RDF graphs that satisfy the respective signatures of the model.
+
 Existing techniques like topic models, pretrained object recognition, and so forth, are being translated into simple signatures that provide a starting point for OCHRE.
 
 .. __: scholarly_knowledge_
@@ -231,6 +237,9 @@ is an entity in the OCHRE namespace corresponding to the particular event being 
 
 Finally, OCHRE keeps track of the sequential number of each tag value within one tier of the input, and this number can be interpolated with "index".  For example, if the input involves processing sentences, each of which are a sequence of words, the string "{index}" within a word-rule will give the current word's number within its sentence, starting from 0.
 
+::
+   python -m pyochre.primary_sources create --input_file X --input_file_format Y --name Z --schema A --xslt_file B --replace --enrich --base_path C --upload_materials
+
 ^^^^^^^^^
 Materials
 ^^^^^^^^^
@@ -245,7 +254,7 @@ The mechanisms described above are for generating RDF.  There is also the need t
   }
 
 When the *pyochre.primary_sources* script encounters a "file" like this, it looks for it on the local filesystem.  If found, it creates a unique identifier *I* based on the file's contents, and adds an additional RDF triple that links it to the object in the predicate_object rule (roughly, (O, hasMaterialId, I)) indicating "the entity O has an associated file identified with the id I".  Then, after OCHRE creates the RDF graph, it also uploads all such files in the appropriate fashion.
-  
+
 .. _machine_learning_script:
 
 ----------------
@@ -258,17 +267,35 @@ While the ultimate aim is for OCHRE to employ and generate complex models, there
 Existing MAR archives
 ^^^^^^^^^^^^^^^^^^^^^
 
-The simplest scenario::
+The simplest scenario is to pass in the location of a pre-existing MAR file::
 
-  $ python -m pyochre.machine_learning create --mar_url https://torchserve.pytorch.org/mar_files/maskrcnn.mar --name "Object detection" --signature_file https://github.com/comp-int-hum/ochre-python/raw/main/examples/object_detection_signature.ttl
+  $ python -m pyochre.machine_learning create --mar_file https://torchserve.pytorch.org/mar_files/maskrcnn.mar --name "CNN object detection" --signature_file https://github.com/comp-int-hum/ochre-python/raw/main/examples/object_detection_signature.ttl
 
 ^^^^^^^^^^^^
 Topic models
 ^^^^^^^^^^^^
 
+Topic models can be created by specifying a `SPARQL query <https://www.w3.org/TR/2013/REC-sparql11-overview-20130321/>`_ that selects text, and potentially spatial and temporal information::
+
+  $ python -m pyochre.machine_learning create --topic_model_query https://github.com/comp-int-hum/ochre-python/raw/main/examples/cdli_topic_query.sparql --name "Cuneiform topic model"
+
+The query may either have a `SELECT` statement of the form::
+
+  SELECT ?doc_identifier WHERE
+  
+with `doc_identifier` indicating documents on the OCHRE server, or with a `SELECT` statement of the form::
+
+  SELECT ?doc_number ?word ?title ?author ?temporal ?lat ?long WHERE
+
+Only `doc_number` and `word` are required to have values (an integer and string, respectively).  If they have values, `title` and `author` should be strings, `temporal` should be an `xsd:dateTime`, and `lat` and `long` should be real numbers indicating a coordinate in the `WGS84` projection (typically the values of a `geo:lat` or `geo:long` property, respectively).
+  
 ^^^^^^^^^^^^^^^^^^
 Huggingface models
 ^^^^^^^^^^^^^^^^^^
+
+Models on Huggingface may be importable directly::
+
+  $ python -m pyochre.machine_learning create --huggingface_model_name openai/whisper-tiny.en --name "Whispernet transcription" --signature_file https://raw.githubusercontent.com/comp-int-hum/ochre-python/main/examples/speech_transcription_signature.ttl
 
 ^^^^^^^^^^^^^
 Custom models
@@ -312,9 +339,9 @@ At this point you should be able to browse to http://localhost:8000 and interact
 Advanced topics
 ===============
 
---------------------------------------
-Converting a new primary source format
---------------------------------------
+------------------------------------
+Handling a new primary source format
+------------------------------------
 
 ---------------------------------------
 Running a full "production"-like server

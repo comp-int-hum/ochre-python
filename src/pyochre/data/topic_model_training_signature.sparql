@@ -1,0 +1,7 @@
+SELECT ?doc ?word WHERE
+{
+  ?doc ochre:hasPart ?token .
+  ?token ochre:isA ochre:Token .
+  ?token ochre:hasLabel ?word .
+  OPTIONAL {?token ochre:hasOrdinal ?order .}
+} ORDER BY ?order

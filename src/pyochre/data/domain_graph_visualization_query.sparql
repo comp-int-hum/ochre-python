@@ -1,0 +1,19 @@
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT DISTINCT ?s ?np ?sn ?rc ?pn ?cn ?dt
+WHERE
+{
+    ?s rdf:type sh:NodeShape .
+    ?s sh:name ?sn .
+    ?s sh:property ?p .
+    ?p sh:name ?pn .
+    ?p sh:path ?np .
+    optional {
+      ?p sh:class|(sh:or/sh:class) ?rc .
+      ?rc sh:name ?cn .
+    }
+    optional {
+      ?p sh:datatype ?dt .
+    }
+}

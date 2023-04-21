@@ -1,0 +1,120 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ochre:TopicModelInput
+    a ochre:Input ;
+    a sh:NodeShape ;
+    #sh:property [
+    #    sh:path ochre:hasPart ;
+    #    sh:minCount 1 ;
+    #   sh:class ochre:Token ;
+    #] ;
+    sh:target [
+        a sh:SPARQLTarget ;
+        sh:select """
+SELECT DISTINCT ?this WHERE
+{
+ ?this ochre:hasPart ?token .
+ ?token ochre:isA ochre:Token .
+ ?token ochre:hasValue ?tokenString .
+}
+""" ;
+    ] .
+#; ?token ochre:isA ochre:Token .
+
+
+
+
+_:TopicModelOutput
+    ochre:isA ochre:Output ;
+    ochre:isA sh:NodeShape .
+
+
+
+_:editor
+    ochre:isA ochre:EditorInteraction ;
+    ochre:hasDescription "Free text" ;
+    ochre:hasParameter (
+        [
+            ochre:hasLabel "endpoint" ;
+            ochre:hasValue "" ;
+        ]
+    ) .
+
+
+
+
+
+_:topics
+    ochre:isA ochre:TabularVisualization ;
+    ochre:hasDescription "Topic table" ;
+    ochre:hasParameter (
+        [
+            ochre:hasLabel "column_type" ;
+            ochre:hasValue ochre:Word ;
+        ]
+        [
+            ochre:hasLabel "column_ranked" ;
+            ochre:hasValue "true"^^xsd:boolean ;
+        ]
+        [
+            ochre:hasLabel "columns_sorted_by" ;
+            ochre:hasValue ochre:hasProbability ;
+        ]
+        [
+            ochre:hasLabel "column_limit" ;
+            ochre:hasValue 10 ;
+        ]
+        [
+            ochre:hasLabel "row_ranked" ;
+            ochre:hasValue "false"^^xsd:boolean ;
+        ]
+        [
+            ochre:hasLabel "row_type" ;
+            ochre:hasValue ochre:CategoricalDistribution ;
+        ]
+        [
+            ochre:hasLabel "rows_sorted_by" ;
+            ochre:hasValue ochre:hasOrdinal ;
+        ]
+        [
+            ochre:hasLabel "value_property" ;
+            ochre:hasValue ochre:hasProbability ;
+        ]
+    ) .
+
+     # ochre:hasColumnType ochre:Word ;
+     # ochre:isColumnRanked "true"^^xsd:boolean ;
+     # ochre:hasColumnsSortedBy ochre:hasProbability ;
+     # ochre:hasColumnLimit 10 ;
+     # ochre:isRowRanked "false"^^xsd:boolean ;
+     # ochre:hasRowType ochre:CategoricalDistribution ;
+     # ochre:hasRowsSortedBy ochre:ordinal ;
+     # ochre:hasValueProperty ochre:hasProbability .
+
+_:clouds
+    ochre:isA ochre:VegaVisualization ;
+    ochre:hasDescription "Word clouds" ;
+    ochre:hasParameter (
+        [
+            ochre:hasLabel "vega_class" ;
+            ochre:hasValue "WordCloud" ;
+        ]
+    ) .
+
+#ochre:hasLabel "WordCloud" .
+
+ # _:temporal
+ #     wdp:P31 ochre:VegaVisualization ;
+ #     wdp:P2561 "Word clouds" ;
+ #     ochre:specification "WordCloud" .
+
+ # _:categorical
+ #     wdp:P31 ochre:VegaVisualization ;
+ #     wdp:P2561 "Word clouds" ;
+ #     ochre:specification "WordCloud" .
+
+ # _:spatial
+ #     wdp:P31 ochre:VegaVisualization ;
+ #     wdp:P2561 "Word clouds" ;
+ #     ochre:specification "WordCloud" .

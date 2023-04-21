@@ -1,0 +1,16 @@
+SELECT ?s ?p ?o WHERE {
+  {
+    ?s ochre:isA ochre:TabularVisualization
+  } UNION {
+    ?s ochre:isA ochre:VegaVisualization
+  } UNION {
+    ?s ochre:isA ochre:EditorInteraction
+  } UNION {
+    ?s ochre:isA ochre:ImageRecorder
+  } UNION {
+    ?s ochre:isA ochre:AudioRecorder
+  } UNION {
+    ?s ochre:isA ochre:TextEditor
+  }
+  ?s ?p ?o .
+}

@@ -1,0 +1,24 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+
+_:SpeechTranscriptionInput
+    a ochre:Input ;
+    a sh:NodeShape ;
+    a ochre:Audio .
+
+
+_:SpeechTranscriptionOutput
+    ochre:isA ochre:Output ;
+    ochre:isA sh:NodeShape .
+
+
+_:recorder
+    ochre:isA ochre:AudioRecorder ;
+    ochre:hasDescription "Record" ;
+    ochre:hasParameter (
+        [
+            ochre:hasLabel "endpoint" ;
+            ochre:hasValue "" ;
+        ]
+    ) .

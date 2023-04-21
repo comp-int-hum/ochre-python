@@ -1,0 +1,23 @@
+CONSTRUCT {
+  ?doc ochre:hasPart ?token .
+  ?token ochre:hasLabel ?word .
+  #?doc ochre:hasDate ?date .
+  #?doc ochre:hasLatitude ?lat .
+  #?doc ochre:hasLongitude ?lon .
+  #?doc ochre:hasTag ?tag .
+} WHERE
+{
+  ?doc ochre:hasPart ?token .
+  ?token ochre:isA ochre:Token .
+  ?token ochre:hasLabel ?word .
+  #OPTIONAL {
+  #  ?doc ochre:hasDate ?date .
+  #}
+  #OPTIONAL {
+  #  ?doc ochre:hasTag ?tag .
+  #}  
+  #OPTIONAL {
+  #  ?doc ochre:hasLatitude ?lat .
+  #  ?doc ochre:hasLongitude ?lon .
+  #}
+}

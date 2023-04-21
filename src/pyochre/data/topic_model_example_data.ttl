@@ -1,0 +1,14 @@
+@prefix ochre: <urn:ochre:> .
+
+ochre:test ochre:hasPart
+    [
+        a ochre:Token ;
+    ] ,
+    [
+        a ochre:Token ;
+    ] .
+
+
+
+
+

@@ -1,0 +1,8 @@
+SELECT DISTINCT ?st ?p ?ot ?odt WHERE {
+  ?s ?p ?o .
+  ?s ochre:isA ?st .
+  OPTIONAL {
+    ?o ochre:isA ?ot .
+  }
+  BIND(IF(ISLITERAL(?o), DATATYPE(?o), "") as ?odt)
+}

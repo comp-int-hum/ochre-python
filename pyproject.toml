@@ -1,18 +1,78 @@
-from setuptools import setup #, find_packages
+[metadata]
+name = "pyochre"
 
-setup()
+[options]
+package_dir = "src"
+#packages = find:
 
-# with open('README.rst') as f:
-#     long_description = f.read()
+[options.packages.find]
+where = "src"
 
-# setup(
-#     name='pyochre',
-#     version='0.0.5',
-#     description='Client and server for the Open Computational Humanities Research Ecosystem (OCHRE)',
-#     long_description=long_description,
-#     author='Tom Lippincott',
-#     author_email='tom.lippincott@jhu.edu',
-#     url='https://github.com/comp-int-hum/ochre-python',
+[options.package_data]
+pyochre.data = "*.ttl"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyochre"
+version = "0.0.5"
+readme = "README.rst"
+authors = [
+  {name = "Tom Lippincott", email="tom.lippincott@jhu.edu"}
+]
+maintainers = [
+  {name = "Tom Lippincott", email="tom.lippincott@jhu.edu"}
+]
+keywords = []
+description = ""
+classifiers = []
+requires-python = ">=3.9"
+dependencies = [
+        "captum",
+        "celery",
+	"datasets",
+        "django",
+        "djangorestframework",
+        "django-cors-headers",
+        "django-debug-toolbar",
+        "django-environ",
+        "django-extensions",
+        "django-guardian",
+        "django-mptt",
+        "django-registration",
+        "django-sekizai",
+        "drf-nested-routers",
+        "gensim",
+        "jsonpath-python",
+        "jsonpath_ng",
+	"lxml",
+        "pairtree",
+        "python-dotenv",
+        "rdflib",
+        "redis",
+        "requests",
+        "spacy",
+	"timm",
+        "torch",
+	"torchaudio",
+	"torchserve",
+        "torchvision",
+        "torch-model-archiver",
+        "transformers",
+	"uritemplate",
+        "watchdog",
+        "https://github.com/django-wiki/django-wiki.git",
+        "wikidata"
+]
+
+[project.urls]
+repository = 'https://github.com/comp-int-hum/ochre-python'
+
+
+
+# [project.provides]
 #     packages=[
 #         "pyochre",
 #         "pyochre.utils",
@@ -45,6 +105,7 @@ setup()
 #             "widgets"
 #         ]
 #     ],
+
 #     install_requires=[
 #         "captum",
 #         "celery",
@@ -89,4 +150,3 @@ setup()
 #         ]
 #     },
 #     include_package_data=True
-# )

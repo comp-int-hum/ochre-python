@@ -35,7 +35,7 @@ class OntologyViewSet(ViewSet):
     )
 
     def retrieve(self, request, pk=None):
-        ontology_string = files("pyochre.data").joinpath("ochre.ttl").read_text()
+        ontology_string = files("pyochre").joinpath("data/ochre.ttl").read_text()
         g = Graph()
         g.parse(
             data="@prefix ochre: <{}> .\n{}".format(

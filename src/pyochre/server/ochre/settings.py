@@ -64,6 +64,7 @@ env = environ.Env(
     LDAP_GROUP_BASE_COMPONENTS = (list, ["ou=groups"]),
     LDAP_BIND_PASSWORD = (str, "CHANGE_ME"),
     LDAP_CERT_FILE = (str, ""),
+    LDAP_SERVER_URI = (str, "ldap://localhost:389/"),
     
     OCHRE_NAMESPACE = (str, "https://cdh.jhu.edu/ontology/"),
 )
@@ -397,7 +398,7 @@ if USE_LDAP:
     #
     #
     AUTH_LDAP_CERT_FILE = env("LDAP_CERT_FILE")
-    AUTH_LDAP_SERVER_URI = "ldap://localhost:1389/"
+    AUTH_LDAP_SERVER_URI = env("LDAP_SERVER_URI")
     AUTH_LDAP_USER_SEARCH = LDAPSearch(
         LDAP_USER_BASE, ldap.SCOPE_SUBTREE, "(uid=%(user)s)"
     )
@@ -410,7 +411,8 @@ if USE_LDAP:
     AUTH_LDAP_ADMIN_CN = "admin"
     AUTH_LDAP_BIND_DN = "cn={},{}".format(AUTH_LDAP_ADMIN_CN, LDAP_ROOT_BASE)
     AUTH_LDAP_BIND_PASSWORD_FILE = env("AUTH_LDAP_BIND_PASSWORD_FILE")
-    AUTH_LDAP_BIND_PASSWORD = "CHANGE_ME"
+    with open(AUTH_LDAP_BIND_PASSWORD_FILE, "rt") as ifd:
+        AUTH_LDAP_BIND_PASSWORD = ifd.read()
     AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn", "email" : "mail"}
 
 LOGIN_REDIRECT_URL = '/'
@@ -425,7 +427,8 @@ DATABASES = {
         'HOST' : env("POSTGRES_HOST"),
         'NAME': env("POSTGRES_DB_NAME"),
         'USER': env("POSTGRES_USER"),
-        'PASSWORD' : env("POSTGRES_PASSWORD")
+        'PASSWORD' : env("POSTGRES_PASSWORD"),
+        "PORT" : env("POSTGRES_PORT")
     } if USE_POSTGRES else {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': DATA_DIR / 'db.sqlite3',

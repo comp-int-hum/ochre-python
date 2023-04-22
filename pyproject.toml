@@ -44,6 +44,7 @@ dependencies = [
         "django-registration",
         "django-sekizai",
         "drf-nested-routers",
+	"gunicorn",
         "gensim",
         "jsonpath-python",
         "jsonpath_ng",
@@ -66,7 +67,7 @@ dependencies = [
         "wiki @ https://github.com/django-wiki/django-wiki/archive/refs/heads/main.zip",
         "wikidata"
 ]
-
+# python-ldap django-auth-ldap psycopg2
 [project.urls]
 repository = 'https://github.com/comp-int-hum/ochre-python'
 

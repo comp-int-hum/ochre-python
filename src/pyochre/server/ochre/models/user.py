@@ -6,6 +6,10 @@ from django.contrib.auth.models import AbstractUser
 from pyochre.server.ochre.models import OchreModel
 
 
+if settings.USE_LDAP:
+    import ldap
+
+
 logger = logging.getLogger(__name__)
 
 
@@ -33,7 +37,7 @@ class User(AbstractUser, OchreModel):
             if settings.AUTH_LDAP_START_TLS == True:
                 ld.set_option(
                     ldap.OPT_X_TLS_CACERTFILE,
-                    settings.LDAP_CERTFILE
+                    settings.AUTH_LDAP_CERT_FILE
                 )
                 ld.set_option(
                     ldap.OPT_X_TLS_REQUIRE_CERT,

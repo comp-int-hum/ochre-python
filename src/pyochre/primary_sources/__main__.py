@@ -163,8 +163,8 @@ def create_primary_source(args, connection):
     #            materials[s] = (fname, potential_materials[s])
     #        else:
     #            ignore.add(s)
-                
-    for s, p, o in g:
+    every = 10000
+    for i, (s, p, o) in enumerate(g):
         #if s in ignore or o in ignore:
         #    continue
         for n in [s, p, o]:
@@ -177,7 +177,11 @@ def create_primary_source(args, connection):
                 o
             )
         )
-    store.commit()
+        if i % every == 0:
+            store.commit()
+    if i % every != 0:
+        store.commit()
+        
     ng = dataset.graph(
         OCHRE["{}_domain".format(obj["id"])]
     )

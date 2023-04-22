@@ -43,7 +43,7 @@ class Command(object):
 
         for k, v in dotenv_values(args.ochre_config).items():
             if getattr(args, k, None) == None:                
-                setattr(args, k.lower() if k in ["USER", "PASSWORD"] else k, v)
+                setattr(args, k.lower() if k in ["USER", "PASSWORD", "HOSTNAME", "PORT", "PROTOCOL"] else k, v)
 
         connection = Connection(vars(args))
 

@@ -91,12 +91,12 @@ def import_huggingface_model(name, user_id, huggingface_name):
 
     signature_type = "object_detection" if handler_type == "image" else "speech_transcription" if handler_type == "audio" else "generative_text" if handler_type == "text" else None
     sg = Graph()
-    sg.parse(data="PREFIX ochre: <{}>\n".format(settings.OCHRE_NAMESPACE) + files("pyochre.data").joinpath("{}_signature.ttl".format(signature_type)).read_text(), format="turtle")
+    sg.parse(data="PREFIX ochre: <{}>\n".format(settings.OCHRE_NAMESPACE) + files("pyochre").joinpath("data/{}_signature.ttl".format(signature_type)).read_text(), format="turtle")
     signature_string = sg.skolemize().serialize(format="turtle")
     
     
     #handler = files("pyochre.data").joinpath("{}_handler.py".format(handler_type)).read_text()
-    handler = files("pyochre.data").joinpath("huggingface_handler.py").read_text()
+    handler = files("pyochre").joinpath("data/huggingface_handler.py").read_text()
     with zipfile.ZipFile(mar_fname, "w") as zfd:
         with zfd.open("MAR-INF/MANIFEST.json", "w") as ofd:
             ofd.write(json.dumps(meta).encode())

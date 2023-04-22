@@ -13,7 +13,7 @@ OCHRE = Namespace(OCHRE_NAMESPACE)
 
 
 def create_domain(connection, primarysource):
-    domain_query = files("pyochre.data").joinpath("domain_query.sparql").read_text()
+    domain_query = files("pyochre").joinpath("data/domain_query.sparql").read_text()
     entities = {}
     for binding in Result.parse(
             source=io.StringIO(

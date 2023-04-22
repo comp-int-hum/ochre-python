@@ -157,8 +157,8 @@ if __name__ == "__main__":
 
     h.query = "PREFIX ochre: <{}>\n".format(
         settings.OCHRE_NAMESPACE
-    ) + files("pyochre.data").joinpath(
-        "topic_model_input_signature.sparql"
+    ) + files("pyochre").joinpath(
+        "data/topic_model_input_signature.sparql"
     ).read_text()
 
     
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     res = h.handle(
         [
             {
-                "data" : "this is a test melodye" #g.serialize(format="turtle")
+                "data" : b"this is a test melodye" #g.serialize(format="turtle")
             }
         ],
         {}

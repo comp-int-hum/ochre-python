@@ -67,8 +67,8 @@ class EpochLogger(Metric):
 
 def create_topic_model_mar(topic_model, name, fname):
     #from importlib.resources import files
-    handler_string = files("pyochre.data").joinpath("topic_model_handler.py").read_text()
-    query_string = files("pyochre.data").joinpath("topic_model_input_signature.sparql").read_text()
+    handler_string = files("pyochre").joinpath("data/topic_model_handler.py").read_text()
+    query_string = files("pyochre").joinpath("data/topic_model_input_signature.sparql").read_text()
     meta = {
         "runtime" : "python",
         "modelServerVersion": "1.0",
@@ -97,12 +97,12 @@ def create_topic_model_mar(topic_model, name, fname):
 @shared_task
 def train_topic_model(name, user_id, query_id, primarysource_id, *argv, **argd):
     from importlib.resources import files
-    signature_string = "@prefix ochre: <{}> .\n".format(settings.OCHRE_NAMESPACE) + files("pyochre.data").joinpath("topic_model_signature.ttl").read_text()
+    signature_string = "@prefix ochre: <{}> .\n".format(settings.OCHRE_NAMESPACE) + files("pyochre").joinpath("data/topic_model_signature.ttl").read_text()
     training_query_string = """PREFIX ochre: <{}>
         {}
         """.format(
             settings.OCHRE_NAMESPACE,
-            files("pyochre.data").joinpath("topic_model_training_signature.sparql").read_text()
+            files("pyochre").joinpath("data/topic_model_training_signature.sparql").read_text()
         )
 
     user = User.objects.get(id=user_id)

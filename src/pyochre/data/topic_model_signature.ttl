@@ -81,20 +81,20 @@ _:topics
             ochre:hasLabel "value_property" ;
             ochre:hasValue ochre:hasProbability ;
         ]
-    ) .
-
-     # ochre:hasColumnType ochre:Word ;
-     # ochre:isColumnRanked "true"^^xsd:boolean ;
-     # ochre:hasColumnsSortedBy ochre:hasProbability ;
-     # ochre:hasColumnLimit 10 ;
-     # ochre:isRowRanked "false"^^xsd:boolean ;
-     # ochre:hasRowType ochre:CategoricalDistribution ;
-     # ochre:hasRowsSortedBy ochre:ordinal ;
-     # ochre:hasValueProperty ochre:hasProbability .
+    ) ;
+     ochre:hasColumnType ochre:Word ;
+     ochre:isColumnRanked "true"^^xsd:boolean ;
+     ochre:hasColumnsSortedBy ochre:hasProbability ;
+     ochre:hasColumnLimit 10 ;
+     ochre:isRowRanked "false"^^xsd:boolean ;
+     ochre:hasRowType ochre:CategoricalDistribution ;
+     ochre:hasRowsSortedBy ochre:ordinal ;
+     ochre:hasValueProperty ochre:hasProbability .
 
 _:clouds
     ochre:isA ochre:VegaVisualization ;
     ochre:hasDescription "Word clouds" ;
+    ochre:hasLabel "WordCloud";
     ochre:hasParameter (
         [
             ochre:hasLabel "vega_class" ;

@@ -11,7 +11,7 @@ function initializeAudioInteraction(elem){
 	    const constraints = { audio: true };
 	    navigator.mediaDevices.getUserMedia(constraints).then(
 		(stream) => {
-		    const mediaRecorder = new MediaRecorder(stream);
+		    const mediaRecorder = new MediaRecorder(stream, {audioBitsPerSecond: 44100});
 		    rbut.onclick = () => {
 			if(mediaRecorder.state == "recording"){
 			    mediaRecorder.stop();
@@ -526,7 +526,7 @@ function ochreSetup(root, htmxSwap){
 					    var decorations = [];
 					    for(let item of output){
 						var value = item["token"];
-						console.error(value);
+						console.error(item);
 						var interp = " ";
 						if(newValue.length == 0){
 						    interp = "";

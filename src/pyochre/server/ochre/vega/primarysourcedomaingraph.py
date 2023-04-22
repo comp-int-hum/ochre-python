@@ -21,8 +21,8 @@ class PrimarySourceDomainGraph(OchreVisualization):
 
     def __init__(self, object, prefix=None):
         self.prefix = prefix
-        query = files("pyochre.data").joinpath(
-            "domain_graph_visualization_query.sparql"
+        query = files("pyochre").joinpath(
+            "data/domain_graph_visualization_query.sparql"
         ).read_text()
         entities, relationships, properties = {}, [], []
         for s, np, sn, rc, pn, cn, dt in object.domain.query(query):

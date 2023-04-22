@@ -170,11 +170,19 @@ class MachineLearningModel(AsyncMixin, OchreModel):
         if "properties_file" in argd:
             if not create:                
                 self.delete_properties()
+            g = rdflib.Graph()
+            g.parse(source=argd["properties_file"])
+            every = 10000
             store = rdf_store(settings=settings, autocommit=False)
             ds = rdflib.Dataset(store=store)
-            g = ds.graph(self.properties_uri)
-            g.parse(source=argd["properties_file"])
-            store.commit()
+            pg = ds.graph(self.properties_uri)
+            for i, tr in enumerate(g):
+                pg.add(tr)
+                if i % every == 0:
+                    store.commit()
+                    print(i)
+            if i % every != 0:
+                store.commit()
         if "mar_file" in argd:
             if not create:
                 self.delete_from_torchserve()

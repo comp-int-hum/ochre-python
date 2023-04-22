@@ -1,4 +1,5 @@
 from ts.torch_handler.base_handler import BaseHandler
+import subprocess
 import os.path
 import base64
 import io
@@ -32,10 +33,15 @@ class Handler(BaseHandler):
         return [{"token" : t} for t in self.pipeline(document.decode("utf-8"), max_new_tokens=1)[0]["generated_text"].split(" ")]
     
     def process_audio(self, ifd):
-        _, fname = tempfile.mkstemp()
+        #_, fname = tempfile.mkstemp()
+        _, fname = tempfile.mkstemp(suffix=".ogg")
         try:
             with open(fname, "wb") as ofd:
-                ofd.write(ifd)                
+                ofd.write(ifd)
+            #pid = subprocess.Popen(["ffmpeg", "-i", "-", fname], stdin=subprocess.PIPE)
+            #pid.communicate(ifd)
+            
+            #subprocess.run(["ffmpeg", "-i", fnameA, fnameB])
             audio, freq = torchaudio.load(fname)
             transf = torchaudio.transforms.Resample(freq, 16000)
             taudio = transf(audio).mean(axis=0)
@@ -45,8 +51,9 @@ class Handler(BaseHandler):
             return {"transcript" : transcription}
         except Exception as e:
             raise Exception()
-        finally:
-            os.remove(fname)
+        #finally:
+        #    os.remove(fname)
+
             
     def process_image(self, ifd):
         image = Image.open(io.BytesIO(ifd))

@@ -27,7 +27,7 @@ class TemporalEvolution(OchreVisualization):
 
     def __init__(self, values, prefix=None):
         store = rdf_store(settings=settings)
-        query_string = "PREFIX ochre: <{}>\n".format(settings.OCHRE_NAMESPACE) + files("pyochre.data").joinpath("temporal_evolution_query.sparql").read_text() % {
+        query_string = "PREFIX ochre: <{}>\n".format(settings.OCHRE_NAMESPACE) + files("pyochre").joinpath("data/temporal_evolution_query.sparql").read_text() % {
             "data" : values.primarysource.data_uri,
             "annotation" : values.uri
         }

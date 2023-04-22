@@ -13,25 +13,9 @@ from rdflib.namespace import RDF, RDFS, Namespace
 
 
 OCHRE = Namespace(settings.OCHRE_NAMESPACE)
-#WDE = Namespace("http://www.wikidata.org/entity/")
-#WDP = Namespace("http://www.wikidata.org/prop/direct/")
 
 
 logger = logging.getLogger(__name__)
-
-
-#input_widget_map = {
-#    WDE["Q26987229"] : AudioWidget,
-#    WDE["Q86920"] : MonacoEditorWidget,
-#    WDE["Q860625"] : ImageWidget
-#}
-
-
-#output_widget_map = {
-#    WDE["Q26987229"] : AudioWidget,
-#    WDE["Q86920"] : MonacoEditorWidget,
-#    WDE["Q860625"] : ImageWidget
-#}
 
 
 widget_map = {
@@ -60,8 +44,8 @@ class MachineLearningModelInteractionField(Field):
         sig = object.signature
         in_field, out_field = None, None
         in_widget = None
-        mvq_string = files("pyochre.data").joinpath(
-            "model_visualization_query.sparql"
+        mvq_string = files("pyochre").joinpath(
+            "data/model_visualization_query.sparql"
         ).read_text()
         #print(argv, argd)
         for s, p, o in sig.triples((None, OCHRE["simpleFormat"], None)):

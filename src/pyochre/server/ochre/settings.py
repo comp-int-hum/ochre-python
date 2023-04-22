@@ -10,13 +10,13 @@ import requests
 env = environ.Env(
 
     DEBUG = (bool, False),
-    ENVIRONMENT = (str, os.path.expanduser("~/ochre/env")),
+    ENVIRONMENT = (str, "env"),
     
     PROTO = (str, "http"),
     HOSTNAME = (str, "localhost"),
     IP = (str, "127.0.0.1"),
     PORT = (int, 8000),
-
+    
     DATA_DIR = (str, os.path.expanduser("~/ochre")),
     
     INDEX_TEMPLATE = (str, ""),
@@ -225,7 +225,7 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'INFO',
+        'level': 'DEBUG',
     },
     "loggers" : {
         'django': {
@@ -243,7 +243,7 @@ LOGGING = {
 
 ALLOWED_HOSTS = [HOSTNAME, IP]
 PROTO = env("PROTO")
-CSRF_TRUSTED_ORIGINS = ["{}://{}".format(PROTO, HOSTNAME)]
+CSRF_TRUSTED_ORIGINS = ["{}://{}".format(PROTO, HOSTNAME), "{}://{}:{}".format(PROTO, HOSTNAME, PORT)]
 USE_X_FORWARDED_HOST = HOSTNAME != "localhost"
 DEBUG = env("DEBUG")
 INTERNAL_IPS = [
@@ -271,7 +271,7 @@ INSTALLED_APPS = [
     'wiki.plugins.images.apps.ImagesConfig',
     'wiki.plugins.attachments.apps.AttachmentsConfig'
 ] + (
-    ['django.contrib.staticfiles'] if HOSTNAME == "localhost" else []
+    ['django.contrib.staticfiles'] #if HOSTNAME == "localhost" else []
 ) + [
     'rest_framework',
     'django_extensions',
@@ -291,7 +291,6 @@ ANONYMOUS = True
 
 
 SITE_ID = 1
-X_FRAME_OPTIONS = "sameorigin"
 
 
 WIKI_USE_BOOTSTRAP_SELECT_WIDGET= False

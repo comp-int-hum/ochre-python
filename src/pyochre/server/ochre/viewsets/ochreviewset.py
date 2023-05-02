@@ -11,12 +11,14 @@ from guardian.shortcuts import get_perms, get_objects_for_user, get_anonymous_us
 from pyochre.server.ochre.renderers import OchreTemplateHTMLRenderer
 from pyochre.server.ochre.content_negotiation import OchreContentNegotiation
 from pyochre.server.ochre.models import Slide, User
-
+from pyochre.server.ochre.autoschemas import OchreAutoSchema
 
 logger = logging.getLogger(__name__)
 
 
 class OchreViewSet(ModelViewSet):
+
+
     content_negotiation_class = OchreContentNegotiation
     renderer_classes = [
         BrowsableAPIRenderer,
@@ -29,6 +31,9 @@ class OchreViewSet(ModelViewSet):
     model = None
     exclude = {}
     accordion_header_template_name = None
+
+    def __init__(self, *argv, **argd):
+        super(ModelViewSet, self).__init__(*argv, **argd)
     
     def get_queryset(self):
         perms = "{}_{}".format(
@@ -221,24 +226,24 @@ class OchreViewSet(ModelViewSet):
                 code=status.HTTP_403_FORBIDDEN
             )
         
-    @action(detail=True, methods=["get", "patch"])
-    def permissions(self, request, pk=None):
-        obj = self.model.objects.get(id=pk)
-        retval = {}
-        user_perms = get_users_with_perms(
-            obj,
-            with_group_users=False,
-            attach_perms=True
-        )
-        group_perms = get_groups_with_perms(
-            obj,
-            attach_perms=True
-        )
-        retval["user_permissions_options"] = [
-            (u.get_absolute_url(), [p.split("_")[0] for p in user_perms.get(u, [])]) for u in User.objects.all()
-        ]
-        retval["group_permissions_options"] = [
-            (g.id, [p.split("_")[0] for p in group_perms.get(g, [])]) for g in Group.objects.all()
-        ]
-        retval["perms"] = ["delete", "view", "change"]
-        return Response(retval)
+    # @action(detail=True, methods=["get", "patch"])
+    # def permissions(self, request, pk=None):
+    #     obj = self.model.objects.get(id=pk)
+    #     retval = {}
+    #     user_perms = get_users_with_perms(
+    #         obj,
+    #         with_group_users=False,
+    #         attach_perms=True
+    #     )
+    #     group_perms = get_groups_with_perms(
+    #         obj,
+    #         attach_perms=True
+    #     )
+    #     retval["user_permissions_options"] = [
+    #         (u.get_absolute_url(), [p.split("_")[0] for p in user_perms.get(u, [])]) for u in User.objects.all()
+    #     ]
+    #     retval["group_permissions_options"] = [
+    #         (g.id, [p.split("_")[0] for p in group_perms.get(g, [])]) for g in Group.objects.all()
+    #     ]
+    #     retval["perms"] = ["delete", "view", "change"]
+    #     return Response(retval)

@@ -7,8 +7,9 @@ logger = logging.getLogger(__name__)
 
 
 class Slide(OchreModel):
+    class Meta(OchreModel.Meta):
+        verbose_name_plural = "Slides"
     article = TextField(blank=True, null=True)
     image = ImageField(blank=True, upload_to="slides")
     
-    class Meta:
-        verbose_name_plural = "Slides"
+        

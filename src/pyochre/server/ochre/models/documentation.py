@@ -10,6 +10,11 @@ logger = logging.getLogger(__name__)
 
 
 class Documentation(OchreModel):
+    class Meta(OchreModel.Meta):
+        indexes = [
+            Index(fields=["referent_type", "referent_id"]),
+        ]
+
     content = TextField(blank=True, null=True)
     view_name = CharField(
         null=True,
@@ -32,11 +37,6 @@ class Documentation(OchreModel):
         'referent_type',
         'referent_id',
     )
-    
-    class Meta:
-        indexes = [
-            Index(fields=["referent_type", "referent_id"]),
-        ]
 
     def render(self):
         return markdown.markdown(self.content)

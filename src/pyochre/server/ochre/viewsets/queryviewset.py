@@ -6,6 +6,7 @@ from pyochre.server.ochre.viewsets import OchreViewSet
 from pyochre.server.ochre.serializers import QuerySerializer, QueryInteractiveSerializer
 from pyochre.server.ochre.models import Query, PrimarySource
 from pyochre.server.ochre.renderers import OchreTemplateHTMLRenderer
+from pyochre.server.ochre.autoschemas import OchreAutoSchema
 
 
 logger = logging.getLogger(__name__)
@@ -13,7 +14,8 @@ logger = logging.getLogger(__name__)
 
 class QueryViewSet(OchreViewSet):
     model = Query
-    schema = AutoSchema(
+    queryset = Query.objects.all()
+    schema = OchreAutoSchema(
         tags=["query"],
         component_name="query",
         operation_id_base="query",

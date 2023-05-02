@@ -8,11 +8,11 @@ from pyochre.utils import rdf_store
 logger = logging.getLogger(__name__)
 
 
-class Query(OchreModel):    
-    sparql = TextField()
-
-    class Meta:
+class Query(OchreModel):
+    class Meta(OchreModel.Meta):
         verbose_name_plural = "Queries"
+    sparql = TextField()
+        
 
     #def save(self, *argv, **argd):
     #    print(argv, argd)

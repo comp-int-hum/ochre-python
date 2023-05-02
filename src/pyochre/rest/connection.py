@@ -1,6 +1,7 @@
 import logging
 from requests import Session
 import yaml
+from pyochre import env
 
 
 logger = logging.getLogger(__name__)
@@ -8,44 +9,66 @@ logger = logging.getLogger(__name__)
 
 class Connection(Session):
 
-    def __init__(self, config):
+    def __init__(self, config=None):
         super(Connection, self).__init__()
-        self.user = config.get("user")
+        self.user = env("USER") #config.get("USER")
         self.session = Session()
         if self.user:
-            self.session.auth = (self.user, config.get("password"))
+            self.session.auth = (self.user, env("PASSWORD"))
 
         self.session.headers = {"Accept" : "application/vnd.oai.openapi"}            
         x = self.session.get(
-            "{protocol}://{hostname}:{port}/openapi/".format(**config),
+            "{PROTOCOL}://{HOSTNAME}:{PORT}/openapi/".format(
+                PROTOCOL=env("PROTOCOL"),
+                HOSTNAME=env("HOSTNAME"),
+                PORT=env("PORT")
+            )
+            #**config),
         )
         self.openapi = yaml.load(x.text, Loader=yaml.FullLoader)
             
         self.session.headers = {"Accept" : "application/json"}
-        self.hostname = "{protocol}://{hostname}/".format(**config)
-        self.base_url = "{protocol}://{hostname}:{port}{path}/".format(**config)
+        # self.url = "{PROTOCOL}://{HOSTNAME}/".format(
+        #     PROTOCOL=env("PROTOCOL"),
+        #     HOSTNAME=env("HOSTNAME")
+        # )
+        #     #**config)
+        # self.base_url = "{PROTOCOL}://{HOSTNAME}:{PORT}/".format(
+        #     PROTOCOL=env("PROTOCOL"),
+        #     HOSTNAME=env("HOSTNAME"),
+        #     PORT=env("PORT"),
+        # )
+        # #**config)
 
 
-        try:
-            resp = self.session.get(self.base_url)
-        except Exception as e:
-            logger.info(
-                "Could not connect to OCHRE server: %s",
-                e
-            )
-            return
-        if resp.status_code == 403:
-            logger.warn("Connected to, but could not authenticate with, server with user '%s' and the provided password.  Falling back to AnonymousUser.", self.user)
-            self.session.auth = None
-            resp = self.session.get(self.base_url)
-        if resp.status_code != 200:
-            logger.warn("Could not connect to server via '%s://%s:%s%s/'", config.get("protocol"), config.get("hostname"), config.get("port"), config.get("path"))
-            raise Exception(resp.reason)
-        self.endpoints = resp.json()
+        # try:
+        #     resp = self.session.get(self.base_url)
+        # except Exception as e:
+        #     logger.info(
+        #         "Could not connect to OCHRE server: %s",
+        #         e
+        #     )
+        #     return
+        # if resp.status_code == 403:
+        #     logger.warn("Connected to, but could not authenticate with, server with user '%s' and the provided password.  Falling back to AnonymousUser.", self.user)
+        #     self.session.auth = None
+        #     resp = self.session.get(self.base_url)
+        # if resp.status_code != 200:
+        #     logger.warn("Could not connect to server via '%s'", self.base_url)
+        #     raise Exception(resp.reason)
+        # print(resp.content, 123123)
+        #self.types = self.openapi["components"]["schemas"].keys()
+        # type=object, properties, some properties w/ readOnly!=True
+        #print(self.openapi["paths"].keys())
+        
+        
+        #sys.exit()
+        #self.endpoints = resp.json()
 
     def action(self, action_name, url, data=None, expected=None, files={}):
         files = {k : open(v, "rb") if isinstance(v, str) else v for k, v in files.items()}
         resp = getattr(self.session, action_name)(url, data=data, files=files)
+        return resp
         if expected and resp.status_code != expected:
             raise Exception("Expected {} but got {} ({})".format(expected, resp.status_code, resp.reason))
         try:

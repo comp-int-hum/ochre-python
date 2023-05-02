@@ -29,13 +29,21 @@ class JsonParser(TreeBuilder):
         else:
             self.data(str(value))
     
-    def __call__(self, fd):
-        self.start("document", {})
-        self.handle_value(
-            {k : v for k, v in json.loads(fd.read()).items()}
-        )
-        self.end("document")
-        return self.close()
+    def __call__(self, fd, split=False):
+        j = json.loads(fd.read())
+        if split:            
+            for sub in j.items() if isinstance(j, dict) else j:
+                self.start("document", {})
+                self.handle_value(
+                    {sub[0] : sub[1]} if isinstance(j, dict) else [sub]
+                )
+                self.end("document")
+                yield self.close()
+        else:
+            self.start("document", {})
+            self.handle_value(j)
+            self.end("document")
+            yield self.close()
 
 
 class JsonLineParser(TreeBuilder):

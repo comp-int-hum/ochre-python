@@ -21,7 +21,7 @@ from pyochre.server.ochre.routers import OchreRouter
 from pyochre.server.ochre.viewsets import OchreViewSet, PrimarySourceViewSet, MaterialViewSet, DocumentationViewSet, UserViewSet, MachineLearningModelViewSet, QueryViewSet, SlideViewSet, ResearchArtifactViewSet, AnnotationViewSet, PermissionsViewSet, OntologyViewSet
 from pyochre.server.ochre.models import ResearchArtifact, Slide
 from pyochre.server.ochre.serializers import ResearchArtifactSerializer
-
+from pyochre.server.ochre.schemagenerators import OchreSchemaGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +54,7 @@ for vs in [
         UserViewSet,
         DocumentationViewSet,
         PermissionsViewSet,
+        OntologyViewSet
         # MarkdownViewSet,
         # SparqlViewSet,
         ]:    
@@ -182,6 +183,7 @@ urlpatterns = [
             title="Programmatic Interface",
             description="API for OCHRE server",
             version="1.0.0",
+            generator_class=OchreSchemaGenerator
         ),
         name='openapi-schema'
     ),
@@ -189,7 +191,7 @@ urlpatterns = [
         'ontology/',
         OntologyViewSet.as_view(
             actions={"get" : "retrieve"},
-            #template_name="ochre/template_pack/ontology.html",
+            template_name="ochre/template_pack/ontology.html",
         ),
         name='ontology'
     )

@@ -95,7 +95,25 @@ def create_topic_model_mar(topic_model, name, fname):
     
 
 @shared_task
-def train_topic_model(name, user_id, query_id, primarysource_id, *argv, **argd):
+def train_topic_model(
+        primarysource_id,        
+        query_id,
+        user_id,
+        name,
+        topic_count,
+        stopwords,
+        random_seed,
+
+        passes,
+        iterations,
+        lowercase,
+        maximum_context_tokens,
+        minimum_token_length,
+        maximum_vocabulary_size,
+        maximum_proportion,
+        minimum_occurrence,
+        maximum_documents=50000,
+):
     from importlib.resources import files
     signature_string = "@prefix ochre: <{}> .\n".format(settings.OCHRE_NAMESPACE) + files("pyochre").joinpath("data/topic_model_signature.ttl").read_text()
     training_query_string = """PREFIX ochre: <{}>
@@ -106,38 +124,19 @@ def train_topic_model(name, user_id, query_id, primarysource_id, *argv, **argd):
         )
 
     user = User.objects.get(id=user_id)
-    query = Query.objects.get(id=query_id)
+    query = Query.objects.get(id=query_id) if query_id else None
     primarysource = PrimarySource.objects.get(id=primarysource_id)
-    random_seed = argd.get("random_seed", 0)
-    maximum_documents = argd.get("maximum_documents", 40000)
-    stopwords = argd.get("stopwords", [])
-    maximum_context_tokens = argd.get("maximum_context_tokens", 50)
-    split_pattern = argd.get("split_pattern", r"\s+")    
-    token_pattern_in = argd.get("token_pattern_in", r"(\S+)")
-    token_pattern_out = argd.get("token_pattern_out", r"\1")
-    lowercase = argd.get("lowercase", False)
-    minimum_occurrence = argd.get("minimum_occurrence", 1)
-    maximum_proportion = argd.get("maximum_proportion", 1.0)
-    minimum_token_length = argd.get("minimum_token_length", 1)
-    maximum_vocabulary_size = argd.get("maximum_vocabulary_size", 50000)
-    topic_count = int(argd.get("topic_count", 20))
-    iterations = argd.get("iterations", 100)
-    passes = argd.get("passes", 100)
-    models = MachineLearningModel.objects.filter(name=name, created_by=user)
-
-    if len(models) == 1:
-        model = models[0]        
-        model.metadata["passes"] = passes
-        model.message = "Preparing training data"
-    else:
-        model = MachineLearningModel(
-            created_by=user,
-            name=name,
-            message="Preparing training data",
-            metadata={
-                "passes" : passes
-            }
-        )        
+    split_pattern = r"\s+"
+    token_pattern_in = r"(\S+)"
+    token_pattern_out = r"\1"
+    model = MachineLearningModel(
+        created_by=user,
+        name=name,
+        message="Preparing training data",
+        metadata={
+            "passes" : passes
+        }
+    )        
     signature_graph = Graph()
     signature_graph.parse(data=signature_string)
     model.state = model.PROCESSING
@@ -145,19 +144,25 @@ def train_topic_model(name, user_id, query_id, primarysource_id, *argv, **argd):
     random.seed(random_seed)
     docs = {}
     try:        
-        g = Graph()
-        for s, p, o in primarysource.query(query.sparql):
-            g.add((s, p, o))
-        for binding in g.query(training_query_string):
-            doc = str(binding.get("doc"))
-            word = binding.get("word").value
-            docs[doc] = docs.get(doc, [])
-            word = re.sub(r"^[^a-zA-Z0-9]+", "", word)
-            word = re.sub(r"[^a-zA-Z0-9]+$", "", word)
-            #if len(word) >= minimum_token_length:
-            word = word.lower() if lowercase else word
-            if word not in stopwords and len(word) >= minimum_token_length:
-                docs[doc].append(word)
+        if query:
+            g = Graph()            
+            for s, p, o in primarysource.query(query.sparql):
+                g.add((s, p, o))
+            for binding in g.query(training_query_string):
+                doc = str(binding.get("doc"))
+                word = binding.get("word").value
+                docs[doc] = docs.get(doc, [])
+                word = re.sub(r"^[^a-zA-Z0-9]+", "", word)
+                word = re.sub(r"[^a-zA-Z0-9]+$", "", word)
+                #if len(word) >= minimum_token_length:
+                word = word.lower() if lowercase else word
+                if word not in stopwords and len(word) >= minimum_token_length:
+                    docs[doc].append(word)
+        else:
+            for s, p, o in primarysource.data:
+                if p == OCHRE["hasValue"]:
+                    txt = o.value.lower() if lowercase else o.value
+                    docs[len(docs)] = txt.split()
 
         subdocs = []
         for doc in docs.values():

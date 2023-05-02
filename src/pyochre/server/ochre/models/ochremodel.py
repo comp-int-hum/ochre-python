@@ -16,10 +16,10 @@ class OchreModel(MetadataMixin, Model):
     class Meta:
         abstract = True
         constraints = [
-            #UniqueConstraint(
-            #    name="%(app_label)s_%(class)s_unique_name_and_user",                
-            #    fields=["name", "created_by"]
-            #)
+            UniqueConstraint(
+                name="%(app_label)s_%(class)s_unique_name_and_user",
+                fields=["name", "created_by"]
+            )
         ]
         
     def is_object(self):

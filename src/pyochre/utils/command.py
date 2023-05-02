@@ -1,10 +1,14 @@
+import json
 import argparse
+import re
 import os.path
 import os
 import logging
 from getpass import getpass
-from dotenv import load_dotenv, dotenv_values
+#from dotenv import load_dotenv, dotenv_values
 from pyochre.rest import Connection
+from pyochre import env
+#import environ
 
 
 logger = logging.getLogger("pyochre.rest")
@@ -18,36 +22,101 @@ class Command(object):
     connection = None
     
     def __init__(self, prog=None):
+        env.read_env(env("ENVIRONMENT"))
         self.parser = argparse.ArgumentParser(
-            prog=prog,
+            prog="python -m pyochre",
         )
-        self.parser.add_argument("--ochre_config", dest="ochre_config", default=os.path.expanduser("~/ochre/env"))
-        self.parser.add_argument("--ochre_path", dest="ochre_path", default=os.path.expanduser("~/ochre"))
-        self.parser.add_argument("--protocol", dest="protocol", default="http")
-        self.parser.add_argument("--hostname", dest="hostname", default="localhost")
-        self.parser.add_argument("--port", dest="port", type=int, default=8000)
-        self.parser.add_argument("--path", dest="path", default="/api")
-        self.parser.add_argument("--user", dest="user", default=None)
-        self.parser.add_argument("--password", dest="password", action="store_true", default=None)
-        self.parser.add_argument("--log_level", dest="log_level", default="WARNING", choices=["INFO", "WARNING", "DEBUG", "ERROR", "CRITICAL", "NOTSET"])
-        self.parser.set_defaults(func=dummy)
-        self.subparsers = self.parser.add_subparsers()
         
     def run(self):
+        logging.basicConfig(level=getattr(logging, env("LOG_LEVEL")))
+        connection = Connection()
+        self.subparsers = self.parser.add_subparsers()
+
+        #print(connection.openapi["paths"]["/api/annotation/create_human_annotation/"])
+        #print(connection.openapi["components"]["schemas"]["HumanAnnotation"])
+        for obj in connection.openapi["components"]["schemas"].keys():
+            if obj in ["ContentType"]:
+                continue
+            actions = []
+            for path, methods in connection.openapi["paths"].items():
+                relevant = False
+                for method, method_info in methods.items():
+                    for code, code_info in method_info["responses"].items():
+                        robj = os.path.split(                            
+                            code_info.get(
+                                "content",
+                                {}
+                            ).get(
+                                "application/json",
+                                {}
+                            ).get(
+                                "schema",
+                                {}
+                            ).get(
+                                "$ref",
+                                ""
+                            )
+                        )[-1]
+                        if obj == robj:
+                            relevant = True
+                if relevant:
+                    actions.append((path, methods))
+
+            if len(actions) > 0:
+                sp = self.subparsers.add_parser(obj)
+                ssps = sp.add_subparsers()
+                for path, methods in actions:
+                    for method_name, method in methods.items():
+                        ssp = ssps.add_parser(
+                            re.sub(obj.lower() + "s?$", "", method["operationId"]),
+                            help=method["description"]
+                        )
+                        ssp.set_defaults(
+                            url=path,
+                            method=method_name
+                        )
+                        rb = method.get(
+                            "requestBody", {}
+                        ).get(
+                            "content",
+                            {}
+                        ).get(
+                            "application/json",
+                            {}
+                        ).get(
+                            "schema",
+                            {}
+                        ).get(
+                            "$ref",
+                            ""
+                        )
+                        #print(connection.openapi["components"]["schemas"])
+                        
+                        if rb:
+                            schema = connection.openapi["components"]["schemas"][os.path.split(rb)[-1]]
+                            for prop_name, prop in schema["properties"].items():
+                                pass
+                                #ssp.add_argument(
+                                #    "--{}".format(prop_name),
+                                #    dest=prop_name
+                                #)
+                            #print(schema)
+                        #requestBody
+                        for param in method["parameters"]:
+                            tp = param["schema"]["type"]
+                            ssp.add_argument(
+                                "--{}".format(param["name"]),
+                                dest=param["name"],
+                                required=param.get("required", False),
+                                help=param["description"]
+                            )
+                            pass
+                        #print(path, method_name, method)
         args = self.parser.parse_args()
 
-        logging.basicConfig(level=getattr(logging, args.log_level))
+        #args.func(args, connection)
+
+
         
-        if args.password:
-            args.password = getpass("Enter password: ")
-
-        for k, v in dotenv_values(args.ochre_config).items():
-            if getattr(args, k, None) == None:                
-                setattr(args, k.lower() if k in ["USER", "PASSWORD", "HOSTNAME", "PORT", "PROTOCOL"] else k, v)
-
-        connection = Connection(vars(args))
-
-        args.func(args, connection)
-    
     
 

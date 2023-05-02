@@ -8,6 +8,9 @@ logger = logging.getLogger(__name__)
 
 
 class ResearchArtifact(OchreModel):
+    class Meta(OchreModel.Meta):
+        ordering = ["-year", "-month"]
+
     ARTICLE = "article"
     BOOK = "book"
     BOOKLET = "booklet"
@@ -71,5 +74,5 @@ class ResearchArtifact(OchreModel):
     def title(self):
         return self.name
     
-    class Meta:
-        ordering = ["-year", "-month"]
+
+

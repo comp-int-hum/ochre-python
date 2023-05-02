@@ -15,7 +15,7 @@ def rdf_store(
         path=None,
         return_format="json",
         auth=None,
-        autocommit=True,
+        autocommit=False,
         settings=None
 ):
     if settings and settings.USE_JENA:

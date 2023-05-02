@@ -4,6 +4,7 @@ from .documentationserializer import DocumentationSerializer
 from .queryserializer import QuerySerializer
 from .queryinteractiveserializer import QueryInteractiveSerializer
 from .primarysourceserializer import PrimarySourceSerializer
+from .hathitrustserializer import HathiTrustSerializer
 from .primarysourceinteractiveserializer import PrimarySourceInteractiveSerializer
 from .annotationserializer import AnnotationSerializer
 from .annotationinteractiveserializer import AnnotationInteractiveSerializer
@@ -12,4 +13,7 @@ from .ontologyserializer import OntologySerializer
 from .researchartifactserializer import ResearchArtifactSerializer
 from .slideserializer import SlideSerializer
 from .machinelearningmodelserializer import MachineLearningModelSerializer
+from .topicmodelserializer import TopicModelSerializer
 from .machinelearningmodelinteractiveserializer import MachineLearningModelInteractiveSerializer
+from .humanannotationserializer import HumanAnnotationSerializer
+from .computationalannotationserializer import ComputationalAnnotationSerializer

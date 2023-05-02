@@ -34,30 +34,30 @@ class AnnotationSerializer(OchreSerializer):
     #     view_name="api:annotation-data"        
     # )
     #source_object = AnnotatedObjectField(read_only=True)
-    machinelearningmodel = HyperlinkedRelatedField(
-        queryset=MachineLearningModel.objects.all(),
-        view_name="api:machinelearningmodel-detail",
-        write_only=True,
-        allow_null=True
-    )
+    # machinelearningmodel = HyperlinkedRelatedField(
+    #    queryset=MachineLearningModel.objects.all(),
+    #    view_name="api:machinelearningmodel-detail",
+    #    write_only=True,
+    #    allow_null=True
+    # )
     #query = HyperlinkedRelatedField(
     #    queryset=Query.objects.all(),
     #    view_name="api:query-detail",
     #    write_only=True,
     #    allow_null=True
     #)
-    primarysource = HyperlinkedRelatedField(
-        queryset=PrimarySource.objects.all(),
-        view_name="api:primarysource-detail",
-        write_only=True,
-        allow_null=True
-    )
+    #primarysource = HyperlinkedRelatedField(
+    #    queryset=PrimarySource.objects.all(),
+    #    view_name="api:primarysource-detail",
+    #    write_only=True,
+    #    allow_null=True
+    #)
     class Meta:
         model = Annotation
         fields = [
             "machinelearningmodel",
             #"query",
-            "primarysource",
+            #"primarysource",
             #"temporal",
             #"spatial",
             "name",

@@ -6,9 +6,6 @@ from celery import Celery
 logger = logging.getLogger(__name__)
 
 
-os.environ.setdefault("USE_CELERY", "True")
-
-
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault(
     'DJANGO_SETTINGS_MODULE',

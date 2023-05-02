@@ -1,5 +1,6 @@
 import logging
 import json
+from django.db.models import UniqueConstraint
 from django.conf import settings
 import rdflib
 from rdflib.plugins.sparql import prepareQuery
@@ -19,6 +20,9 @@ else:
     
 class PrimarySource(AsyncMixin, OchreModel):
 
+    class Meta(OchreModel.Meta):
+        pass
+    
     def update(self, update):
         store = rdf_store(settings=settings)
         store.update(update.decode("utf-8"))
@@ -89,21 +93,21 @@ class PrimarySource(AsyncMixin, OchreModel):
             pass
         return super(PrimarySource, self).delete(**argd)        
     
-    def save(
-            self,
-            domain_file=None,
-            annotations_file=None,
-            data_file=None,
-            materials_file=None,
-            limit=None,
-            **argd
-    ):
-        create = not (self.id and True)
-        self.state = self.COMPLETE
-        retval = super(PrimarySource, self).save()
-        if create:
-            store = rdf_store(settings=settings)
-            store.update("CREATE GRAPH <{}>".format(self.data_uri))
-            store.update("CREATE GRAPH <{}>".format(self.domain_uri))
-            store.commit()
-        return retval
+    # def save(
+    #         self,
+    #         domain_file=None,
+    #         annotations_file=None,
+    #         data_file=None,
+    #         materials_file=None,
+    #         limit=None,
+    #         **argd
+    # ):
+    #     create = not (self.id and True)
+    #     self.state = self.COMPLETE
+    #     retval = super(PrimarySource, self).save()
+    #     if create:
+    #         store = rdf_store(settings=settings)
+    #         store.update("CREATE GRAPH <{}>".format(self.data_uri))
+    #         store.update("CREATE GRAPH <{}>".format(self.domain_uri))
+    #         store.commit()
+    #     return retval

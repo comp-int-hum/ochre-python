@@ -32,9 +32,9 @@ class OchreSerializer(ModelSerializer):
             max_length=2000,
             required=False
         )
-        self.fields["permissions_url"] = HyperlinkedIdentityField(
-            view_name="api:{}-permissions".format(
-                self.Meta.model._meta.model_name
-            )
-        )
+        #self.fields["permissions_url"] = HyperlinkedIdentityField(
+        #    view_name="api:{}-permissions".format(
+        #        self.Meta.model._meta.model_name
+        #    )
+        #)
         return retval

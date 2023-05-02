@@ -12,6 +12,7 @@ from pairtree import PairtreeStorageFactory
 from pyochre.server.ochre.serializers import MaterialSerializer
 from pyochre.server.ochre.content_negotiation import OchreContentNegotiation
 from pyochre.server.ochre.renderers import OchreTemplateHTMLRenderer
+from pyochre.server.ochre.autoschemas import OchreAutoSchema
 
 
 logger = logging.getLogger(__name__)
@@ -26,7 +27,7 @@ class MaterialViewSet(ViewSet):
     ]
     serializer_class = MaterialSerializer
     prefix = "ochre"
-    schema = AutoSchema(
+    schema = OchreAutoSchema(
         tags=["material"],
         component_name="material",
         operation_id_base="material"

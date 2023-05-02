@@ -58,9 +58,9 @@
       <hasOrdinal rdf:datatype="{$xsd}integer">
 	<xsl:value-of select="@name"/>
       </hasOrdinal>
-      <!--
-      <xsl:apply-templates select="object/property[@name='annotations']/list/item/object/property[@name='type' and text()='grammar']" />
 
+      <xsl:apply-templates select="object/property[@name='annotations']/list/item/object/property[@name='type' and text()='grammar']" />
+      <!--
       <xsl:apply-templates select="property[@name='annotations']/list/item/object/property[@name='type' and text()='vowel_clusters']" />
 
       <xsl:apply-templates select="property[@name='annotations']/list/item/object/property[@name='type' and text()='scansion']" />
@@ -69,7 +69,6 @@
   </xsl:template>
     
   <!-- token grammar -->
-  <!--
   <xsl:template match="property[@name='type' and text()='grammar']">
     <hasPart rdf:parseType="Resource">
       <isA rdf:resource="GrammaticalTag" />
@@ -78,7 +77,6 @@
       </hasLabel>
     </hasPart>
   </xsl:template>
-  -->
   
   <!-- token vowel clusters -->
   <!--

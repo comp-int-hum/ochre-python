@@ -4,78 +4,16 @@ Django settings for the OCHRE project.
 from pathlib import Path
 import os
 import os.path
-import environ
 import requests
+from pyochre import env
 
-env = environ.Env(
-
-    DEBUG = (bool, False),
-    ENVIRONMENT = (str, "env"),
-    
-    PROTO = (str, "http"),
-    HOSTNAME = (str, "localhost"),
-    IP = (str, "127.0.0.1"),
-    PORT = (int, 8000),
-    
-    DATA_DIR = (str, os.path.expanduser("~/ochre")),
-    
-    INDEX_TEMPLATE = (str, ""),
-    ABOUT_TEMPLATE = (str, ""),
-
-    USE_POSTGRES = (bool, False),
-    POSTGRES_HOST = (str, "localhost"),
-    POSTGRES_DB_NAME = (str, "ochre"),
-    POSTGRES_USER = (str, "ochre"),
-    POSTGRES_PASSWORD = (str, "CHANGE_ME"),
-    
-    USE_CELERY = (bool, False),
-    CELERY_BROKER_URL = (str, "redis://localhost:6379"),
-    CELERY_RESULT_BACKEND  = (str, "redis://localhost:6379"),
-
-    USE_TORCHSERVE = (bool, False),
-    TORCHSERVE_INFERENCE_ADDRESS = (str, "http://127.0.0.1:8080"),
-    TORCHSERVE_MANAGEMENT_ADDRESS = (str, "http://127.0.0.1:8081"),
-    TORCHSERVE_METRICS_ADDRESS = (str, "http://127.0.0.1:8082"),
-    TORCHSERVE_TIMEOUT = (float, 30.0),
-
-    USE_JENA = (bool, False),
-    JENA_PROTO = (str, "http"), 
-    JENA_HOST = (str, "localhost"),
-    JENA_PORT = (int, 3030),
-    JENA_USER = (str, "admin"),
-    JENA_PASSWORD = (str, "CHANGE_ME"),
-    JENA_TIMEOUT = (float, 300.0),
-
-    USE_EMAIL = (bool, False),
-    EMAIL_HOST = (str, "smtp.gmail.com"),
-    EMAIL_PORT = (int, 587),
-    EMAIL_HOST_USER = (str, "jhu.digital.humanities"),
-    EMAIL_HOST_PASSWORD = (str, ""),
-    EMAIL_USE_TLS = (bool, True),
-    EMAIL_WHITELIST = (list, ["tom.lippincott@gmail.com"]),
-    
-    USE_LDAP = (bool, False),
-    LDAP_WEB_GROUP = (str, "web"),
-    LDAP_WEB_ADMIN_GROUP = (str, "webadmin"),
-    LDAP_WORKSTATION_GROUP = (str, "workstation"),
-    LDAP_WORKSTATION_ADMIN_GROUP = (str, "workstationadmin"),
-    LDAP_ROOT_BASE_COMPONENTS = (list, ["dc=ochre", "dc=org"]),
-    LDAP_USER_BASE_COMPONENTS = (list, ["ou=users"]),
-    LDAP_GROUP_BASE_COMPONENTS = (list, ["ou=groups"]),
-    LDAP_BIND_PASSWORD = (str, "CHANGE_ME"),
-    LDAP_CERT_FILE = (str, ""),
-    LDAP_SERVER_URI = (str, "ldap://localhost:389/"),
-    
-    OCHRE_NAMESPACE = (str, "https://cdh.jhu.edu/ontology/"),
-)
-
-environ.Env.read_env(env("ENVIRONMENT"))
 
 template_dict = {}
 
 if env("INDEX_TEMPLATE"):
     with open(env("INDEX_TEMPLATE"), "rt") as ifd:
         template_dict["ochre/index.html"] = ifd.read()
+
         
 if env("ABOUT_TEMPLATE"):
     with open(env("ABOUT_TEMPLATE"), "rt") as ifd:
@@ -95,8 +33,6 @@ APPS = {
     "machine_learning" : "Machine learning",
     "scholarly_knowledge" : "Scholarly knowledge",
 }
-
-
 
 # NOTE: For development you can follow the README instructions for running the needed backends locally,
 #       and set these to True, otherwise the framework will use hacks to simulate the behavior
@@ -189,6 +125,7 @@ TEMP_ROOT = DATA_DIR / "temp"
 MATERIALS_ROOT = DATA_DIR / "materials"
 MODELS_ROOT = DATA_DIR / "models"
 RDF_ROOT = DATA_DIR / "rdf"
+HATHITRUST_ROOT = env("HATHITRUST_ROOT")
 for path in [DATA_DIR, STATIC_ROOT, MEDIA_ROOT, TEMP_ROOT, MATERIALS_ROOT, MODELS_ROOT, RDF_ROOT]:
     if not path.exists():
         path.mkdir()
@@ -242,7 +179,7 @@ LOGGING = {
 
 
 ALLOWED_HOSTS = [HOSTNAME, IP]
-PROTO = env("PROTO")
+PROTO = env("PROTOCOL")
 CSRF_TRUSTED_ORIGINS = ["{}://{}".format(PROTO, HOSTNAME), "{}://{}:{}".format(PROTO, HOSTNAME, PORT)]
 USE_X_FORWARDED_HOST = HOSTNAME != "localhost"
 DEBUG = env("DEBUG")

@@ -11,21 +11,23 @@ from pyochre.server.ochre.settings import OCHRE_NAMESPACE
 
 OCHRE = Namespace(OCHRE_NAMESPACE)
 
-
-def create_domain(connection, primarysource):
+def create_domain(primarysource):
     domain_query = files("pyochre").joinpath("data/domain_query.sparql").read_text()
     entities = {}
-    for binding in Result.parse(
-            source=io.StringIO(
-                json.dumps(
-                    connection.post(
-                        primarysource["query_url"],
-                        {"query" : domain_query}
-                    )
-                ),
-            ),
-            format="json"            
+    #for binding in Result.parse(
+            #source=io.StringIO(
+                #json.dumps(
+    for binding in primarysource.query(
+            domain_query
     ):
+                    #connection.post(
+                    #    primarysource["query_url"],
+                    #    {"query" : domain_query}
+                    #)
+                #),
+    #        ),
+    #        format="xml"            
+    #):
         vals = {}
         for vn in ["st", "p", "ot", "odt"]:
             vals[vn] = binding.get(vn)

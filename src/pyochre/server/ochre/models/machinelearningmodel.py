@@ -26,6 +26,9 @@ else:
 
 
 class MachineLearningModel(AsyncMixin, OchreModel):
+
+    class Meta(OchreModel.Meta):
+        pass
     
     @property
     def signature(self, *argv, **argd):
@@ -143,17 +146,20 @@ class MachineLearningModel(AsyncMixin, OchreModel):
             pass
     
     def delete(self, **argd):
-        resp = requests.delete(
-            "{}/models/{}".format(
-                settings.TORCHSERVE_MANAGEMENT_ADDRESS,
-                self.id
+        try:
+            resp = requests.delete(
+                "{}/models/{}".format(
+                    settings.TORCHSERVE_MANAGEMENT_ADDRESS,
+                    self.id
+                )
             )
-        )
-        model_file = os.path.join(settings.MODELS_ROOT, "{}_model.mar".format(self.id))
-        if os.path.exists(model_file):
-            os.remove(os.path.join(settings.MODELS_ROOT, "{}_model.mar".format(self.id)))
-        self.delete_signature()
-        self.delete_properties()        
+            model_file = os.path.join(settings.MODELS_ROOT, "{}_model.mar".format(self.id))
+            if os.path.exists(model_file):
+                os.remove(os.path.join(settings.MODELS_ROOT, "{}_model.mar".format(self.id)))
+            self.delete_signature()
+            self.delete_properties()
+        except:
+            pass
         return super(MachineLearningModel, self).delete(**argd)
     
     def save(self, **argd):

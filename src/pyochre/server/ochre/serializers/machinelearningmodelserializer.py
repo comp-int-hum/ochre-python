@@ -10,67 +10,67 @@ logger = logging.getLogger(__name__)
 
 
 class MachineLearningModelSerializer(OchreSerializer):
-    huggingface_name = CharField(
-        required=False,
-        write_only=True
-    )
+    #huggingface_name = CharField(
+    #    required=False,
+    #    write_only=True
+    #)
 
-    topic_count = IntegerField(
-        required=False,
-        write_only=True
-    )
+    #topic_count = IntegerField(
+    #    required=False,
+    #    write_only=True
+    #)
     
-    stopwords = CharField(
-        required=False,
-        write_only=True
-    )
+    #stopwords = CharField(
+    #    required=False,
+    #    write_only=True
+    #)
 
-    mar_file = FileField(
-        required=False,
-        write_only=True
-    )
-    mar_url = URLField(
-        required=False,
-        write_only=True
-    )
+    #mar_file = FileField(
+    #    required=False,
+    #    write_only=True
+    #)
+    #mar_url = URLField(
+    #    required=False,
+    #    write_only=True
+    #)
 
-    signature_file = FileField(
-        required=False,
-        write_only=True
-    )
-    signature_url = URLField(
-        required=False,
-        write_only=True
-    )
-    apply_url = HyperlinkedIdentityField(
-        view_name="api:machinelearningmodel-apply",
-    )
+    #signature_file = FileField(
+    #    required=False,
+    #    write_only=True
+    #)
+    #signature_url = URLField(
+    #    required=False,
+    #    write_only=True
+    #)
+#    apply_url = HyperlinkedIdentityField(
+#        view_name="api:machinelearningmodel-apply",
+#    )
 
-    query = IntegerField(
-        required=False,
-        write_only=True
-    )
-    primarysource = IntegerField(
-        required=False,
-        write_only=True
-    )    
+    #query = IntegerField(
+    #    required=False,
+    #    write_only=True
+    #)
+    #primarysource = IntegerField(
+    #    required=False,
+    #    write_only=True
+    #)    
     class Meta:
         model = MachineLearningModel
         fields = [
             "name",
-            "query",
-            "primarysource",
-            "signature_file",
-            "mar_file",
-            "huggingface_name",
-            "topic_count",
+            #"query",
+            #"primarysource",
+            #"signature_file",
+            #"mar_file",
+            #"huggingface_name",
+            #"topic_count",
             "url",
             "created_by",
             "id",
-            "apply_url",
-            "mar_url",
-            "signature_url",
-            "stopwords"
+            #"apply_url",
+            #"mar_url",
+            #"signature_url",
+            #"stopwords"
         ]
         
     def create(self, validated_data):

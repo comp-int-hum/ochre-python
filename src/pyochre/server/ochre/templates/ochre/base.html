@@ -240,7 +240,7 @@
 	    <div id="top_level_content" class="container">
 	      {% if object.state == "PR" %}
 	      <div
-		hx-trigger="load delay:1000ms"
+		hx-trigger="load delay:5000ms"
 		hx-target="this"
 		hx-swap="outerHTML"
 		hx-get="{{request.path_info}}"

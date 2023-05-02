@@ -13,6 +13,7 @@ from pyochre.server.ochre.serializers import OntologySerializer
 from pyochre.server.ochre.content_negotiation import OchreContentNegotiation
 from pyochre.server.ochre.renderers import OchreTemplateHTMLRenderer
 from rdflib import Graph, BNode
+from pyochre.server.ochre.autoschemas import OchreAutoSchema
 
 
 logger = logging.getLogger(__name__)
@@ -21,20 +22,20 @@ logger = logging.getLogger(__name__)
 class OntologyViewSet(ViewSet):
     content_negotiation_class = OchreContentNegotiation
     renderer_classes = [
-        #BrowsableAPIRenderer,
-        #JSONRenderer,
+        BrowsableAPIRenderer,
+        JSONRenderer,
         OchreTemplateHTMLRenderer
     ]
     template_name = "ochre/template_pack/ontology.html"
     serializer_class = OntologySerializer
     prefix = "ochre"
-    schema = AutoSchema(
+    schema = OchreAutoSchema(
         tags=["ontology"],
         component_name="ontology",
         operation_id_base="ontology"
     )
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request):
         ontology_string = files("pyochre").joinpath("data/ochre.ttl").read_text()
         g = Graph()
         g.parse(

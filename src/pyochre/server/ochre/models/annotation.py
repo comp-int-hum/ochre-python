@@ -1,9 +1,9 @@
 import logging
-from django.db.models import ForeignKey, PositiveIntegerField, ManyToManyField, CASCADE
+from django.db.models import ForeignKey, PositiveIntegerField, ManyToManyField, CASCADE, SET_NULL
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from pyochre.server.ochre.models import OchreModel, AsyncMixin, MachineLearningModel, PrimarySource
+from pyochre.server.ochre.models import OchreModel, AsyncMixin, MachineLearningModel, PrimarySource, Query
 from pyochre.utils import rdf_store
 import rdflib
 
@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class Annotation(AsyncMixin, OchreModel):
+    class Meta(OchreModel.Meta):
+        pass    
     # source_type = ForeignKey(
     #     ContentType,
     #     on_delete=CASCADE,
@@ -20,20 +22,33 @@ class Annotation(AsyncMixin, OchreModel):
     #     editable=False
     # )
     # source_id = PositiveIntegerField(null=True, blank=True, editable=False)
-    # source_object = GenericForeignKey('source_type', 'source_id')
+    # source_object = GenericForeignKey('source_type', 'source_id')    
     machinelearningmodel = ForeignKey(
         MachineLearningModel,
         null=True,
-        on_delete=CASCADE,
+        on_delete=SET_NULL,
         editable=False
     )
     primarysource = ForeignKey(
         PrimarySource,
         null=True,
-        on_delete=CASCADE,
+        on_delete=SET_NULL,
         editable=False
     )
-
+    user = ForeignKey(
+        "ochre.User",
+        null=True,
+        on_delete=SET_NULL,
+        editable=False,
+        related_name="annotator"
+    )
+    #primarysources = ManyToManyField(
+    #    PrimarySource
+    #)
+    #queries = ManyToManyField(
+    #    Query
+    #)
+    
     @property
     def uri(self):
         return "{}{}_annotation".format(settings.OCHRE_NAMESPACE, self.id)

@@ -14,23 +14,51 @@ The Open Computational Humanities Research Ecosystem (OCHRE) provides the server
 Installation
 ============
 
-This package can be installed via `pip`::
-
-  $ pip install pyochre
-
-However, it's advisable to employ Python `virtual environments <https://docs.python.org/3/library/venv.html>`_ (here and in other situations), in which case you would run something like the following in a new empty directory::
+This package can be installed via `pip`.  It's advisable to employ Python `virtual environments <https://docs.python.org/3/library/venv.html>`_ (here and in other situations).  If you will be using the package as a library in your own code, run something like the following::
 
   $ python3 -m venv local
   $ source local/bin/activate
-  $ pip install pyochre
+  $ pip install git+https://github.com/comp-int-hum/ochre-python.git
 
-and run `deactivate` to exit the virtual environment, `source local/bin/acticate` to enter it again.
+If you're planning to edit the package code itself, run something like::
 
-The simple package doesn't include certain dependencies that are important for deploying a dedicated server, but is designed to be fully functional without requiring significant modification.  There are three extra options that can be included, `ldap`, `postgres`, and `torchserve`.  For instance, to include the full set of options, the command is::
+  $ git clone https://github.com/comp-int-hum/ochre-python.git
+  $ cd ochre-python
+  $ python3 -m venv local
+  $ source local/bin/activate
+  $ pip install -e .
+  
+In either case, run `deactivate` to exit the virtual environment, `source local/bin/acticate` to enter it again.
 
-  $ pip install pyochre[ldap,postgres,torchserve]
+By default the package doesn't include certain dependencies that are important for deploying a dedicated server, but is designed to be fully functional without requiring significant modification.  To install the more production-grade dependencies there are three extra options that can be included: `ldap`, `postgres`, and `torchserve`.  For instance, to include the full set of options, the command is::
+
+  $ pip install git+https://github.com/comp-int-hum/ochre-python.git[ldap,postgres,torchserve]
 
 Note that these options may require additional effort, such as non-Python dependencies that need to be installed independently.  For most situations, the simple package is the right choice.
+
+.. _configuration:
+
+=============
+Configuration
+=============
+
+OCHRE is designed to be used as a Python client library, as off-the-shelf scripts, and as a deployable server in new environments.  This involves a bit of configuration, and this is accomplished by creating and editing a file called *env* in the directory where OCHRE will be used.  This file is in a simple text format and can be used to override any of the settings listed in the `env.py <https://github.com/comp-int-hum/ochre-python/blob/main/src/pyochre/env.py>`_ file.  For instance, if you are interacting with an OCHRE server that's browsable at "https://some.ochre.org:8443" and where you have an account with user name "jane" and password "changeme", your environment file might contain::
+
+  USER=jane
+  PASSWORD=changeme
+  PORT=8443
+  HOSTNAME=some.ochre.org
+  PROTOCOL=https
+
+Most of the other settings have to do with running the OCHRE server, and are addressed in that section below.
+
+.. _command:
+
+================
+Command-line use
+================
+
+OCHRE can be interacted with from the command-line in fairly sophisticated ways.
 
 .. _library:
 
@@ -47,13 +75,13 @@ The package has five submodules:
   The OCHRE server, an orchestrated set of servers and frontends that manages the complexity of interdisciplinary computational research
 
 **pyochre.primary_sources**
-  Formal domain descriptions, data, and multimedia materials
+  Creating empirical primary sources with Formal domain descriptions and multimedia materials
 
 **pyochre.machine_learning**
-  Training, applying, and fine-tuning models with well-defined signatures
+  Instantiating, training, and fine-tuning models with well-defined signatures
 
 **pyochre.scholarly_knowledge**
-  Labeling data, specifying conceptual frameworks, and comparing hypotheses
+  Labeling data, specifying conceptual frameworks, and comparing hypotheses from human and computational sources
 
 The latter three submodules correspond to basic concepts in computational humanities research, and constitute the "client library" that will be most relevant for the majority of users.
 
@@ -61,7 +89,7 @@ Additionally, the `pyochre.primary_sources`, `pyochre.machine_learning`, `pyochr
 
   $ python -m pyochre.scholarly_knowledge --help
 
-will print usage information about the `pyochre.scholarly_knowledge` script.  See the Scripts_ section for detailed information on how to use these tools.
+will print usage information about the `pyochre.scholarly_knowledge` script.  See the Scripts_ section for detailed information on how to use these.
 
 .. _concepts:
 
@@ -143,117 +171,37 @@ There are several existing standards being considered for OCHRE's various repres
 The OCHRE Scripts
 =================
 
+Note that everything created on an OCHRE server has a *name* and a *creator* which, which together must be unique for the type of thing (primary source, model, etc).  When referring to a model just by name, OCHRE assumes you mean *your* model of that name, but it's also possible to specify another user, e.g. "--model_name 'Some model' --model_creator_name 'Sarah'".
+
 .. _primary_sources_script:
 
 ---------------
 Primary sources
 ---------------
 
-The general pattern for converting a non-RDF document is: as a format is parsed, certain "events" fire, each of which is an opportunity to generate RDF triples based on the event and the current location in the document.
+^^^^
+Data
+^^^^
 
-Each event indicates what has just been parsed by sending a *tag*, *content*, and a dictionary of *attributes* (only *tag* is certain to have a value).  The particular tags and attributes will be specific to the format and data.  For instance, the event that fires for a cell in a CSV file in the column "day" with value "Monday" would send the tag "cell", the content "Monday", and the attribute dictionary::
-
-  {"id" : "day"}
-
-Along with the tag and attributes, the event sends its *location*, which for most formats is the list of "parent" events the current event is happening under.  If the above event was happening while processing the 22nd row of a file called "some_file.csv", the location might be (ignore for the moment the "uid" entries)::
-
-  [
-    {"tag" : "table", "content" : "", "attributes" : {"id" : "some_file.csv"}, "uid" : "43k2"},
-    {"tag" : "row", "content" : "", "attributes" : {"id" : "22"}, "uid" : "213j"}
-  ]
-
-No matter the format (CSV, XML, etc), events have the same structure, and in fact the event just described might be this JSON object::
-
-  {
-    "tag" : "cell",
-    "attributes" : {"id" : "day", "value" : "Monday"},
-    "location" : [
-      {"tag" : "table", "attributes" : {"id" : "some_file.csv"}, "uid" : "43k2"},
-      {"tag" : "row", "attributes" : {"id" : "22"}, "uid" : "213j"}
-    ],
-    "uid" : "t98f"
-  }
-  
-Again, the possible values for *tag* will depend on the format (HTML won't ever have a "row" tag, but might have "div", "body", etc), as will the *attributes* dictionary.
-
-The goal is to decide what RDF triples to generate when seeing an event.  This involves specifying rules that 1) can be determined if they match the event, and 2) describe the RDF triple(s) to create from it.  Here is an example of a match portion::
-
-  {
-    "tag" : ["cell"],
-    "attributes" : {"id" : ["day"]}
-  }
-
-Note how it constrains the tag and the attribute "id" by giving a list of acceptable values.
-  
-Here is an example of a creation portion with some placeholders for readability, that creates the two triples (S, P1, O1) and (S, P2, O2) when its rule matches::
-    
-  {
-    "subject" : S,
-    "predicate_objects" : [
-      {
-        "predicate" : P1,
-	"object" : O1
-      },
-      {
-        "predicate" : P2,
-	"object" : O2
-      }
-    ]
-  }
-    
-The placeholders are a bit more interesting: they tell OCHRE how to create an RDF node based on the event.  Here is an example that creates an RDF integer literal node that doesn't depend at all on the event::
-
-  {
-    "type" : "literal",
-    "datatype" : "integer",
-    "value" : "27"
-  }
-
-Here is an example that also creates an integer literal node, but based on the event::
-
-  {
-    "type" : "literal",
-    "datatype" : "integer",
-    "value" : "{content}"
-  }
-
-In the CSV example, if the rule were matching rows, this would correspond to the row number.  This curly-braces interpolation can also be used to refer to attributes and locations in the event, and mixed arbitrarily with bare strings, allowing the extraction of fairly sophisticated patterns.
-
-Here is an example that creates a URI node, directly specifying the Wikidata entry for "photograph"::
-
-  {
-    "type" : "uri",
-    "value" : "wd:Q125191"
-  }
-
-Importantly, most entities in a primary source will not have a clear corresponding entity in Wikidata (e.g. there may be a long list of photos, so the above example is useful for saying "this is an instance of a photo", but not for referring to *this* or *that* specific photo).  To handle this, every time an event occurs, OCHRE creates a *unique identifier* based on the event.  This unique identifier is the "uid" seen in the full event example above, and can be interpolated as-needed to derive unique URIs.  For instance::
-
-  {
-    "type" : "uri",
-    "value" : "ochre:{uid}"
-  }
-
-is an entity in the OCHRE namespace corresponding to the particular event being processed.
-
-Finally, OCHRE keeps track of the sequential number of each tag value within one tier of the input, and this number can be interpolated with "index".  For example, if the input involves processing sentences, each of which are a sequence of words, the string "{index}" within a word-rule will give the current word's number within its sentence, starting from 0.
-
-::
-   python -m pyochre.primary_sources create --input_file X --input_file_format Y --name Z --schema A --xslt_file B --replace --enrich --base_path C --upload_materials
+The general pattern for creating a new OCHRE primary source is to first convert data to XML (if it isn't already), and then define and apply an `XML stylesheet <https://www.w3.org/TR/1999/REC-xslt-19991116>`_ to convert the XML to RDF.  OCHRE can perform the first step for CSV and JSON.  The second step requires a basic understanding of XML stylesheets (often called "XSL" or "XSLT"), and considerable care in deciding how to connect information in the primary source to the growing `OCHRE ontology <https://github.com/comp-int-hum/ochre-python/blob/main/src/pyochre/data/ochre.ttl>`_.  Several examples of real-world stylesheets are available, such as `a JSON-based transformation of Chaucer <https://github.com/comp-int-hum/ochre-python/blob/main/examples/chaucer_transform.xml>`_ and `a CSV-based transformation of the Cuneiform Digital Library Initiative <https://github.com/comp-int-hum/ochre-python/blob/main/examples/cdli_transform.xml>`_.
 
 ^^^^^^^^^
 Materials
 ^^^^^^^^^
 
-The mechanisms described above are for generating RDF.  There is also the need to connect parts of RDF to *materials*, larger files that don't belong directly in the RDF graph, such as JPGs, audio recordings, and long documents.  To accomplish this, there is special information that can be added to an entry in a "predicate_object" list::
+The stylesheet generates RDF, but there is often the need to connect parts of RDF to *materials*: larger files that don't belong directly in the RDF graph, such as JPGs, audio recordings, and long-form documents.  To accomplish this, a stylesheet can use the "ochre:hasMaterialId" property.
 
-  {
-    "predicate" : P,
-    "object" : O,
-    "file" : "path/some_file_{attributes['name']}.jpg",
-    "file_type" : "image/jpg"
-  }
+When the *pyochre.primary_sources* script encounters an "ochre:hasMaterialId" property, it looks for its value on the local filesystem.  If found, it creates a unique identifier *I* based on the file's contents, uses that identifier as the property value, and uploads the file to OCHRE such that the identifier resolves to it.  If no such file is found on the local filesystem, the identifier is left as-is, or the property is removed entirely, depending on arguments to the script.
 
-When the *pyochre.primary_sources* script encounters a "file" like this, it looks for it on the local filesystem.  If found, it creates a unique identifier *I* based on the file's contents, and adds an additional RDF triple that links it to the object in the predicate_object rule (roughly, (O, hasMaterialId, I)) indicating "the entity O has an associated file identified with the id I".  Then, after OCHRE creates the RDF graph, it also uploads all such files in the appropriate fashion.
+^^^^^^
+Domain
+^^^^^^
+
+The final component in a primary source is a domain description that captures the structure of the data.  In most cases, this will be automatically derived from the data by enumerating the *types of entities* and the *properties* that occur between instances of them.
+
+^^^^^^^
+Queries
+^^^^^^^
 
 .. _machine_learning_script:
 
@@ -261,15 +209,7 @@ When the *pyochre.primary_sources* script encounters a "file" like this, it look
 Machine learning
 ----------------
 
-While the ultimate aim is for OCHRE to employ and generate complex models, there are already several simple types of models that can be incorporated via the *pyochre.machine_learning* script.  Ultimately, all models are transformed into `MAR archives <https://github.com/pytorch/serve/tree/master/model-archiver#artifact-details>`_, so other than the case of `Existing MAR archives`_, these situations are essentially different ways of *building* such an archive for a particular type of model.
-
-^^^^^^^^^^^^^^^^^^^^^
-Existing MAR archives
-^^^^^^^^^^^^^^^^^^^^^
-
-The simplest scenario is to pass in the location of a pre-existing MAR file::
-
-  $ python -m pyochre.machine_learning create --mar_file https://torchserve.pytorch.org/mar_files/maskrcnn.mar --name "CNN object detection" --signature_file https://github.com/comp-int-hum/ochre-python/raw/main/examples/object_detection_signature.ttl
+The ultimate aim is for OCHRE to generate and employ complex machine learning models.  There are several paths to adding a new model to an OCHRE server via the *pyochre.machine_learning* script.  Ultimately, all models are transformed into `MAR archives <https://github.com/pytorch/serve/tree/master/model-archiver#artifact-details>`_, which are then efficiently served from the `TorchServe <https://pytorch.org/serve/>`_ framework.
 
 ^^^^^^^^^^^^
 Topic models
@@ -277,7 +217,7 @@ Topic models
 
 Topic models can be created by specifying a `SPARQL query <https://www.w3.org/TR/2013/REC-sparql11-overview-20130321/>`_ that selects text, and potentially spatial and temporal information::
 
-  $ python -m pyochre.machine_learning create --topic_model_query https://github.com/comp-int-hum/ochre-python/raw/main/examples/cdli_topic_query.sparql --name "Cuneiform topic model"
+  $ python -m pyochre.machine_learning create --name "Chaucer topic model" topic_model --query_name "Chaucer query" --primary_source_name Chaucer --topic_count 10
 
 The query may either have a `SELECT` statement of the form::
 
@@ -293,13 +233,26 @@ Only `doc_number` and `word` are required to have values (an integer and string,
 Huggingface models
 ^^^^^^^^^^^^^^^^^^
 
-Models on Huggingface may be importable directly::
+Models on Huggingface are importable directly if they have a corresponding `pipeline <https://huggingface.co/docs/transformers/main_classes/pipelines>`_::
 
-  $ python -m pyochre.machine_learning create --huggingface_model_name openai/whisper-tiny.en --name "Whispernet transcription" --signature_file https://raw.githubusercontent.com/comp-int-hum/ochre-python/main/examples/speech_transcription_signature.ttl
+  $ python -m pyochre.machine_learning create --name "Speech transcriber" huggingface --huggingface_name openai/whisper-tiny.en
 
-^^^^^^^^^^^^^
-Custom models
-^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
+StarCoder models
+^^^^^^^^^^^^^^^^
+
+The most ambitious approach is to create a model tailored to the structure of a particular primary source.
+
+^^^^^^^^^^^^^^^^^^^^^
+Existing MAR archives
+^^^^^^^^^^^^^^^^^^^^^
+
+The most flexible approach is to pass in the location of a pre-existing MAR file and a signature describing its input and output semantics::
+
+  $ python -m pyochre.machine_learning create --mar_file https://torchserve.pytorch.org/mar_files/maskrcnn.mar --name "CNN object detection" --signature_file maskrcnn_signature.ttl
+
+It's unlikely this is what you want, though: constructing a MAR file directly is challenging enough, without even considering the details of OCHRE compatibility!
+
 
 .. _scholarly_knowledge_script:
 
@@ -313,7 +266,7 @@ Scholarly knowledge
 Server
 ------
 
-The package also contains the server side of OCHRE under the `pyochre.server` submodule.  When invoked as a script, it functions in most ways as a standard [Django](https://docs.djangoproject.com/en/4.1/) project's `manage.py` script::
+The package also contains the server side of OCHRE under the `pyochre.server` submodule.  When invoked as a script, it functions in most ways as a standard [Django](https://docs.djangoproject.com/en/4.2/) project's `manage.py` script::
 
   $ python -m pyochre.server --help
 
@@ -367,7 +320,7 @@ to enter the same virtual environment as the OCHRE package, and then run the fol
 
 At this point, with the two containers running (can be verified with `podman ps`), and Celery and TorchServe running in separate terminals, running::
 
-  $ USE_JENA=True USE_TORCHSERVE=True python -m pyochre.server runserver
+  $ python -m pyochre.server runserver
 
 Should start the OCHRE server, and the site should work near-identically to when it's officially deployed.
 

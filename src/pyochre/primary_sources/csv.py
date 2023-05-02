@@ -30,7 +30,7 @@ default_dialect = {
 
 class XsvParser(TreeBuilder):
     
-    def __call__(self, fd, limit=100000):
+    def __call__(self, fd, limit=100000, split=False):
         c = csv.DictReader(
             fd,
             delimiter=self.delimiter
@@ -50,7 +50,7 @@ class XsvParser(TreeBuilder):
                     self.end("cell")
             self.end("row")
         self.end("document")
-        return self.close()
+        yield self.close()
 
 
 class CsvParser(XsvParser):

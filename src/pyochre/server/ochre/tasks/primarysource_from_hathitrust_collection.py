@@ -96,17 +96,25 @@ def primarysource_from_hathitrust_collection(
             publication_place = BNode()
             g.add((text, OCHRE["isA"], OCHRE["Text"]))
             g.add((text, OCHRE["hasValue"], Literal(full_content)))
-            g.add((text, OCHRE["hasAuthor"], author))
-            g.add((author, OCHRE["isA"], OCHRE["Author"]))
-            g.add((publisher, OCHRE["isA"], OCHRE["Publisher"]))
-            g.add((text, OCHRE["hasPublisher"], publisher))
-            g.add((text, OCHRE["hasLocation"], Literal(row["pub_place"])))
-            if row["rights_date_used"].isdigit():
-                g.add((text, OCHRE["hasDate"], Literal(row["rights_date_used"], datatype=XSD.integer)))
-            g.add((text, OCHRE["inLanguage"], Literal(row["lang"])))
-            g.add((text, OCHRE["hasLabel"], Literal(row["title"])))
-            g.add((author, OCHRE["hasLabel"], Literal(row["author"])))
-            g.add((publisher, OCHRE["hasLabel"], Literal(row["imprint"])))
+            if "author" in row:
+                g.add((author, OCHRE["hasLabel"], Literal(row["author"])))            
+                g.add((text, OCHRE["hasAuthor"], author))
+                g.add((author, OCHRE["isA"], OCHRE["Author"]))
+            if "imprint" in row:
+                g.add((publisher, OCHRE["isA"], OCHRE["Publisher"]))
+                g.add((text, OCHRE["hasPublisher"], publisher))
+                g.add((publisher, OCHRE["hasLabel"], Literal(row["imprint"])))                
+            if "pub_place" in row:
+                g.add((text, OCHRE["hasLocation"], Literal(row["pub_place"])))
+            if "rights_date_used" in row:
+                if row["rights_date_used"].isdigit():
+                    g.add((text, OCHRE["hasDate"], Literal(row["rights_date_used"], datatype=XSD.integer)))
+            if "lang" in row:
+                g.add((text, OCHRE["inLanguage"], Literal(row["lang"])))
+            if "title" in row:
+                g.add((text, OCHRE["hasLabel"], Literal(row["title"])))
+
+
         g = g.skolemize()
         store = rdf_store(settings=settings)
         dataset = Dataset(store=store, default_graph_base=OCHRE)

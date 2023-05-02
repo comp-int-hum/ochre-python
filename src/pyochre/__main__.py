@@ -150,6 +150,8 @@ class Command(object):
             if key in self.object_fields:
                 success = False
                 model = self.object_fields[key]
+                if not vargs[k]:
+                    continue
                 toks = vargs[k].split(":")
                 if len(toks) == 2:
                     name, user = toks

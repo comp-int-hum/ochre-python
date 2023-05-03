@@ -96,16 +96,14 @@ class PrimarySourceViewSet(OchreViewSet):
         ser = HathiTrustSerializer(data=request.data, context={"request" : request})
         if ser.is_valid():
             logger.info("Creating new primarysource")
-            #obj.save()            
             primarysource_from_hathitrust_collection.delay(
-                #obj.id,
                 ser.validated_data["collection_file"].read().decode("utf-8"),
                 ser.validated_data["name"],
                 ser.validated_data["created_by"].id
             )
-            #obj.save()
             return Response({"status" : "success"})
         else:
-            return Response(ser.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
-
+            return Response(
+                ser.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )

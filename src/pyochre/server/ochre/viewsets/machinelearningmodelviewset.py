@@ -81,8 +81,7 @@ class MachineLearningModelViewSet(OchreViewSet):
         """
         ser = TopicModelSerializer(data=request.data, context={"request" : request})
         if ser.is_valid():
-            
-            
+            logger.info("Creating new topic model")
             train_topic_model.delay(
                 primarysource_id=ser.validated_data["primarysource"].id,
                 query_id=ser.validated_data["query"].id if ser.validated_data.get("query") else None,

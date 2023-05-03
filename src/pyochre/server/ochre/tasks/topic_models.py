@@ -35,9 +35,6 @@ OCHRE = Namespace(settings.OCHRE_NAMESPACE)
 logger = logging.getLogger(__name__)
 
 
-
-
-
 if settings.USE_CELERY:
     from celery import shared_task
 else:
@@ -122,7 +119,6 @@ def train_topic_model(
             settings.OCHRE_NAMESPACE,
             files("pyochre").joinpath("data/topic_model_training_signature.sparql").read_text()
         )
-
     user = User.objects.get(id=user_id)
     query = Query.objects.get(id=query_id) if query_id else None
     primarysource = PrimarySource.objects.get(id=primarysource_id)
@@ -137,11 +133,12 @@ def train_topic_model(
             "passes" : passes
         }
     )        
-    signature_graph = Graph()
-    signature_graph.parse(data=signature_string)
     model.state = model.PROCESSING
     model.save()
-    random.seed(random_seed)
+    signature_graph = Graph()
+    signature_graph.parse(data=signature_string)
+    if random_seed != None:
+        random.seed(random_seed)
     docs = {}
     try:        
         if query:
@@ -154,7 +151,6 @@ def train_topic_model(
                 docs[doc] = docs.get(doc, [])
                 word = re.sub(r"^[^a-zA-Z0-9]+", "", word)
                 word = re.sub(r"[^a-zA-Z0-9]+$", "", word)
-                #if len(word) >= minimum_token_length:
                 word = word.lower() if lowercase else word
                 if word not in stopwords and len(word) >= minimum_token_length:
                     docs[doc].append(word)
@@ -162,48 +158,19 @@ def train_topic_model(
             for s, p, o in primarysource.data:
                 if p == OCHRE["hasValue"]:
                     txt = o.value.lower() if lowercase else o.value
-                    docs[len(docs)] = txt.split()
-
+                    key = len(docs)
+                    docs[key] = []
+                    for word in txt.split():
+                        word = re.sub(r"^[^a-zA-Z0-9]+", "", word)
+                        word = re.sub(r"[^a-zA-Z0-9]+$", "", word)
+                        word = word.lower() if lowercase else word
+                        if word not in stopwords and len(word) >= minimum_token_length:
+                            docs[key].append(word)
         subdocs = []
         for doc in docs.values():
             while len(doc) > 0:
                 subdocs.append(doc[0:maximum_context_tokens])
                 doc = doc[maximum_context_tokens:]
-        
-        #with open("test.out", "wt") as ofd:
-        #    for subdoc in subdocs:
-        #        ofd.write(" ".join(subdoc) + "\n")
-                
-            #     if doc_id:
-        #         prefix, suffix = str(doc_id).split("/")[-2:]
-        #         resp = requests.get(
-        #             "http://{}:{}/materials/{}/{}/".format(
-        #                 settings.HOSTNAME,
-        #                 settings.PORT,
-        #                 prefix,
-        #                 suffix
-        #             ),
-        #             auth=requests.auth.HTTPBasicAuth(
-        #                 settings.JENA_USER,
-        #                 settings.JENA_PASSWORD
-        #             )
-        #         )
-        #         text = resp.content.decode("utf-8")
-        #         text = text.lower() if lowercase else text
-        #         toks = [
-        #             re.sub(
-        #                 token_pattern_in,
-        #                 token_pattern_out,
-        #                 t
-        #             ) for t in re.split(split_pattern, text) if t not in stopwords]
-        #         num_subdocs = round(0.5 + len(toks) / maximum_context_tokens)
-        #         toks_per = int(len(toks) / num_subdocs)
-        #         for i in range(num_subdocs):
-        #             docs[(prefix, suffix, i)] = toks[i * toks_per : (i + 1) * toks_per]
-        #     else:
-        #         doc_id = binding.get("doc_id").value #result["doc_number"]["value"]
-        #         word = binding.get("word").value #result["word"]["value"]
-        subdocs = [gpp.remove_stopword_tokens(toks) for toks in subdocs]
         random.shuffle(subdocs)
         logger.info(
             "Loading at most %d subdocuments out of %d",
@@ -211,7 +178,7 @@ def train_topic_model(
             len(subdocs),
         )
         subdocs = subdocs[:maximum_documents]
-        logger.info("Loaded %d ubdocuments", len(subdocs))
+        logger.info("Loaded %d subdocuments", len(subdocs))
         dictionary = Dictionary(subdocs)
         dictionary.filter_extremes(
             no_below=minimum_occurrence,
@@ -232,7 +199,6 @@ def train_topic_model(
             eval_every=None,
             #callbacks=[el],
         )
-
         mar_path = os.path.join(settings.TEMP_ROOT, "model_{}.mar".format(model.id))
         sig_path = os.path.join(settings.TEMP_ROOT, "sig_{}.ttl".format(model.id))
         prop_path = os.path.join(settings.TEMP_ROOT, "prop_{}.ttl".format(model.id))
@@ -277,8 +243,6 @@ def train_topic_model(
                 ofd.write(g.skolemize().serialize(format="turtle"))
             with open(mar_path, "rb") as mar, open(sig_path, "rb") as sig, open(prop_path, "rb") as prop:
                 files = {
-                    #"mar_file" : mar,
-                    #"signature_file" : sig,
                     "properties_file" : prop
                 }
                 model.save(**files)

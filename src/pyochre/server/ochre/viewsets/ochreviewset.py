@@ -2,10 +2,11 @@ import logging
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet, GenericViewSet
 from rest_framework import exceptions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from guardian.shortcuts import get_perms, get_objects_for_user, get_anonymous_user, get_groups_with_perms, get_users_with_perms
 from pyochre.server.ochre.renderers import OchreTemplateHTMLRenderer
@@ -17,8 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class OchreViewSet(ModelViewSet):
-
-
+    #ListModelMixin, DestroyModelMixin, RetrieveModelMixin, GenericViewSet):
     content_negotiation_class = OchreContentNegotiation
     renderer_classes = [
         BrowsableAPIRenderer,
@@ -33,7 +33,7 @@ class OchreViewSet(ModelViewSet):
     accordion_header_template_name = None
 
     def __init__(self, *argv, **argd):
-        super(ModelViewSet, self).__init__(*argv, **argd)
+        super(OchreViewSet, self).__init__(*argv, **argd)
     
     def get_queryset(self):
         perms = "{}_{}".format(
@@ -154,7 +154,20 @@ class OchreViewSet(ModelViewSet):
         ):
             logger.info("Permission verified")
             try:
-                retval = super(OchreViewSet, self).create(request)
+                ser = self.get_serializer_class()(
+                    data=request.data,
+                    context={"request" : request}
+                )
+                if ser.is_valid():
+                    ser.create(ser.validated_data)
+                    retval = Response({"status" : "success"})
+                else:
+                    return Response(
+                        ser.errors,
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                #retval = 
+                #retval = super(OchreViewSet, self).create(request)
             except Exception as e:
                 logging.warn(
                     "Exception in create method of OchreViewSet: %s",
@@ -182,14 +195,10 @@ class OchreViewSet(ModelViewSet):
 
     def retrieve(self, request, pk=None):
         obj = self.get_object()
-        #if obj == None:
-        #    logger.info("Retrieve invoked by %s", request.user)
-        #    ser = self.get_serializer()
-        #else:
         logger.info("Retrieve of %s invoked by %s", obj, request.user)
         ser = self.get_serializer()
         return Response(ser.data)
-
+    
     def destroy(self, request, pk=None):
         logger.info("Delete invoked by %s for %s", request.user, pk)
         retval = super(OchreViewSet, self).destroy(request, pk)        
@@ -201,30 +210,30 @@ class OchreViewSet(ModelViewSet):
                 pk=pk
             )
         return retval
-        
-    def update(self, request, pk=None, partial=False):
-        logger.info("Update invoked by %s for %s", request.user, pk)
-        if self.model.get_change_perm() in get_perms(
-                request.user,
-                self.get_object()
-        ):
-            logger.info("Permission verified")
-            retval = super(OchreViewSet, self).update(request, pk)
-            retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "update", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
-                app_label=self.model._meta.app_label,
-                model_name=self.model._meta.model_name,
-                pk=pk
-            )                
-            return retval
-        else:
-            raise exceptions.PermissionDenied(
-                detail="{} does not have permission to change {} object {}".format(
-                    request.user,
-                    self.model._meta.model_name,
-                    pk
-                ),
-                code=status.HTTP_403_FORBIDDEN
-            )
+
+    # def update(self, request, pk=None, partial=False):
+    #     logger.info("Update invoked by %s for %s", request.user, pk)
+    #     if self.model.get_change_perm() in get_perms(
+    #             request.user,
+    #             self.get_object()
+    #     ):
+    #         logger.info("Permission verified")
+    #         retval = super(OchreViewSet, self).update(request, pk)
+    #         retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "update", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
+    #             app_label=self.model._meta.app_label,
+    #             model_name=self.model._meta.model_name,
+    #             pk=pk
+    #         )                
+    #         return retval
+    #     else:
+    #         raise exceptions.PermissionDenied(
+    #             detail="{} does not have permission to change {} object {}".format(
+    #                 request.user,
+    #                 self.model._meta.model_name,
+    #                 pk
+    #             ),
+    #             code=status.HTTP_403_FORBIDDEN
+    #         )
         
     # @action(detail=True, methods=["get", "patch"])
     # def permissions(self, request, pk=None):

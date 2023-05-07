@@ -19,7 +19,7 @@ OCHRE = Namespace(settings.OCHRE_NAMESPACE)
 class Handler(BaseHandler):
     
     def initialize(self, context):
-        self.query = "PREFIX ochre: <{}>\n".format(settings.OCHRE_NAMESPACE) + context.manifest["model"]["modelInputSignature"]
+        self.signature = context.manifest["model"]["modelSignature"]
         with open(
                 context.manifest["model"]["serializedFile"],
                 "rb"
@@ -97,8 +97,8 @@ class Handler(BaseHandler):
                     elif p == OCHRE["hasLabel"]:
                         tok = s
                         word = o
-                        word = re.sub(r"^[^a-zA-Z0-9]+", "", word)
-                        word = re.sub(r"[^a-zA-Z0-9]+$", "", word)
+                        word = re.sub(r"^\W+", "", word)
+                        word = re.sub(r"\W+$", "", word)
                         word = word.lower()
                         if word in word2id:
                             tok2word[tok] = word

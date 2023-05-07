@@ -217,7 +217,7 @@ class PrimarySourceDomainGraph(OchreVisualization):
                             },
                             "update": {
                                 "shape" : {"value" : "M-1.5,-1H1.5V0.5H-1.5Z"},
-                                "size": {"signal": "30 * nodeRadius * nodeRadius"},
+                                "size": {"signal": "40 * nodeRadius * nodeRadius"},
                                 "cursor": {"value": "pointer"},
                                 "zindex" : {"value" : 1},
 

@@ -6,12 +6,12 @@ from rest_framework.decorators import action
 from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.response import Response
 from pyochre.server.ochre.viewsets import OchreViewSet
-from pyochre.server.ochre.serializers import MachineLearningModelSerializer, MachineLearningModelInteractiveSerializer, TopicModelSerializer
+from pyochre.server.ochre.serializers import MachineLearningModelSerializer, MachineLearningModelTopicModelSerializer, MachineLearningModelHuggingfaceSerializer, MachineLearningModelStarcoderSerializer
 from pyochre.server.ochre.models import MachineLearningModel
-from pyochre.server.ochre.tasks import apply_machinelearningmodel, train_topic_model
 from pyochre.server.ochre.renderers import OchreTemplateHTMLRenderer
 from pyochre.server.ochre.autoschemas import OchreAutoSchema
 import requests
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,17 +27,15 @@ class MachineLearningModelViewSet(OchreViewSet):
     )
 
     def get_serializer_class(self):
-        if self.action == "create_topic_model":
-            return TopicModelSerializer
-        if isinstance(self.request.accepted_renderer, OchreTemplateHTMLRenderer):
-            return MachineLearningModelInteractiveSerializer
+        if self.action == "train_topic_model":
+            return MachineLearningModelTopicModelSerializer
+        elif self.action == "import_huggingface_model":
+            return MachineLearningModelHuggingfaceSerializer
+        elif self.action == "create_starcoder_model":
+            return MachineLearningModelStarcoderSerializer
         else:
             return MachineLearningModelSerializer
 
-
-    #def create_topic_model(self, request, pk=None):
-    #    return Response()
-        
     @action(detail=True, methods=["post"])
     def apply(self, request, pk=None):
         if "primarysource_id" in request.data:
@@ -75,27 +73,39 @@ class MachineLearningModelViewSet(OchreViewSet):
         methods=["post", "options"],
         url_path="create/topic_model"
     )
-    def create_topic_model(self, request, pk=None):
+        
+    def create_model(self, request, pk=None):
+        ser = self.get_serializer_class()(
+            data=request.data,
+            context={"request" : request}
+        )
+        if ser.is_valid():
+            ser.create(ser.validated_data)
+            return Response({"status" : "success"})
+        else:
+            return Response(
+                ser.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    
+    @action(detail=False, methods=["POST"], url_path="create/topicmodel")
+    def train_topic_model(self, request, pk=None):
         """
         Create a topic model
         """
-        ser = TopicModelSerializer(data=request.data, context={"request" : request})
-        if ser.is_valid():
-            logger.info("Creating new topic model")
-            train_topic_model.delay(
-                primarysource_id=ser.validated_data["primarysource"].id,
-                query_id=ser.validated_data["query"].id if ser.validated_data.get("query") else None,
-                user_id=ser.validated_data["created_by"].id,
-                **{k : v for k, v in ser.validated_data.items() if k not in ["primarysource", "created_by", "query"]}
-            )
-            return Response({"status" : "success"})
-        else:
-            return Response(ser.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+        return self.create_model(request, pk=None)
+        
+    @action(detail=False, methods=["POST"], url_path="create/huggingface")
+    def import_huggingface_model(self, request, pk=None):
+        """
+        Import a HuggingFace model
+        """
+        return self.create_model(request, pk=None)
 
-    # @action(detail=False, methods=["POST"], url_path="create/starcoder_model")
-    # def create_starcoder_model(self, request, pk=None):
-    #     """
-    #     Create a StarCoder model
-    #     """
-    #     pass
+    @action(detail=False, methods=["POST"], url_path="create/starcoder")
+    def create_starcoder_model(self, request, pk=None):
+        """
+        Create a StarCoder model
+        """
+        return self.create_model(request, pk=None)
+    

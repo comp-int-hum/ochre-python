@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 class MetadataMixin(Model):
     metadata = JSONField(
         default=dict,
-        editable=False
+        editable=False,
     )
 
     class Meta:

@@ -1,3 +1,9 @@
+import logging
+from rest_framework.serializers import CharField, IntegerField, HyperlinkedRelatedField, ListField, FloatField, BooleanField
+from pyochre.server.ochre.serializers import OchreSerializer
+from pyochre.server.ochre.fields import ActionOrInterfaceField
+from pyochre.server.ochre.models import MachineLearningModel, Query, PrimarySource
+from pyochre.server.ochre.fields import MachineLearningModelInteractionField
 import io
 import time
 import zipfile
@@ -16,6 +22,7 @@ import tempfile
 import os.path
 from importlib.resources import files
 from datetime import datetime
+from django.db.models import Model
 from django.conf import settings
 from django.core.files.base import ContentFile
 from gensim.models import LdaModel
@@ -32,14 +39,14 @@ from pyochre.server.ochre.models import MachineLearningModel, Query, PrimarySour
 OCHRE = Namespace(settings.OCHRE_NAMESPACE)
 
 
-logger = logging.getLogger(__name__)
-
-
 if settings.USE_CELERY:
     from celery import shared_task
 else:
     def shared_task(func):
         return func
+
+
+logger = logging.getLogger(__name__)
 
 
 class EpochLogger(Metric):
@@ -62,10 +69,10 @@ class EpochLogger(Metric):
         return 0
 
 
-def create_topic_model_mar(topic_model, name, fname):
+def create_topic_model_mar(topic_model, name, fname, lowercase):
     #from importlib.resources import files
     handler_string = files("pyochre").joinpath("data/topic_model_handler.py").read_text()
-    query_string = files("pyochre").joinpath("data/topic_model_input_signature.sparql").read_text()
+    sig_string = files("pyochre").joinpath("data/topic_model_signature.ttl").read_text()
     meta = {
         "runtime" : "python",
         "modelServerVersion": "1.0",
@@ -77,7 +84,8 @@ def create_topic_model_mar(topic_model, name, fname):
             "handler": "handler.py",
             "modelFile": "model.py",
             "modelVersion": "1.0",
-            "modelInputSignature" : query_string
+            "modelSignature" : sig_string,
+            "lowercase" : lowercase
         }
     }
     with zipfile.ZipFile(fname, "w") as zfd:
@@ -93,14 +101,13 @@ def create_topic_model_mar(topic_model, name, fname):
 
 @shared_task
 def train_topic_model(
-        primarysource_id,        
-        query_id,
-        user_id,
+        model_id,
+        primarysource_id,
+        created_by_id,
         name,
         topic_count,
         stopwords,
         random_seed,
-
         passes,
         iterations,
         lowercase,
@@ -109,7 +116,9 @@ def train_topic_model(
         maximum_vocabulary_size,
         maximum_proportion,
         minimum_occurrence,
-        maximum_documents=50000,
+        maximum_documents,
+        query_id=None,        
+        **argd
 ):
     from importlib.resources import files
     signature_string = "@prefix ochre: <{}> .\n".format(settings.OCHRE_NAMESPACE) + files("pyochre").joinpath("data/topic_model_signature.ttl").read_text()
@@ -119,22 +128,13 @@ def train_topic_model(
             settings.OCHRE_NAMESPACE,
             files("pyochre").joinpath("data/topic_model_training_signature.sparql").read_text()
         )
-    user = User.objects.get(id=user_id)
+    user = User.objects.get(id=created_by_id)
     query = Query.objects.get(id=query_id) if query_id else None
     primarysource = PrimarySource.objects.get(id=primarysource_id)
     split_pattern = r"\s+"
     token_pattern_in = r"(\S+)"
     token_pattern_out = r"\1"
-    model = MachineLearningModel(
-        created_by=user,
-        name=name,
-        message="Preparing training data",
-        metadata={
-            "passes" : passes
-        }
-    )        
-    model.state = model.PROCESSING
-    model.save()
+    model = MachineLearningModel.objects.get(id=model_id)
     signature_graph = Graph()
     signature_graph.parse(data=signature_string)
     if random_seed != None:
@@ -149,20 +149,22 @@ def train_topic_model(
                 doc = str(binding.get("doc"))
                 word = binding.get("word").value
                 docs[doc] = docs.get(doc, [])
-                word = re.sub(r"^[^a-zA-Z0-9]+", "", word)
-                word = re.sub(r"[^a-zA-Z0-9]+$", "", word)
+                word = re.sub(r"^\W+", "", word)
+                word = re.sub(r"\W+$", "", word)
                 word = word.lower() if lowercase else word
                 if word not in stopwords and len(word) >= minimum_token_length:
                     docs[doc].append(word)
         else:
-            for s, p, o in primarysource.data:
+            g = Graph()
+            g.parse(data=primarysource.data)
+            for s, p, o in g:
                 if p == OCHRE["hasValue"]:
                     txt = o.value.lower() if lowercase else o.value
                     key = len(docs)
                     docs[key] = []
                     for word in txt.split():
-                        word = re.sub(r"^[^a-zA-Z0-9]+", "", word)
-                        word = re.sub(r"[^a-zA-Z0-9]+$", "", word)
+                        word = re.sub(r"^\W+", "", word)
+                        word = re.sub(r"\W+$", "", word)
                         word = word.lower() if lowercase else word
                         if word not in stopwords and len(word) >= minimum_token_length:
                             docs[key].append(word)
@@ -208,7 +210,8 @@ def train_topic_model(
             create_topic_model_mar(
                 topic_model,
                 name,
-                mar_path
+                mar_path,
+                lowercase
             )
             with open(mar_path, "rb") as mar, open(sig_path, "rb") as sig:
                 files = {
@@ -262,3 +265,158 @@ def train_topic_model(
     model.save()
 
 
+class MachineLearningModelTopicModelSerializer(OchreSerializer):
+    primarysource = HyperlinkedRelatedField(
+        queryset=PrimarySource.objects.all(),
+        view_name="api:primarysource-detail",
+        help_text="The primary source to train the topic model on"
+    )
+    query = HyperlinkedRelatedField(
+        queryset=Query.objects.all(),
+        view_name="api:query-detail",
+        allow_null=True,
+        required=False,
+        help_text="Optional SPARQL query file to manipulate the primary source"
+    )    
+    topic_count = IntegerField(
+        required=False,
+        write_only=True,
+        default=10,
+        allow_null=True,
+        help_text="The number of topics the model will infer"
+    )
+    stopwords = ListField(
+        child=CharField(
+            required=False,
+            write_only=True,
+            help_text="A list of words to ignore"
+        ),
+        default=[],
+        allow_null=True,
+        required=False
+    )
+    random_seed = IntegerField(
+        required=False,
+        write_only=True,
+        default=0,
+        allow_null=True,
+        help_text="Seed for random number generator"
+    )
+    maximum_documents = IntegerField(
+        required=False,
+        write_only=True,
+        allow_null=True,
+        default=50000,
+        help_text="Maximum number of documents to train on"
+    )
+    passes = IntegerField(
+        required=False,
+        write_only=True,
+        default=100,
+        allow_null=True,
+        help_text="Number of training passes over corpus"
+    )
+    iterations = IntegerField(
+        required=False,
+        write_only=True,
+        default=100,
+        allow_null=True,
+        help_text="Number of iterations for variational optimization"
+    )
+    maximum_context_tokens = IntegerField(
+        required=False,
+        write_only=True,
+        allow_null=True,
+        default=500,
+        help_text="Maximum size of a 'context' in tokens"
+    )
+    lowercase = BooleanField(
+        required=False,
+        write_only=True,
+        allow_null=True,
+        default=False,
+        help_text="Convert text to lower-case"
+    )
+    force = BooleanField(
+        required=False,
+        write_only=True,
+        allow_null=True,
+        default=False,
+        help_text="Overwrite any existing model of the same name and creator"
+    )
+    minimum_token_length = IntegerField(
+        required=False,
+        write_only=True,
+        default=3,
+        allow_null=True,
+        help_text="Number of iterations for variational optimization"
+    )
+    maximum_vocabulary_size = IntegerField(
+        required=False,
+        write_only=True,
+        default=30000,
+        allow_null=True,
+        help_text="Number of iterations for variational optimization"
+    )
+    minimum_occurrence = IntegerField(
+        required=False,
+        write_only=True,
+        default=5,
+        allow_null=True,
+        help_text="Number of iterations for variational optimization"
+    )
+    maximum_proportion = FloatField(
+        required=False,
+        write_only=True,
+        default=0.5,
+        allow_null=True,
+        help_text="Number of iterations for variational optimization"
+    )
+    class Meta:
+        model = MachineLearningModel
+        fields = [
+            "name",
+            "primarysource",
+            "force",
+            "query",
+            "topic_count",
+            "url",
+            "created_by",
+            "id",
+            "stopwords",
+            "random_seed",
+            "maximum_documents",
+            "passes",
+            "iterations",
+            "lowercase",
+            "maximum_context_tokens",
+            "minimum_token_length",
+            "maximum_vocabulary_size",
+            "maximum_proportion",
+            "minimum_occurrence"
+        ]
+        
+    def create(self, validated_data):
+        if validated_data.get("force", False):
+            for existing in MachineLearningModel.objects.filter(
+                    name=validated_data["name"],
+                    created_by=validated_data["created_by"]
+            ):
+                existing.delete()
+        model = MachineLearningModel(
+            created_by=validated_data["created_by"],
+            name=validated_data["name"],
+            message="Training topic model",
+            state=MachineLearningModel.PROCESSING
+        )
+        model.save()
+        args = {}
+        for k, v in validated_data.items():
+            if isinstance(v, Model):
+                args[k + "_id"] = v.id
+            else:
+                args[k] = v
+        train_topic_model.delay(
+            model.id,
+            **args
+        )

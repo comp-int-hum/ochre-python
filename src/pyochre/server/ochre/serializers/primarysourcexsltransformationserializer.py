@@ -1,32 +1,15 @@
-import typing
-import subprocess
-import re
-import io
 import os.path
-import shlex
-import json
-import zipfile
-import pickle
-from importlib.resources import files
-from django.conf import settings
-from pyochre.utils import rdf_store
-from pyochre.server.ochre.models import PrimarySource
-from rdflib import Graph
-
 import logging
-import sys
-import io
-import os
-import json
-import tarfile
-from pyochre.server.ochre import settings
-from pyochre.utils import meta_open
-from pyochre.primary_sources import TsvParser, CsvParser, JsonParser, create_domain, enrich_uris, NoHeaderTsvParser, NoHeaderCsvParser, XmlParser
+import re
+import tempfile
+from rest_framework.serializers import HyperlinkedIdentityField, FileField, BooleanField
+from django.conf import settings
+from rdflib import Namespace, Graph, Dataset
 from lxml.etree import XML, XSLT, parse, TreeBuilder, tostring, XSLTExtension
-import rdflib
-from rdflib.plugins.stores.sparqlstore import SPARQLUpdateStore
-from rdflib import Dataset, Namespace, URIRef, Literal, BNode
-from rdflib.graph import BatchAddGraph
+from pyochre.server.ochre.models import PrimarySource, Query, Annotation
+from pyochre.server.ochre.serializers import OchreSerializer
+from pyochre.utils import meta_open, rdf_store
+from pyochre.primary_sources import TsvParser, CsvParser, JsonParser, create_domain, enrich_uris, NoHeaderTsvParser, NoHeaderCsvParser, XmlParser
 
 
 logger = logging.getLogger(__name__)
@@ -55,8 +38,9 @@ def file_type(fname):
     _, ext = os.path.splitext(re.sub(r"\.(gz|bz2)$", "", fname))
     return ext[1:]
 
+
 @shared_task
-def expand_primarysource(
+def primarysource_from_xsl_transformation(
         object_id,
         data_file,
         transformation_file,
@@ -79,10 +63,11 @@ def expand_primarysource(
             for xml in parser(ifd, split=split_data):
         
                 logger.info("Creating RDF from XML")
-                tr = transform(xml)
+                tr = transform(xml) #, ochre_namespace=settings.OCHRE_NAMESPACE)
+                
 
                 logger.info("Loading the RDF and skolemizing it")
-                g = rdflib.Graph(base="http://test/")
+                g = Graph(base="http://test/")
                 g.parse(data=tostring(tr), format="xml", publicID=OCHRE)
                 g = g.skolemize()
 
@@ -159,7 +144,7 @@ def expand_primarysource(
            OCHRE["{}_domain".format(obj.id)]
         )
         for s, p, o in create_domain(obj):
-           dg.add((s, p, o))
+            dg.add((s, p, o))
         store.commit()
 
         # for uri, (fname, mode) in materials.items():
@@ -183,3 +168,110 @@ def expand_primarysource(
         for fname in [data_file, transformation_file, materials_file]:
             if fname:
                 os.remove(fname)
+
+
+class PrimarySourceXslTransformationSerializer(OchreSerializer):    
+
+    data_file = FileField(
+        write_only=True,
+        help_text="Data in some supported non-RDF format (e.g. XML, JSON, CSV)"
+    )
+
+    transformation_file = FileField(
+        write_only=True,
+        required=True,
+        help_text="XSL file describing the transformation of the data into RDF"
+    )
+
+    materials_file = FileField(
+        write_only=True,
+        help_text="Data in some supported non-RDF format (e.g. XML, JSON, CSV)",
+        required=False,
+        allow_null=True
+    )
+
+    split_data = BooleanField(
+        write_only=True,
+        default=True,
+        required=False,
+        allow_null=True,
+        help_text="Split data files to emulate streaming (may lead to incorrect RDF for some formats/transformations)"
+    )
+    
+    domain_url = HyperlinkedIdentityField(
+        view_name="api:primarysource-domain"
+    )
+    
+    clear_url = HyperlinkedIdentityField(
+        view_name="api:primarysource-clear"
+    )
+    
+    query_url = HyperlinkedIdentityField(
+        view_name="api:primarysource-query"
+    )
+    
+    update_url = HyperlinkedIdentityField(
+        view_name="api:primarysource-sparqlupdate"
+    )    
+    
+    class Meta:
+        model = PrimarySource
+        fields = [
+            "name",
+            "data_file",
+            "transformation_file",
+            "materials_file",
+            "split_data",
+            "domain_url",
+            "creator",
+            "id",
+            "url",
+            "clear_url",
+            "query_url",
+            "update_url"
+        ]
+
+    def create(self, validated_data):
+        logger.info("Creating new primarysource")
+        obj = PrimarySource(
+            name=validated_data["name"],
+            created_by=validated_data["created_by"],
+            state=PrimarySource.PROCESSING,
+            message="This primary source is being processed..."
+        )
+        obj.save()
+        _, d_name = tempfile.mkstemp(
+            suffix=os.path.basename(validated_data["data_file"].name),
+            dir=settings.TEMP_ROOT
+        )
+        _, tr_name = tempfile.mkstemp(
+            suffix=os.path.basename(validated_data["transformation_file"].name),
+            dir=settings.TEMP_ROOT
+        )
+        if validated_data.get("materials_file", False):
+            _, mf_name = tempfile.mkstemp(
+                suffix=os.path.basename(validated_data["materials_file"].name),
+                dir=settings.TEMP_ROOT
+            )
+        else:
+            mf_name = None
+        for stream, fname in [
+                (validated_data.get("data_file"), d_name),
+                (validated_data.get("transformation_file"), tr_name),
+                (validated_data.get("materials_file"), mf_name)
+        ]:
+            if fname:
+                with open(fname, "wb") as ofd:
+                    ofd.write(stream.read())
+        
+        obj.task_id = primarysource_from_xsl_transformation.delay(
+            obj.id,
+            d_name,
+            tr_name,
+            mf_name,
+            validated_data.get("split_data", False)
+        )
+        obj.save()
+        return obj
+
+    

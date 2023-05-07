@@ -4,7 +4,7 @@ from pyochre.server.ochre.fields import VegaField, ActionOrInterfaceField, Annot
 from pyochre.server.ochre.serializers import OchreSerializer
 from pyochre.server.ochre.models import Annotation, MachineLearningModel, Query, PrimarySource
 from pyochre.server.ochre.vega import  TemporalEvolution, SpatialDistribution, WordCloud
-from pyochre.server.ochre import tasks
+
 
 
 logger = logging.getLogger(__name__)

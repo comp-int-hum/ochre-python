@@ -1,0 +1,17 @@
+CONSTRUCT {
+  ?story ochre:hasPart ?token .
+  ?token ochre:hasLabel ?word .
+  ?token ochre:isA ochre:Token .
+  ?story ochre:hasTag ?title .
+  ?token ochre:hasOrdinal ?line_number .
+} WHERE
+{
+  ?story ochre:isA ochre:Story .
+  ?story ochre:hasPart ?line .
+  ?story ochre:hasLabel ?title .
+  ?line ochre:isA ochre:LineOfVerse .
+  ?line ochre:hasPart ?token .
+  ?token ochre:isA ochre:Token .
+  ?line ochre:hasOrdinal ?line_number .
+  ?token ochre:hasLabel ?word .
+}

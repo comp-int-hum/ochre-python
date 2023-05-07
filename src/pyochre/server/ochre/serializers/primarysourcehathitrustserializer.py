@@ -1,23 +1,15 @@
-import io
-import time
-import zipfile
-import random
-import pickle
-import json
-from urllib.parse import urlencode
-import csv
-import gzip
 import os.path
 import logging
+import io
+import zipfile
 import re
-import os
-import tarfile
+import csv
 import tempfile
-import os.path
-from importlib.resources import files
-from datetime import datetime
+from rest_framework.serializers import HyperlinkedIdentityField, FileField, BooleanField
 from django.conf import settings
-from django.core.files.base import ContentFile
+from rdflib import Namespace
+from pyochre.server.ochre.models import PrimarySource, Query, Annotation
+from pyochre.server.ochre.serializers import OchreSerializer
 from rdflib import Graph, BNode, URIRef, Literal, Dataset
 from rdflib.namespace import RDF, RDFS, XSD, Namespace
 from pyochre.server.ochre.models import PrimarySource, User
@@ -26,10 +18,10 @@ from pyochre.utils import rdf_store
 from pyochre.primary_sources import create_domain
 
 
-OCHRE = Namespace(settings.OCHRE_NAMESPACE)
-
-
 logger = logging.getLogger(__name__)
+
+
+OCHRE = Namespace(settings.OCHRE_NAMESPACE)
 
 
 if settings.USE_CELERY:
@@ -41,20 +33,13 @@ else:
 
 @shared_task
 def primarysource_from_hathitrust_collection(
+        primarysource_id,
         collection_string,
-        name,
-        created_by_id
 ):
-    ps = PrimarySource(
-        name=name,
-        created_by=User.objects.get(id=created_by_id),
-        state=PrimarySource.PROCESSING,
-        message="This primary source is still being processed..."
-    )
-    ps.save()
-    psf = PairtreeStorageFactory()
-    g = Graph(base="http://test/")
+    ps = PrimarySource.objects.get(id=primarysource_id)
     try:
+        psf = PairtreeStorageFactory()
+        g = Graph(base="http://test/")
         c = csv.DictReader(io.StringIO(collection_string), delimiter="\t")
         for row in c:
             toks = row["htid"].split(".")
@@ -71,7 +56,6 @@ def primarysource_from_hathitrust_collection(
                 obj = store.get_object(ident, create_if_doesnt_exist=False)
             except:
                 continue
-            
             full_content = []                        
             for subpath in obj.list_parts():
                 for fname in obj.list_parts(subpath):
@@ -95,6 +79,7 @@ def primarysource_from_hathitrust_collection(
             publisher = BNode()
             publication_place = BNode()
             g.add((text, OCHRE["isA"], OCHRE["Text"]))
+            #g.add((text, OCHRE["hasMaterialId"], Literal(row["htid"])))
             g.add((text, OCHRE["hasValue"], Literal(full_content)))
             if "author" in row:
                 g.add((author, OCHRE["hasLabel"], Literal(row["author"])))            
@@ -113,8 +98,6 @@ def primarysource_from_hathitrust_collection(
                 g.add((text, OCHRE["inLanguage"], Literal(row["lang"])))
             if "title" in row:
                 g.add((text, OCHRE["hasLabel"], Literal(row["title"])))
-
-
         g = g.skolemize()
         store = rdf_store(settings=settings)
         dataset = Dataset(store=store, default_graph_base=OCHRE)
@@ -138,3 +121,54 @@ def primarysource_from_hathitrust_collection(
         raise e
     finally:
         pass
+
+
+class PrimarySourceHathiTrustSerializer(OchreSerializer):    
+
+    collection_file = FileField(
+        write_only=True,
+        help_text="A collection CSV file downloaded from the HathiTrust interface"
+    )
+    force = BooleanField(
+        required=False,
+        write_only=True,
+        allow_null=True,
+        default=False,
+        help_text="Overwrite any existing primary source of the same name and creator"
+    )
+    
+    class Meta:
+        model = PrimarySource
+        fields = [
+            "name",
+            "force",
+            "collection_file",
+            "id",
+            "url",
+        ]
+
+    def create(self, validated_data):
+        obj = PrimarySource(
+            name=validated_data["name"],
+            created_by=validated_data["created_by"],
+            state=PrimarySource.PROCESSING,
+            message="This primary source is being processed..."
+        )
+        obj.save()
+        primarysource_from_hathitrust_collection.delay(
+            obj.id,
+            validated_data["collection_file"].read().decode("utf-8")
+        )
+        return obj
+
+    def update(self, instance, validated_data):        
+        super(
+            PrimarySourceSerializer,
+            self
+        ).update(
+            instance,
+            validated_data
+        )
+        instance.save(**validated_data)
+        return instance
+    

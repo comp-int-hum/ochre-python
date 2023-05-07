@@ -10,7 +10,7 @@ class OchreSerializer(ModelSerializer):
 
     def __init__(self, *argv, **argd):
         for field in self.Meta.model._meta.fields:
-            if isinstance(field, ForeignKey):
+            if isinstance(field, ForeignKey) and field.name not in getattr(self.Meta, "exclude", []):
                 self.fields[field.name] = HyperlinkedRelatedField(
                     view_name="api:{}-detail".format(
                         field.related_model._meta.model_name

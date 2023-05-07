@@ -7,7 +7,7 @@
     >
   <xsl:output method="xml" indent="yes"/>
 
-  <xsl:variable name="ochre">https://cdh.jhu.edu/ontology/</xsl:variable>
+  <xsl:param name="ochre_namespace"/>
   <xsl:variable name="materials-dir"></xsl:variable>
   <xsl:variable name="xsd">http://www.w3.org/2001/XMLSchema#</xsl:variable>
 
@@ -15,7 +15,7 @@
   <xsl:template match="text()|@*"/>
   
   <xsl:template match="/">
-    <rdf:RDF xml:base="{$ochre}">
+    <rdf:RDF xml:base="{$ochre_namespace}">
       <xsl:apply-templates select="document/object/property"/>
     </rdf:RDF>
   </xsl:template>

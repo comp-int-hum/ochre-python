@@ -54,7 +54,6 @@ class OchreAutoSchema(AutoSchema):
 
     def map_field(self, field):
         retval = super(OchreAutoSchema, self).map_field(field)
-        #print(field)
         if isinstance(field, serializers.HyperlinkedRelatedField):
             retval["format"] = "object"
             if field.queryset:

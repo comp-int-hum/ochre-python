@@ -164,7 +164,6 @@ class MachineLearningModel(AsyncMixin, OchreModel):
     
     def save(self, **argd):
         create = not (self.id and True)
-        self.state = self.COMPLETE
         retval = super(MachineLearningModel, self).save()
         if "signature_file" in argd:
             self.delete_signature()
@@ -186,7 +185,6 @@ class MachineLearningModel(AsyncMixin, OchreModel):
                 pg.add(tr)
                 if i % every == 0:
                     store.commit()
-                    print(i)
             if i % every != 0:
                 store.commit()
         if "mar_file" in argd:

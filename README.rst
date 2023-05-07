@@ -6,7 +6,7 @@ OCHRE
 The Open Computational Humanities Research Ecosystem
 ****************************************************
 
-The Open Computational Humanities Research Ecosystem (OCHRE) provides the server infrastructure and client libraries to experiment with complex machine learning and rich humanistic scholarship.
+The Open Computational Humanities Research Ecosystem (OCHRE) provides the server infrastructure and client library to experiment with complex machine learning and rich humanistic primary sources.
 
 .. _installation:
 
@@ -14,13 +14,15 @@ The Open Computational Humanities Research Ecosystem (OCHRE) provides the server
 Installation
 ============
 
-This package can be installed via `pip`.  It's advisable to employ Python `virtual environments <https://docs.python.org/3/library/venv.html>`_ (here and in other situations).  If you will be using the package as a library in your own code, run something like the following::
+This package can be installed via `pip`.  It's advisable to employ Python `virtual environments <https://docs.python.org/3/library/venv.html>`_ (here and in other situations).  If you will be using the package as a library in your own code, you might create a new directory and set it up by running something like the following::
 
+  $ mkdir my_new_project
+  $ cd my_new_project
   $ python3 -m venv local
   $ source local/bin/activate
   $ pip install git+https://github.com/comp-int-hum/ochre-python.git
 
-If you're planning to edit the package code itself, run something like::
+If you're planning to edit the package code itself, you might check out the current version from the git repository and "live install" the package by running something like::
 
   $ git clone https://github.com/comp-int-hum/ochre-python.git
   $ cd ochre-python
@@ -30,7 +32,7 @@ If you're planning to edit the package code itself, run something like::
   
 In either case, run `deactivate` to exit the virtual environment, `source local/bin/acticate` to enter it again.
 
-By default the package doesn't include certain dependencies that are important for deploying a dedicated server, but is designed to be fully functional without requiring significant modification.  To install the more production-grade dependencies there are three extra options that can be included: `ldap`, `postgres`, and `torchserve`.  For instance, to include the full set of options, the command is::
+The package is designed to be fully functional without requiring significant effort, but by default doesn't include certain dependencies that are important for deploying a substantial server.  To install the more production-grade dependencies there are three extra options that can be included: `ldap`, `postgres`, and `torchserve`.  For instance, to include the full set of options, the command is::
 
   $ pip install git+https://github.com/comp-int-hum/ochre-python.git[ldap,postgres,torchserve]
 
@@ -42,15 +44,15 @@ Note that these options may require additional effort, such as non-Python depend
 Configuration
 =============
 
-OCHRE is designed to be used as a Python client library, as off-the-shelf scripts, and as a deployable server in new environments.  This involves a bit of configuration, and this is accomplished by creating and editing a file called *env* in the directory where OCHRE will be used.  This file is in a simple text format and can be used to override any of the settings listed in the `env.py <https://github.com/comp-int-hum/ochre-python/blob/main/src/pyochre/env.py>`_ file.  For instance, if you are interacting with an OCHRE server that's browsable at "https://some.ochre.org:8443" and where you have an account with user name "jane" and password "changeme", your environment file might contain::
+Most users will treat OCHRE as a way of interacting with an existing OCHRE server, so before it will function, OCHRE needs to be told how to connect to the server.  When OCHRE is invoked as a script, it looks in the current directory for a file named `env`.  Minimally, this file should contain the following settings::
 
-  USER=jane
-  PASSWORD=changeme
-  PORT=8443
-  HOSTNAME=some.ochre.org
   PROTOCOL=https
+  HOSTNAME=cdh.jhu.edu
+  PORT=8443
+  USER=my_username
+  PASSWORD=my_password
 
-Most of the other settings have to do with running the OCHRE server, and are addressed in that section below.
+This would direct the script to connect to the OCHRE server at `https://cdh.jhu.edu:8441` as the user "my_username" and with password "my_password".  In fact, the `env` file can override any of the settings listed in the `env.py <https://github.com/comp-int-hum/ochre-python/blob/main/src/pyochre/env.py>`_ file, but these are the only settings needed unless you are running your own OCHRE server.
 
 .. _command:
 
@@ -58,39 +60,55 @@ Most of the other settings have to do with running the OCHRE server, and are add
 Command-line use
 ================
 
-OCHRE can be interacted with from the command-line in fairly sophisticated ways.
+OCHRE can be interacted with from the command-line in fairly sophisticated ways.  The basic pattern for a command is "python -m pyochre NOUN VERB OPTIONS": using the "-h" option (help), you can explore the nouns (types of things on the OCHRE server) and verbs (ways of manipulating them)::
 
-.. _library:
+  $ python -m pyochre -h
+  usage: python -m pyochre [-h]
+                         {Slide,ResearchArtifact,Annotation,Query,PrimarySource,MachineLearningModel,User,Documentation}
+  positional arguments:
+  {Slide,ResearchArtifact,Annotation,Query,PrimarySource,MachineLearningModel,User,Documentation}
 
-=================
-Library structure
-=================
+  options:
+    -h, --help            show this help message and exit
 
-The package has five submodules:
+So, the server can hold primary sources, annotations, machine learning models, etc.  To see how a primary source can be manipulated (its verbs), run::
 
-**pyochre.utils**
-  Various functions and classes that are generally useful in many places throughout the package
+  $ python -m pyochre PrimarySource -h
+  usage: python -m pyochre PrimarySource [-h]
+                                       {list,create,retrieve,update,partialUpdate,destroy,data,domain,clear,createHathiTrust}
+                                       ...
+				       
+  positional arguments:
+    {list,create,retrieve,update,partialUpdate,destroy,data,domain,clear,createHathiTrust}
+      list
+      create
+      retrieve
+      update
+      partialUpdate
+      destroy
+      data
+      domain
+      clear
+      createHathiTrust    Create a primary source from a HathiTrust collection file.
+  
+  options:
+    -h, --help            show this help message and exit
 
-**pyochre.server**
-  The OCHRE server, an orchestrated set of servers and frontends that manages the complexity of interdisciplinary computational research
+You can see what arguments are needed to invoke a particular verb::
 
-**pyochre.primary_sources**
-  Creating empirical primary sources with Formal domain descriptions and multimedia materials
+  $ python -m pyochre PrimarySource createHathiTrust -h
+  usage: python -m pyochre PrimarySource createHathiTrust [-h] --name NAME --collection_file COLLECTION_FILE
 
-**pyochre.machine_learning**
-  Instantiating, training, and fine-tuning models with well-defined signatures
+  options:
+    -h, --help            show this help message and exit
+    --name NAME
+    --collection_file COLLECTION_FILE
+                          A collection CSV file downloaded from the HathiTrust interface
 
-**pyochre.scholarly_knowledge**
-  Labeling data, specifying conceptual frameworks, and comparing hypotheses from human and computational sources
+Finally, you can actually invoke the verb with appropriate arguments::
 
-The latter three submodules correspond to basic concepts in computational humanities research, and constitute the "client library" that will be most relevant for the majority of users.
-
-Additionally, the `pyochre.primary_sources`, `pyochre.machine_learning`, `pyochre.scholarly_knowledge`, and `pyochre.server` submodules can each be executed as scripts, for instance::
-
-  $ python -m pyochre.scholarly_knowledge --help
-
-will print usage information about the `pyochre.scholarly_knowledge` script.  See the Scripts_ section for detailed information on how to use these.
-
+  $ python -m pyochre PrimarySource createHathiTrust --name "My primary source" --collection_file some_collection.csv
+  
 .. _concepts:
 
 =======================

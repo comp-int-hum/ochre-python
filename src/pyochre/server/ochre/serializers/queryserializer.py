@@ -23,7 +23,7 @@ class QuerySerializer(OchreSerializer):
             "name",
             "sparql_file",
             "sparql",
-            "created_by",
+            "creator",
             "url",
             "id"
         ]

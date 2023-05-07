@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:transform
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:wde="http://www.wikidata.org/entity/"
+    xmlns:wdp="http://www.wikidata.org/prop/direct/"
+    xmlns:ochre="urn:ochre:"
+    version="1.0"
+    >
+  <xsl:output method="xml" indent="yes"/>
+
+  <xsl:variable name="materials-dir"></xsl:variable>
+  <xsl:variable name="xsd">http://www.w3.org/2001/XMLSchema#</xsl:variable>
+  <xsl:variable name="ochre">urn:ochre:</xsl:variable>
+  <xsl:variable name="inscription">ochre:Inscription</xsl:variable>
+  <xsl:variable name="line_drawing">ochre:LineDrawing</xsl:variable>
+  <xsl:variable name="photo">ochre:Photo</xsl:variable>
+  <xsl:variable name="has_transliteration">ochre:hasTransliteration</xsl:variable>
+  <xsl:variable name="has_discoverer">ochre:hasDiscoverer</xsl:variable>
+
+
+  <xsl:template match="text()|@*"/>
+  
+  <xsl:template match="/">
+    <rdf:RDF
+	xmlns:wde="http://www.wikidata.org/entity/"
+	xmlns:wdp="http://www.wikidata.org/prop/direct/"
+	xmlns:ochre="urn:ochre:"
+	>
+      <xsl:apply-templates select="document/row"/>
+    </rdf:RDF>
+  </xsl:template>
+
+  <!-- inscription -->
+  <xsl:template match="/document/row">
+    <xsl:variable name="id" select="concat('P', cell[@id='id']/@value)"/>
+    <rdf:Description>
+      <ochre:isA rdf:resource="{$inscription}" />
+      <ochre:hasLabel rdf:datatype="{$xsd}string">
+	<xsl:value-of select="$id" />
+      </ochre:hasLabel>
+      <ochre:hasTransliteration rdf:datatype="{$xsd}string">
+	<xsl:value-of select="cell[@id='content']/@value" />
+      </ochre:hasTransliteration>
+      <xsl:apply-templates select="cell" />
+
+      <ochre:hasImage rdf:parseType="Resource">
+	<ochre:isA rdf:resource="{$line_drawing}" />
+	<ochre:hasLabel rdf:datatype="{$xsd}string">
+	  <xsl:value-of select="concat($id, '_line.jpg')" />
+	</ochre:hasLabel>
+      </ochre:hasImage>
+      
+      <ochre:hasImage rdf:parseType="Resource">
+	<ochre:isA rdf:resource="{$photo}" />
+	<ochre:hasLabel rdf:datatype="{$xsd}string">
+	  <xsl:value-of select="concat($id, '_photo.jpg')" />
+	</ochre:hasLabel>
+      </ochre:hasImage>
+    </rdf:Description>
+  </xsl:template>
+  
+  <!-- metadata item -->
+  <xsl:template match="/document/row/cell[@id='material']">
+    <ochre:madeFrom rdf:datatype="{$xsd}string">
+      <xsl:value-of select="@value"/>
+    </ochre:madeFrom>
+  </xsl:template>
+  
+  <xsl:template match="/document/row/cell[@id='language']">
+    <ochre:inLanguage rdf:datatype="{$xsd}string">
+      <xsl:value-of select="@value"/>
+    </ochre:inLanguage>
+  </xsl:template>
+
+  <xsl:template match="/document/row/cell[@id='genre']">
+    <ochre:hasGenre rdf:datatype="{$xsd}string">
+      <xsl:value-of select="@value"/>
+    </ochre:hasGenre>
+  </xsl:template>
+  
+</xsl:transform>

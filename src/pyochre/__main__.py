@@ -6,17 +6,11 @@ import os
 import logging
 from getpass import getpass
 import requests
-#from dotenv import load_dotenv, dotenv_values
 from pyochre.rest import Connection
 from pyochre import env
-#import environ
 
 
-logger = logging.getLogger("pyochre.rest")
-
-
-def dummy(args, connection):
-    logger.warning("A Command object was invoked without its default function being overridden")
+logger = logging.getLogger("pyochre")
 
 
 class Command(object):
@@ -26,6 +20,7 @@ class Command(object):
         env.read_env(env("ENVIRONMENT"))
         self.parser = argparse.ArgumentParser(
             prog="python -m pyochre",
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter
         )
         
     def run(self):
@@ -63,7 +58,6 @@ class Command(object):
                         if obj == robj:
                             relevant = True
                 if relevant:
-                    #print(method_info)
                     actions.append((path, methods))
             
             if len(actions) > 0:
@@ -74,13 +68,11 @@ class Command(object):
                 ssps = sp.add_subparsers()
                 for path, methods in actions:
                     for method_name, method in methods.items():
-                        #print(method["operationId"])
-                        #print(obj.lower())
                         action_name = re.sub(obj.lower() + "s?$", "", method["operationId"])
-                        #print(action_name)
                         ssp = ssps.add_parser(
                             action_name,
-                            help=method["description"]
+                            help=method["description"],
+                            formatter_class=argparse.ArgumentDefaultsHelpFormatter
                         )
                         if action_name == "list":
                             list_urls[obj] = path
@@ -136,14 +128,28 @@ class Command(object):
                                     
                         for param in method["parameters"]:
                             tp = param["schema"]["type"]
-                            ssp.add_argument(
+                            if param["name"] == "id":
+                                ssp.add_argument(
+                                    "--object_name",
+                                    dest="object_name",
+                                    required=True,
+                                    help="Name of object."
+                                )
+                                ssp.add_argument(
+                                    "--object_creator",
+                                    dest="object_creator",
+                                    required=False,
+                                    help="Username of object's creator.",
+                                    default=env("USER")
+                                )
+                            else:
+                                                        ssp.add_argument(
                                 "--{}".format(param["name"]),
                                 dest=param["name"],
                                 required=param.get("required", False),
                                 help=param["description"]
                             )
-
-        args = self.parser.parse_args()
+        args = self.parser.parse_args()        
         vargs = vars(args)
         for k in list(vargs.keys()):
             key = (vargs.get("action_name"), k)            
@@ -165,22 +171,35 @@ class Command(object):
                         success = True
                 if not success:
                     raise Exception("Could not find {} matching name {} and creator {}".format(model, name, user))
-                
-        url = args.url.format(**vargs)
+
+        
+        if "object_name" in vargs:
+            obj = None
+            for res in connection.action("get", list_urls[vargs["object_type"]]).json()["results"]:
+                if res["name"] == vargs["object_name"] and res["creator"] == vargs["object_creator"]:
+                    obj = res
+            if not obj:
+                raise Exception(
+                    "Could not find {} matching name {} and creator {}".format(
+                        vargs["object_type"],
+                        vargs["object_name"],
+                        vargs["object_creator"],
+                    )
+                )
+            url = obj["url"]
+        else:
+            url = args.url.format(**vargs)
 
         data = {k : v for k, v in vargs.items() if isinstance(v, (int, str, float, list, bool))}
         files = {k : v for k, v in vargs.items() if not isinstance(v, (int, str, float, list, bool))}
 
         resp = connection.action(args.method, url, data=data, files=files)
-        print(json.dumps(resp.json(), indent=4))
-        
-
-
-        
-    
+        try:
+            print(json.dumps(resp.json(), indent=4))
+        except:
+            print(resp.status_code)
 
 
 if __name__ == "__main__":
     command = Command()
     command.run()
-    pass

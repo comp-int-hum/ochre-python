@@ -1,3 +1,4 @@
+import argparse
 import logging
 import sys
 import io
@@ -113,93 +114,93 @@ def create_primary_source(args, connection):
             ofd.write(g.serialize(format="turtle"))
 
     # create or replace the primary source graph on the RDF server
-    obj = connection.create_or_replace_object(
-       model_name="primarysource",
-       object_name=args.name,
-       data={"name" : args.name}
-    )
+    # obj = connection.create_or_replace_object(
+    #    model_name="primarysource",
+    #    object_name=args.name,
+    #    data={"name" : args.name}
+    # )
 
-    # create dataset handle from a SPARQL connection to the RDF server
-    store = SPARQLUpdateStore(
-        query_endpoint=obj["query_url"],
-        update_endpoint=obj["update_url"],
-        autocommit=False,
-        returnFormat="json",
-    )
-    dataset = Dataset(store=store, default_graph_base=OCHRE)
+    # # create dataset handle from a SPARQL connection to the RDF server
+    # store = SPARQLUpdateStore(
+    #     query_endpoint=obj["query_url"],
+    #     update_endpoint=obj["update_url"],
+    #     autocommit=False,
+    #     returnFormat="json",
+    # )
+    # dataset = Dataset(store=store, default_graph_base=OCHRE)
 
-    #get the named graph corresponding to the primary source
-    ng = dataset.graph(
-        OCHRE["{}_data".format(obj["id"])]
-    )
+    # #get the named graph corresponding to the primary source
+    # ng = dataset.graph(
+    #     OCHRE["{}_data".format(obj["id"])]
+    # )
 
-    # information to collect
-    uris = set()
-    potential_materials = {}
-    ignore = set()
-    materials = {}
+    # # information to collect
+    # uris = set()
+    # potential_materials = {}
+    # ignore = set()
+    # materials = {}
 
-    modalities = {
-        OCHRE[x] : x for x in [
-            "image",
-            "video",
-            "text",
-            "audio",
-            "tensor"
-        ]
-    }
+    # modalities = {
+    #     OCHRE[x] : x for x in [
+    #         "image",
+    #         "video",
+    #         "text",
+    #         "audio",
+    #         "tensor"
+    #     ]
+    # }
     
-    #for s, p, o in g:
-    #    if p in modalities:
-    #        potential_materials[o] = modalities[p]
+    # #for s, p, o in g:
+    # #    if p in modalities:
+    # #        potential_materials[o] = modalities[p]
             
-    #for uri, name in modalities.items():
-    #    ng.add((uri, OCHRE["hasLabel"], Literal(name)))
+    # #for uri, name in modalities.items():
+    # #    ng.add((uri, OCHRE["hasLabel"], Literal(name)))
         
-    #for s, _, o in g.triples((None, OCHRE["hasLabel"], None)):
-    #    if s in potential_materials:
-    #        fname = os.path.join(args.base_path, o)
-    #        if os.path.exists(fname):
-    #            materials[s] = (fname, potential_materials[s])
-    #        else:
-    #            ignore.add(s)
-    every = 10000
-    for i, (s, p, o) in enumerate(g):
-        #if s in ignore or o in ignore:
-        #    continue
-        for n in [s, p, o]:
-            if isinstance(n, URIRef) and "wikidata" in n:
-                uris.add(n)
-        ng.add(
-            (
-                s,
-                p,
-                o
-            )
-        )
-        if i % every == 0:
-            store.commit()
-    if i % every != 0:
-        store.commit()
+    # #for s, _, o in g.triples((None, OCHRE["hasLabel"], None)):
+    # #    if s in potential_materials:
+    # #        fname = os.path.join(args.base_path, o)
+    # #        if os.path.exists(fname):
+    # #            materials[s] = (fname, potential_materials[s])
+    # #        else:
+    # #            ignore.add(s)
+    # every = 10000
+    # for i, (s, p, o) in enumerate(g):
+    #     #if s in ignore or o in ignore:
+    #     #    continue
+    #     for n in [s, p, o]:
+    #         if isinstance(n, URIRef) and "wikidata" in n:
+    #             uris.add(n)
+    #     ng.add(
+    #         (
+    #             s,
+    #             p,
+    #             o
+    #         )
+    #     )
+    #     if i % every == 0:
+    #         store.commit()
+    # if i % every != 0:
+    #     store.commit()
         
-    ng = dataset.graph(
-        OCHRE["{}_domain".format(obj["id"])]
-    )
-    for s, p, o in create_domain(connection, obj):
-        ng.add((s, p, o))
-    store.commit()
+    # ng = dataset.graph(
+    #     OCHRE["{}_domain".format(obj["id"])]
+    # )
+    # for s, p, o in create_domain(connection, obj):
+    #     ng.add((s, p, o))
+    # store.commit()
 
-    for uri, (fname, mode) in materials.items():
-        ext = os.path.splitext(fname)[-1][1:]
-        with open(fname, "rb") as ifd:
-            connection.create_object(
-                "material",
-                {
-                    "uid" : str(uri),
-                    "content_type" : "{}/{}".format(mode, ext)
-                },
-                files={"file" : ifd}
-            )
+    # for uri, (fname, mode) in materials.items():
+    #     ext = os.path.splitext(fname)[-1][1:]
+    #     with open(fname, "rb") as ifd:
+    #         connection.create_object(
+    #             "material",
+    #             {
+    #                 "uid" : str(uri),
+    #                 "content_type" : "{}/{}".format(mode, ext)
+    #             },
+    #             files={"file" : ifd}
+    #         )
     
 
 class PrimarySourcesCommand(Command):
@@ -335,4 +336,62 @@ class PrimarySourcesCommand(Command):
 
 
 if __name__ == "__main__":
-    PrimarySourcesCommand().run()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--xslt_file",
+        dest="xslt_file",
+        help="XSLT file describing how to process the data tree"
+    )
+    parser.add_argument(
+        "--input_file",
+        dest="input_file",
+        help=""
+    )
+    parser.add_argument(
+        "--input_format",
+        dest="input_format",
+        help="Format of input file",
+        choices=formats.keys()
+    )
+    parser.add_argument(
+        "--output_xml_file",
+        dest="output_xml_file",
+        help=""
+    )
+    parser.add_argument(
+        "--output_rdf_file",
+        dest="output_rdf_file",
+        help=""
+    )
+
+
+    args = parser.parse_args()
+    #PrimarySourcesCommand().run()
+    # load the XML-to-RDF transformation rules
+    with meta_open(args.xslt_file, "rt") as ifd:
+        transform = XSLT(parse(ifd))
+
+    # instantiate the specified X-to-XML parser
+    parser = formats[args.input_format]()
+
+    # create XML from the primary sources
+    with meta_open(args.input_file, "rt") as ifd:
+        xml = parser(ifd, split=True)
+
+        if args.output_xml_file:
+            with open(args.output_xml_file, "wb") as ofd:
+                xx = xml.__next__()
+                xx.getroottree().write(ofd, pretty_print=True)
+
+                # create RDF from the XML (lots of memory!)
+    tr = transform(xx)
+
+    
+    # load the RDF and skolemize it
+    g = rdflib.Graph(base="http://test/")
+    g.parse(data=tostring(tr), format="xml", publicID=OCHRE)
+    g = g.skolemize()
+
+    if args.output_rdf_file:
+        with open(args.output_rdf_file, "wt") as ofd:
+            ofd.write(g.serialize(format="turtle"))

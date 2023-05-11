@@ -45,7 +45,8 @@ class XsvParser(TreeBuilder):
             self.start("row", {"id" : str(i)})
             for k, v in row.items() if self.header else enumerate(row, 1):
                 if v and v.strip() != "":
-                    v = v.encode("utf-8")
+                    if not isinstance(v, str):
+                        v = v.decode("utf-8")
                     self.start("cell", {"id" : str(k), "value" : str(v)})
                     self.end("cell")
             self.end("row")

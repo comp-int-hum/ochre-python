@@ -1,10 +1,23 @@
-{% extends "ochre/index.html" %}
+{% extends "ochre/template_pack/index.html" %}
 {% block content %}
-<form action="/accounts/login/?next_page={{next}}" method="post">
+<div
+  class="container"
+  >
+  <form action="/accounts/login/?next_page={{next}}" method="post">
     {% csrf_token %}
     {{ form }}
     <input type="hidden" name="next" value="{{next}}">
-    <input type="submit" value="Submit">
-</form>
-Alternatively, <a href="/accounts/register/">register</a> with your JHU email address or <a href="/accounts/password_reset">get your username and reset your password</a>.
+    <button
+      type="submit"
+      class="submit-button"
+      dclass="{{commit_icon}}"
+      id="login-button"
+      dstyle="transform:scale(2,2);"      
+      >
+      Submit
+    </button>
+
+  </form>
+  Alternatively, <a href="/accounts/register/">register</a> with your email address or <a href="/accounts/password_reset">get your username and reset your password</a>.
+</div>
 {% endblock %}

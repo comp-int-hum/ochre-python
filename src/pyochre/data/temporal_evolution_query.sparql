@@ -2,14 +2,14 @@ SELECT ?bucket ?bucket_name ?topic (COUNT(?topic) as ?count)
 FROM <%(data)s>
 FROM <%(annotation)s>
 WHERE {
-  ?story ochre:isA ochre:Story .
+  ?story ochre:instanceOf ochre:Story .
   ?story ochre:hasOrdinal ?bucket .
   ?story ochre:hasTag ?bucket_name .
   ?story ochre:hasPart ?line .
   ?story ochre:hasLabel ?title .
-  ?line ochre:isA ochre:LineOfVerse .
+  ?line ochre:instanceOf ochre:LineOfVerse .
   ?line ochre:hasPart ?token .
-  ?token ochre:isA ochre:Token .
+  ?token ochre:instanceOf ochre:Token .
   ?line ochre:hasOrdinal ?line_number .
   ?token ochre:hasLabel ?word .
   ?token	ochre:hasValue ?topic .

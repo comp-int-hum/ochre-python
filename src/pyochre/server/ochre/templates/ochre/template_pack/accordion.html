@@ -1,17 +1,13 @@
-{% extends "ochre/index.html" %}
 {% load ochre %}
 
-
-{% block content %}
-  <div
-    class="accordion ochre-accordion {{model.model_class}}"
-    id="accordion-{{uid}}"
-    accordion_url="{{accordion_url}}"
-    >  
-    {% if items|length > 0 %}
-      {% for item in items %}
-        {% include "ochre/template_pack/accordion_item.html" with item=item index=forloop.counter uid=uid documentation_model=documentation_model %}
-      {% endfor %}
-    {% endif %}
-  </div>
-{% endblock %}
+<div
+  class="accordion ochre-accordion {{model.model_class}}"
+  id="{{uid}}-accordion"
+  >
+  {% if items|length > 0 %}
+  {% for item in items %}
+  {% join uid forloop.counter as next_uid %}
+  {% include "ochre/template_pack/accordion_item.html" with item=item index=forloop.counter uid=next_uid request=request %}
+  {% endfor %}
+  {% endif %}
+</div>

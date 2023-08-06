@@ -25,5 +25,5 @@ _:ObjectRecognitionOutput
 
 
 _:ObjectRecognitionWidget
-    ochre:isA ochre:ImageRecorder ;
+    ochre:instanceOf ochre:ImageRecorder ;
     ochre:hasDescription "Upload an image" .

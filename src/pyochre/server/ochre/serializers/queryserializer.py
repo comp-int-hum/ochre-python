@@ -1,30 +1,35 @@
 import logging
-from rest_framework.serializers import HyperlinkedIdentityField, CharField, FileField
+from rest_framework.serializers import HyperlinkedIdentityField, CharField, FileField, CurrentUserDefault, BaseSerializer, HiddenField, Serializer
 from pyochre.server.ochre.models import Query
 from pyochre.server.ochre.serializers import OchreSerializer
+from pyochre.server.ochre.fields import MonacoEditorField
 
 
 logger = logging.getLogger(__name__)
 
 
-class QuerySerializer(OchreSerializer):
-
-    sparql_file = FileField(
-        write_only=True
+class QuerySerializer(Serializer):
+    name = CharField(
+        help_text="Names must be unique for the user and type of object."
     )
-
-    sparql = CharField(
-        read_only=True
+    sparql = MonacoEditorField(
+        label="SPARQL query",
+        help_text="Queries will automatically have the appropriate 'ochre:' prefix added."
+    )
+    permissions_url = HyperlinkedIdentityField(
+        view_name="api:query-permissions"
+    )
+    created_by = HiddenField(            
+        default=CurrentUserDefault()
     )
     
     class Meta:
         model = Query
         fields = [
             "name",
-            "sparql_file",
-            "sparql",
-            "creator",
+            "sparql",            
             "url",
+            "permissions_url",
             "id"
         ]
 
@@ -32,7 +37,7 @@ class QuerySerializer(OchreSerializer):
         obj = Query(
             name=validated_data["name"],
             created_by=validated_data["created_by"],
-            sparql=validated_data["sparql_file"].read().decode("utf-8")
+            sparql=validated_data["sparql"] #.read().decode("utf-8")
         )
         obj.save()
         return obj

@@ -1,6 +1,7 @@
 import logging
 from importlib.resources import files
 from django.conf import settings
+from rdflib import Graph
 from pyochre.server.ochre.vega import OchreVisualization
 from pyochre.utils import rdf_store
 
@@ -9,50 +10,61 @@ logger = logging.getLogger(__name__)
 
 query = "PREFIX ochre: <{}>\n".format(settings.OCHRE_NAMESPACE) + """
   SELECT ?bucket ?bucket_name ?topic (COUNT(?topic) as ?count) WHERE {
-  	?story ochre:isA ochre:Story .
+  	?story ochre:instanceOf ochre:Story .
   	?story ochre:hasOrdinal ?bucket .
         ?story ochre:hasTag ?bucket_name .
   	?story ochre:hasPart ?line .
   	?story ochre:hasLabel ?title .
-  	?line ochre:isA ochre:LineOfVerse .
+  	?line ochre:instanceOf ochre:LineOfVerse .
   	?line ochre:hasPart ?token .
-  	?token ochre:isA ochre:Token .
+  	?token ochre:instanceOf ochre:Token .
   	?line ochre:hasOrdinal ?line_number .
   	?token ochre:hasLabel ?word .
         ?token	ochre:hasValue ?topic .
   } GROUP BY ?bucket ?topic ?bucket_name
 """
 
+query = "PREFIX ochre: <{}>\n".format(settings.OCHRE_NAMESPACE) + """
+SELECT ?ann ?start ?end ?title ?date ?loc
+FROM <%(data)s>
+FROM <%(annotation)s>
+WHERE
+{
+  ?thing ochre:hasAnnotation ?ann .
+  ?thing ochre:hasStartIndex ?start .
+  ?thing ochre:hasEndIndex ?end .
+  ?thing ochre:partOf ?doc .
+  ?doc ochre:hasLabel ?title .
+  ?doc ochre:hasDate ?date .
+  ?doc ochre:hasLocation ?loc .
+} ORDER BY ?ann
+"""
+
 class TemporalEvolution(OchreVisualization):
 
-    def __init__(self, values, prefix=None):
-        store = rdf_store(settings=settings)
-        query_string = "PREFIX ochre: <{}>\n".format(settings.OCHRE_NAMESPACE) + files("pyochre").joinpath("data/temporal_evolution_query.sparql").read_text() % {
-            "data" : values.primarysource.data_uri,
-            "annotation" : values.uri
+    def __init__(self, ann, prefix=None):
+        store = rdf_store(settings=settings)        
+        query_string = query % {
+            "data" : ann.primarysource.data_uri,
+            "annotation" : ann.uri
         }
         self.prefix = prefix
-        self.values = []
-        for binding in sorted(store.query(query_string), key=lambda x : x.get("bucket")):
-            
-            self.values.append(
-                {
-                    "bucket" : binding.get("bucket_name"),
-                    "topic" : binding.get("topic"),
-                    "count" : binding.get("count")
-                }
-            )
-        #for bucket, info in sorted(values[1].items(), key=lambda x : x[0]):
-        #     total = sum(info["weights"].values())
-        #     for topic, count in info["weights"].items():
-        #         self.values.append(
-        #             {
-        #                 "bucket" : bucket,
-        #                 "topic" : topic,
-        #                 "count" : count,
-        #                 "percent" : count / total
-        #             }
-        #         )
+        values = {}
+        bucket_totals = {}
+        for binding in store.query(query_string):
+            date = binding.get("date").value
+            topic = binding.get("ann").value
+            values[(date, topic)] = values.get((date, topic), 0)
+            values[(date, topic)] += 1
+            bucket_totals[date] = bucket_totals.get(date, 0) + 1
+        self.values = [
+            {
+                "bucket" : date,
+                "topic" : topic,
+                "count" : count,
+                "percent" : count / bucket_totals[date]
+            } for (date, topic), count in values.items()
+        ]
         super(TemporalEvolution, self).__init__()
 
     @property

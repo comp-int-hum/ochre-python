@@ -1,13 +1,13 @@
 <table class="table">
   <thead>
     <tr>
-    {% for col_name in widget.value.column_names %}
+    {% for col_name in field.value.column_names %}
     <th scope="col">{{col_name}}</th>
     {% endfor %}
     </tr>
   </thead>
   <tbody>
-    {% for row in widget.value.rows %}
+    {% for row in field.value.rows %}
     <a href="">
       <tr>
 	{% for col_val in row %}

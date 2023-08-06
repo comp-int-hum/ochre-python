@@ -1,10 +1,11 @@
-{% extends "ochre/index.html" %}
+{% load ochre %}
 {% load static %}
 {% load guardian_tags %}
-{% get_obj_perms request.user for slide_model as "perms" %}
-{% block content %}
 
-<div class="container-fluid">
+
+<div
+  class="container-fluid"
+  >
   <div id="slides_{{uid}}" class="carousel carousel-dark slide ochre-carousel">
     <div class="carousel-indicators">
       {% for item in items %}
@@ -14,7 +15,8 @@
     <div class="carousel-inner slide">
       {% for item in items %}
       <div class="carousel-item{% if forloop.counter == 1 %} active{% endif %} mt-0 mb-0">
-	{% include "ochre/template_pack/slide.html" with item=item index=forloop.counter uid=uid %}
+	{% join uid forloop.counter as next_uid %}
+	{% include "ochre/template_pack/slide.html" with item=item index=forloop.counter uid=next_uid %}
       </div>
       {% endfor %}
     </div>
@@ -29,11 +31,20 @@
   </div>
 </div>
 
-
+{% comment %}
 <div class="container w-75">
-  {% if slide_model.get_add_perm in perms %}
-  {% include "ochre/template_pack/modal.html" with mode="create" uid=uid index="0" csrf_token=csrf_token item=slide_model serializer=serializer %}
+  {% if model.get_add_perm in perms %}
+    {% join uid 1 as next_uid %}
+  <button
+  class="btn ochre-modal ochre-interactive {{create_icon}}"
+  type="button"
+  data-bs-toggle="modal"
+  data-bs-target="#modal-{{next_uid}}"
+  title="Create a new article"
+  id="modal_button-{{next_uid}}"
+  >
+  </button>
+  {% include "ochre/template_pack/modal.html" with uid=next_uid csrf_token=csrf_token item=model serializer=serializer title="Create a new article" url="api:article-list" method="post" mode="create" %}
   {% endif %}
 </div>
-
-{% endblock %}      
+{% endcomment %}

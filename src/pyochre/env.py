@@ -23,6 +23,10 @@ env = environ.Env(
     
     INDEX_TEMPLATE = (str, ""),
     ABOUT_TEMPLATE = (str, ""),
+    RESEARCH_TEMPLATE = (str, ""),
+    TEACHING_TEMPLATE = (str, ""),
+    EVENTS_TEMPLATE = (str, ""),
+    PEOPLE_TEMPLATE = (str, ""),
 
     USE_POSTGRES = (bool, False),
     POSTGRES_HOST = (str, "localhost"),
@@ -41,7 +45,7 @@ env = environ.Env(
     TORCHSERVE_TIMEOUT = (float, 30.0),
 
     USE_JENA = (bool, False),
-    JENA_PROTO = (str, "http"), 
+    JENA_PROTOCOL = (str, "http"), 
     JENA_HOST = (str, "localhost"),
     JENA_PORT = (int, 3030),
     JENA_USER = (str, "admin"),
@@ -70,6 +74,20 @@ env = environ.Env(
     
     OCHRE_NAMESPACE = (str, "https://cdh.jhu.edu/"),
     HATHITRUST_ROOT = (str, None),
+    STATICFILES_DIRS = (list, []),
+
+    CREATE_ICON = (str, "bi-plus-lg"),
+    DELETE_ICON = (str, "bi-trash3"),
+    COMMIT_ICON = (str, "bi-check2"),
+    CANCEL_ICON = (str, "bi-x"),
+    EDIT_ICON = (str, "bi-pencil"),
+    LOGIN_ICON = (str, "bi-door-closed"),
+    LOGOUT_ICON = (str, "bi-door-open"),
+    PHONE_ICON = (str, "bi-telephone-fill"),
+    EMAIL_ICON = (str, "bi-envelope-fill"),
+    LOCATION_ICON = (str, "bi-geo-alt-fill"),
+    HOMEPAGE_ICON = (str, "bi-house-fill"),
+    HEADSHOT_ICON = (str, "bi-person-fill"),
 )
 
 env.read_env(env("ENVIRONMENT"), overwrite=True)

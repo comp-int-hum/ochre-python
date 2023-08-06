@@ -1,7 +1,6 @@
 import logging
 from rest_framework.serializers import CharField, IntegerField, HyperlinkedRelatedField, ListField, FloatField, BooleanField
 from pyochre.server.ochre.serializers import OchreSerializer
-from pyochre.server.ochre.fields import ActionOrInterfaceField
 from pyochre.server.ochre.models import MachineLearningModel, Query, PrimarySource
 import io
 import time
@@ -55,7 +54,7 @@ def create_starcoder_model(
         query_id=None,
         **argd
 ):
-    print("TODO!")
+    logger.info("TODO: incorporate StarCoder!")
     return None
 
 

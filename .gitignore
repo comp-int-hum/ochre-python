@@ -13,3 +13,9 @@ package-lock.json
 package.json
 build
 dist
+template*
+views
+.#*
+env
+ekmek*
+.*

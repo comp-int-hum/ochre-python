@@ -150,7 +150,7 @@ Machine learning models, in the most general sense, are *functions* that take in
 - Provenance of training data for a fitted model to facilitate parameter re-use etc
 - Output of a model, in combination with its signatures and the corresponding inputs, should allow creation of annotations of the same form as described in `Scholarly knowledge`__.
 
-OCHRE has provisionally adopted the `MLSchema specification <http://ml-schema.github.io/documentation/ML%20Schema.html>`_ to describe models, though real-world experience will determine if it is sufficiently expressive.
+.. OCHRE has provisionally adopted the `MLSchema specification <http://ml-schema.github.io/documentation/ML%20Schema.html>`_ to describe models, though real-world experience will determine if it is sufficiently expressive.
 
 Ideally, signatures are generated as models are assembled and trained.  In particular, OCHRE will be integrating the `Starcoder project <https://github.com/starcoder/starcoder-python>`_ to automatically generate, train, and reuse `graph neural networks <https://en.wikipedia.org/wiki/Graph_neural_network>`_ based on primary sources and scholarly knowledge, with signatures capturing the structural and semantic relationships.
 
@@ -159,6 +159,8 @@ Model signatures and input/output
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Inputs and outputs of an OCHRE model are RDF graphs that satisfy the respective signatures of the model.
+
+A model's input signature is a canonical SPARQL query that produces appropriate graphs for its structure.  When invoked on a given input, the model may also be passed an initial SPARQL query to rewrite the input before the canonical query is applied, thus allowing for a great deal of flexibility.
 
 Existing techniques like topic models, pretrained object recognition, and so forth, are being translated into simple signatures that provide a starting point for OCHRE.
 
@@ -342,3 +344,17 @@ At this point, with the two containers running (can be verified with `podman ps`
 
 Should start the OCHRE server, and the site should work near-identically to when it's officially deployed.
 
+=================
+Technical details
+=================
+
+--------------
+Site structure
+--------------
+
+The OCHRE site is composed together dynamically as the user navigates, and this requires making sure that identifiers for different parts of a page are unique.  This is made more complex because the site is *lazy*, and generates each piece when it comes into view by requesting the corresponding HTML fragment from the API using HTMX.
+
+
+-------
+Caching
+-------

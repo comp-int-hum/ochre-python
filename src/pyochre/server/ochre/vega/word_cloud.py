@@ -29,8 +29,8 @@ class WordCloud(OchreVisualization):
               ?prob <{value_property}> ?val .
               ?prob ochre:partOf ?cloud .
               ?prob ochre:partOf ?item .
-              ?cloud ochre:isA <{cloud_type}> .
-              ?item ochre:isA <{item_type}> .
+              ?cloud ochre:instanceOf <{cloud_type}> .
+              ?item ochre:instanceOf <{item_type}> .
               ?cloud ochre:hasLabel ?cloud_name .
               ?item ochre:hasLabel ?item_name .
             }}

@@ -18,4 +18,16 @@ def app_directory(request):
         "top_level" : top_level,
         "interaction_name" : settings.APPS.get(top_level, "Ontology" if top_level == "ontology" else "API"),
         "documentation_model" : Documentation,
+        "create_icon" : settings.CREATE_ICON,
+        "cancel_icon" : settings.CANCEL_ICON,
+        "commit_icon" : settings.COMMIT_ICON,
+        "edit_icon" : settings.EDIT_ICON,
+        "delete_icon" : settings.DELETE_ICON,
+        "login_icon" : settings.LOGIN_ICON,
+        "logout_icon" : settings.LOGOUT_ICON,
+        "phone_icon" : settings.PHONE_ICON,
+        "email_icon" : settings.EMAIL_ICON,
+        "location_icon" : settings.LOCATION_ICON,
+        "homepage_icon" : settings.HOMEPAGE_ICON,
+        "headshot_icon" : settings.HEADSHOT_ICON
     }

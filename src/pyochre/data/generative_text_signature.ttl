@@ -9,12 +9,12 @@ _:GenerativeTextInput
 
 
 _:GenerativeTextOutput
-    ochre:isA ochre:Output ;
-    ochre:isA sh:NodeShape .
+    ochre:instanceOf ochre:Output ;
+    ochre:instanceOf sh:NodeShape .
 
 
 _:editor
-    ochre:isA ochre:TextEditor ;
+    ochre:instanceOf ochre:TextEditor ;
     ochre:hasDescription "Compose" ;
     ochre:hasParameter (
         [

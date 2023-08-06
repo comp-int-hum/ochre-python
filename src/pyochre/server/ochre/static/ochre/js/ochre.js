@@ -427,7 +427,13 @@ function ochreSetup(root, htmxSwap){
 	sheet.insertRule(".topic" + i + " {background:rgb("+ rgb[0] + "," + rgb[1] + "," + rgb[2] + ");}");
     }
 
-    
+
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+	return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
     // things that should only happen once, at the top level of the page
     //if(!htmxSwap){
     // preserve accordion, tab, and scroll states when browsing away from or reloading the page

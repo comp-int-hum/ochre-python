@@ -1,40 +1,68 @@
 import logging
-from django.db.models.fields.related import ForeignKey
-from rest_framework.serializers import ModelSerializer, HiddenField, HyperlinkedIdentityField, CurrentUserDefault, CharField, HyperlinkedRelatedField
+from rest_framework.reverse import reverse
+from rest_framework.serializers import ModelSerializer, HiddenField, CurrentUserDefault, SerializerMethodField, ReadOnlyField, BooleanField, CharField, IntegerField
 
 
 logger = logging.getLogger(__name__)
 
 
 class OchreSerializer(ModelSerializer):
+    created_by = HiddenField(
+        default=CurrentUserDefault()
+    )
+    creator_url = SerializerMethodField(
+        help_text="URL of the user that created this object."
+    )
+    force = BooleanField(
+        required=False,
+        write_only=True,
+        allow_null=True,
+        default=False,
+        help_text="Overwrite any existing object of the same type, name, and creator."
+    )
+    name = CharField()
+    ordering = IntegerField(
+        default=0,
+        help_text="The ordering priority of this object when displayed in a list."
+    )    
+    def get_creator_url(self, instance):
+        if instance:
+            return reverse(
+                "api:user-detail",
+                args=(instance.created_by.id,),
+                request=self.context["request"]
+            )
+        else:
+            return ""
 
-    def __init__(self, *argv, **argd):
-        for field in self.Meta.model._meta.fields:
-            if isinstance(field, ForeignKey) and field.name not in getattr(self.Meta, "exclude", []):
-                self.fields[field.name] = HyperlinkedRelatedField(
-                    view_name="api:{}-detail".format(
-                        field.related_model._meta.model_name
-                    ),
-                    queryset=field.related_model.objects.all()
-                )
-        retval = super(OchreSerializer, self).__init__(*argv, **argd)
-        self.fields["url"] = HyperlinkedIdentityField(
-            view_name="api:{}-detail".format(
-                self.Meta.model._meta.model_name
-            ),
-            lookup_field="id",
-            lookup_url_kwarg="pk"
-        )
-        self.fields["created_by"] = HiddenField(            
-            default=CurrentUserDefault()
-        )
-        self.fields["name"] = CharField(
-            max_length=2000,
-            required=False
-        )
-        #self.fields["permissions_url"] = HyperlinkedIdentityField(
-        #    view_name="api:{}-permissions".format(
-        #        self.Meta.model._meta.model_name
-        #    )
-        #)
-        return retval
+    def partial_update(self, *argv, **argd):
+        return self.update(*argv, **argd)
+
+    def creation_methods(self):
+        return []
+
+    def create(self, validated_data, message=None):
+        if "force" in validated_data:
+            if validated_data["force"] == True:
+                for existing in self.Meta.model.objects.filter(
+                        name=validated_data["name"],
+                        created_by=validated_data["created_by"]
+                ):
+                    existing.delete()
+            validated_data.pop("force")
+        obj = super(OchreSerializer, self).create(validated_data)
+        if message:
+            obj.message = message
+        obj.save()
+        return obj
+
+    class Meta:
+        fields = [
+            "created_by",
+            "name",
+            "url",
+            "force",
+            "creator_url",
+            "is_active",
+            "id"
+        ]

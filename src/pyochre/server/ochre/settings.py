@@ -2,37 +2,49 @@
 Django settings for the OCHRE project.
 """
 from pathlib import Path
+from importlib.resources import files
+import re
 import os
 import os.path
 import requests
 from pyochre import env
-
-
-template_dict = {}
-
-if env("INDEX_TEMPLATE"):
-    with open(env("INDEX_TEMPLATE"), "rt") as ifd:
-        template_dict["ochre/index.html"] = ifd.read()
-
         
-if env("ABOUT_TEMPLATE"):
-    with open(env("ABOUT_TEMPLATE"), "rt") as ifd:
-        template_dict["ochre/about.html"] = ifd.read()        
 
 OCHRE_NAMESPACE = env("OCHRE_NAMESPACE")
+
+ONTOLOGY_URI = "{}ontology".format(OCHRE_NAMESPACE)
 
 BUILTIN_PAGES = {
     "about" : "About",
     "people" : "People",
     "research" : "Research",
-    "wiki" : "Wiki",
+    "teaching" : "Teaching",
+    #"events" : "Events"
+    #"api" : "API",
+    #"ontology" : "Ontology",
+    #"wiki" : "Wiki"
 }
 
 APPS = {
     "primary_sources" : "Primary sources",
     "machine_learning" : "Machine learning",
     "scholarly_knowledge" : "Scholarly knowledge",
+    "api" : "API",
+    "ontology" : "Ontology"
 }
+
+CREATE_ICON = env("CREATE_ICON")
+DELETE_ICON = env("DELETE_ICON")
+COMMIT_ICON = env("COMMIT_ICON")
+CANCEL_ICON = env("CANCEL_ICON")
+EDIT_ICON = env("EDIT_ICON")
+LOGIN_ICON = env("LOGIN_ICON")
+LOGOUT_ICON = env("LOGOUT_ICON")
+PHONE_ICON = env("PHONE_ICON")
+EMAIL_ICON = env("EMAIL_ICON")
+LOCATION_ICON = env("LOCATION_ICON")
+HOMEPAGE_ICON = env("HOMEPAGE_ICON")
+HEADSHOT_ICON = env("HEADSHOT_ICON")
 
 # NOTE: For development you can follow the README instructions for running the needed backends locally,
 #       and set these to True, otherwise the framework will use hacks to simulate the behavior
@@ -44,6 +56,9 @@ USE_CELERY = env("USE_CELERY")
 USE_POSTGRES = env("USE_POSTGRES")
 #USE_JENA = env("USE_JENA")
 #USE_TORCHSERVE = env("USE_TORCHSERVE")
+
+if env("STATICFILES_OVERRIDES_DIR"):
+    STATICFILES_DIRS = [env("STATICFILES_OVERRIDES_DIR")]
 
 # NOTE: These should be fine for development, but for deployment would need to be changed to match
 #       the server the framework runs on.
@@ -85,29 +100,32 @@ TORCHSERVE_TIMEOUT = env("TORCHSERVE_TIMEOUT")
 
 
 USE_JENA = env("USE_JENA")
-JENA_PROTO = env("JENA_PROTO")
+JENA_PROTO = env("JENA_PROTOCOL")
+JENA_PROTOCOL = env("JENA_PROTOCOL")
 JENA_HOST = env("JENA_HOST")
 JENA_PORT = env("JENA_PORT")
-JENA_URL = "{}://{}:{}".format(JENA_PROTO, JENA_HOST, JENA_PORT)
+JENA_URL = "{}://{}:{}".format(JENA_PROTOCOL, JENA_HOST, JENA_PORT)
 JENA_USER = env("JENA_USER")
 JENA_PASSWORD = env("JENA_PASSWORD")
 JENA_TIMEOUT = env("JENA_TIMEOUT")
 if USE_JENA:
-    resp = requests.get(
-        "{}/$/stats".format(JENA_URL),
-        auth=requests.auth.HTTPBasicAuth(JENA_USER, JENA_PASSWORD),
-    ).json()
-    if "/ochre" not in resp["datasets"]:
-        requests.post(            
-            "{}/$/datasets".format(JENA_URL),
-            data={
-                "dbType" : "tdb",
-                "dbName" : "ochre"
-            },
-            auth=requests.auth.HTTPBasicAuth(JENA_USER, JENA_PASSWORD)
-        )
-
-
+    try:
+        resp = requests.get(
+            "{}/$/stats".format(JENA_URL),
+            auth=requests.auth.HTTPBasicAuth(JENA_USER, JENA_PASSWORD),
+        ).json()
+        if "/ochre" not in resp["datasets"]:
+            requests.post(            
+                "{}/$/datasets".format(JENA_URL),
+                data={
+                    "dbType" : "tdb",
+                    "dbName" : "ochre"
+                },
+                auth=requests.auth.HTTPBasicAuth(JENA_USER, JENA_PASSWORD)
+            )
+    except:
+        pass
+    
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -126,7 +144,7 @@ MATERIALS_ROOT = DATA_DIR / "materials"
 MODELS_ROOT = DATA_DIR / "models"
 RDF_ROOT = DATA_DIR / "rdf"
 HATHITRUST_ROOT = env("HATHITRUST_ROOT")
-for path in [DATA_DIR, STATIC_ROOT, MEDIA_ROOT, TEMP_ROOT, MATERIALS_ROOT, MODELS_ROOT, RDF_ROOT]:
+for path in [DATA_DIR, STATIC_ROOT, MEDIA_ROOT, TEMP_ROOT, MODELS_ROOT, RDF_ROOT]:
     if not path.exists():
         path.mkdir()
         
@@ -180,7 +198,8 @@ LOGGING = {
 
 ALLOWED_HOSTS = [HOSTNAME, IP]
 PROTO = env("PROTOCOL")
-CSRF_TRUSTED_ORIGINS = ["{}://{}".format(PROTO, HOSTNAME), "{}://{}:{}".format(PROTO, HOSTNAME, PORT)]
+PROTOCOL = env("PROTOCOL")
+CSRF_TRUSTED_ORIGINS = ["{}://{}".format(PROTOCOL, HOSTNAME), "{}://{}:{}".format(PROTOCOL, HOSTNAME, PORT)]
 USE_X_FORWARDED_HOST = HOSTNAME != "localhost"
 DEBUG = env("DEBUG")
 INTERNAL_IPS = [
@@ -203,10 +222,10 @@ INSTALLED_APPS = [
     'sekizai',
     'sorl.thumbnail',
     'pyochre.server.ochre',
-    'wiki.apps.WikiConfig',
-    'wiki.plugins.macros.apps.MacrosConfig',
-    'wiki.plugins.images.apps.ImagesConfig',
-    'wiki.plugins.attachments.apps.AttachmentsConfig'
+    #'wiki.apps.WikiConfig',
+    #'wiki.plugins.macros.apps.MacrosConfig',
+    #'wiki.plugins.images.apps.ImagesConfig',
+    #'wiki.plugins.attachments.apps.AttachmentsConfig'
 ] + (
     ['django.contrib.staticfiles'] #if HOSTNAME == "localhost" else []
 ) + [
@@ -233,7 +252,7 @@ SITE_ID = 1
 WIKI_USE_BOOTSTRAP_SELECT_WIDGET= False
 WIKI_ACCOUNT_HANDLING = False
 WIKI_ACCOUNT_SIGNUP_ALLOWED = False
-WIKI_EDITOR = "pyochre.server.ochre.fields.WikiMarkdownField"
+#WIKI_EDITOR = "pyochre.server.ochre.fields.WikiMarkdownField"
 WIKI_MARKDOWN_KWARGS = {
     'extensions': [
         'footnotes',
@@ -256,6 +275,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
@@ -279,11 +302,14 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 "sekizai.context_processors.sekizai",
             ],
-            "loaders" : [
-                (
-                    'django.template.loaders.locmem.Loader',
-                    template_dict
-                ),
+            "loaders" : (
+                [
+                    (
+                        "django.template.loaders.filesystem.Loader",
+                        [env("TEMPLATE_OVERRIDES_DIR")]
+                    )
+                ] if env("TEMPLATE_OVERRIDES_DIR") else []
+            ) + [
                 'django.template.loaders.app_directories.Loader',
                 'django.template.loaders.filesystem.Loader',
             ]            
@@ -409,8 +435,8 @@ CACHES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10
+    'DEFAULT_PAGINATION_CLASS': None #'rest_framework.pagination.LimitOffsetPagination',
+    #'PAGE_SIZE': 10
 }
 
 USE_DEPRECATED_PYTZ = True

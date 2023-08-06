@@ -1,41 +1,37 @@
 import logging
 from django.db.models.fields.related import ForeignKey
-from pyochre.server.ochre.models import ResearchArtifact
-from pyochre.server.ochre.fields import MarkdownEditorField
+from rest_framework.serializers import FileField, URLField, SerializerMethodField, HyperlinkedIdentityField, CharField, IntegerField, BooleanField, HyperlinkedRelatedField
+from pyochre.server.ochre.models import ResearchArtifact, ResearchProject, User
 from pyochre.server.ochre.serializers import OchreSerializer
+#, UserSerializer, ResearchProjectSerializer
 
 
 logger = logging.getLogger(__name__)
 
 
 class ResearchArtifactSerializer(OchreSerializer):
-    #description = MarkdownEditorField(
-    #    language="markdown",
-    #    property_field="description",
-    #    allow_blank=True,
-    #    required=False,
-    #    endpoint="markdown"
-    #)
-    
-    class Meta:
+    url = HyperlinkedIdentityField(
+        view_name="api:researchartifact-detail",
+        lookup_field="id",
+        lookup_url_kwarg="pk"
+    )
+    #contributors = UserSerializer(many=True, required=False)
+    #related_to = ResearchProjectSerializer(many=True, required=False)
+    contributors = HyperlinkedRelatedField(
+        many=True,
+        view_name="api:user-detail",
+        queryset=User.objects.all()
+    )
+
+    related_to = HyperlinkedRelatedField(
+        many=True,
+        view_name="api:researchproject-detail",
+        queryset=ResearchProject.objects.all()
+    )
+
+    class Meta(OchreSerializer.Meta):
         model = ResearchArtifact
-        fields = [
-            f.name for f in ResearchArtifact._meta.fields if not isinstance(f, ForeignKey)
-        ] + [
-            "url",
-            "created_by"
-        ]
-        #view_fields = ["description"]
-        edit_fields = [
-            f.name for f in ResearchArtifact._meta.fields if not isinstance(f, ForeignKey)
-        ] + [
-            "url",
-            "created_by"
-        ]
-        create_fields = [
-            f.name for f in ResearchArtifact._meta.fields if not isinstance(f, ForeignKey)
-        ] + [
-            "url",
-            "created_by"
-        ]
-        extra_kwargs = dict([(f, {"required" : False}) for f in create_fields])
+        fields = [            
+            f.name for f in ResearchArtifact._meta.fields
+            #if not isinstance(f, ForeignKey)
+        ] + ["contributors", "related_to"] + OchreSerializer.Meta.fields

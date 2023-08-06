@@ -9,12 +9,12 @@ _:SpeechTranscriptionInput
 
 
 _:SpeechTranscriptionOutput
-    ochre:isA ochre:Output ;
-    ochre:isA sh:NodeShape .
+    ochre:instanceOf ochre:Output ;
+    ochre:instanceOf sh:NodeShape .
 
 
 _:recorder
-    ochre:isA ochre:AudioRecorder ;
+    ochre:instanceOf ochre:AudioRecorder ;
     ochre:hasDescription "Record" ;
     ochre:hasParameter (
         [

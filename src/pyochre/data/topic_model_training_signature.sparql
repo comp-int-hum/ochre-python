@@ -1,7 +1,13 @@
-SELECT ?doc ?word WHERE
+SELECT ?doc ?word ?mid WHERE
 {
-  ?doc ochre:hasPart ?token .
-  ?token ochre:isA ochre:Token .
-  ?token ochre:hasLabel ?word .
-  OPTIONAL {?token ochre:hasOrdinal ?order .}
+  {
+    ?doc ochre:instanceOf ochre:Text .    
+    ?doc ochre:hasPart ?token .
+    ?token ochre:instanceOf ochre:Token .
+    ?token ochre:hasLabel ?word .
+    OPTIONAL {?token ochre:hasOrdinal ?order .}
+  } UNION {
+    ?doc ochre:instanceOf ochre:Text .
+    ?doc ochre:hasMaterialId ?mid .
+  }
 } ORDER BY ?order

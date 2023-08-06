@@ -2,7 +2,7 @@ import logging
 from secrets import token_hex as random_token
 from django.urls import reverse
 from django.conf import settings
-from rest_framework.serializers import Field, HyperlinkedIdentityField
+from rest_framework.serializers import Field, HyperlinkedIdentityField, SerializerMethodField
 from pyochre.server.ochre.fields import MonacoEditorField, ObjectDetectionField, AudioTranscriptionField
 from pyochre.server.ochre.models import PrimarySource
 from pyochre.server.ochre.widgets import VegaWidget
@@ -19,20 +19,21 @@ OCHRE = Namespace(settings.OCHRE_NAMESPACE)
 logger = logging.getLogger(__name__)
 
 
-class PrimarySourceInteractionField(Field):
+class PrimarySourceInteractionField(HyperlinkedIdentityField):
 
     def __init__(self, *argv, **argd):
         super(
             PrimarySourceInteractionField,
             self
         ).__init__(
-            source="*",
-            required=False,
+            view_name=argd["view_name"]
+            #source="*",
+            #required=False,
         )
         self.field_name = "interaction_{}".format(random_token(6))
         self.style["template_pack"] = "ochre/template_pack"
                 
-    def to_representation(self, object, *argv, **argd):
+    def ato_representation(self, object, *argv, **argd):
         sig = object.domain
         tabs = []
         tabs.append(
@@ -60,5 +61,5 @@ class PrimarySourceInteractionField(Field):
         self.style["object"] = object
         return str(object)
     
-    def to_internal_value(self, data):
+    def ato_internal_value(self, data):
         return {}

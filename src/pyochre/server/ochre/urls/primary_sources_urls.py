@@ -12,15 +12,43 @@ urlpatterns = [
     path(
         "",
         TemplateView.as_view(
-            template_name="ochre/template_pack/accordion.html",
+            template_name="ochre/template_pack/ochre.html",
             extra_context={
                 "items" : [
-                    PrimarySource,
-                    Query,
-                    #Annotation
-                ]
+                    {
+                        "title" : "Primary Sources",
+                        "model" : PrimarySource,
+                        "view_name" : "api:primarysource-list",
+                        "creation_methods" : [
+                            {
+                                "title" : "Create from XSL transformation",
+                                "url" : "api:primarysource-create_from_xsl_transformation"
+                            },
+                            {
+                                "title" : "Create from HathiTrust Collection",
+                                "url" : "api:primarysource-create_from_hathitrust_collection"
+                            }
+                        ]
+                    },
+                    {
+                        "title" : "Queries",
+                        "model" : Query,
+                        "view_name" : "api:query-list",
+                        "creation_methods" : [
+                            {
+                                "title" : "Write in-browser",
+                                "url" : "api:query-create_from_text"
+                            },
+                            {
+                                "title" : "Upload",
+                                "url" : "api:query-create_from_file"
+                            }
+                        ]
+                    }
+                ],
+                "uid" : "primary_sources"
             }
         ),
-        name="index"
+        name="primary_sources"
     )
 ]

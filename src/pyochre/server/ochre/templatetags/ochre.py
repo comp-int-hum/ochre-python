@@ -13,6 +13,13 @@ logger = logging.getLogger(__name__)
 
 register = template.Library()
 
+@register.simple_tag(takes_context=True)
+def join(
+        context,        
+        prefix,
+        suffix
+):
+    return "{}_{}".format(str(prefix), str(suffix))
 
 @register.simple_tag(takes_context=True)
 def ochre_render_form(
@@ -21,7 +28,7 @@ def ochre_render_form(
         template_pack=None,
         mode="view",
         uid=None
-):
+):    
     try:
         style = {'template_pack': template_pack} if template_pack else {}
         args = {}        
@@ -33,16 +40,16 @@ def ochre_render_form(
             style["object_id"] = serializer.data.get("id", None)
         except:
             style["object_id"] = None
-        tab_view = mode == "view" and hasattr(serializer, "Meta") and getattr(serializer.Meta, "tab_view", False)
-        keep = getattr(serializer.Meta, "{}_fields".format(mode), None) if hasattr(serializer, "Meta") else None
-        if keep:
-            serializer.fields = {
-                field_name : field for field_name, field in serializer.fields.items() if field_name in keep
-            }
+        #tab_view = mode == "view" and hasattr(serializer, "Meta") and getattr(serializer.Meta, "tab_view", False)
+        #keep = getattr(serializer.Meta, "{}_fields".format(mode), None) if hasattr(serializer, "Meta") else None
+        #if keep:
+        #    serializer.fields = {
+        #        field_name : field for field_name, field in serializer.fields.items() if field_name in keep
+        #    }
         for i, field in enumerate(serializer.fields):
             serializer.fields[field].style["index"] = i
-            if mode in ["edit", "create"]:
-                serializer.fields[field].style["editable"] = True
+            #if mode in ["edit", "create"]:
+            #    serializer.fields[field].style["editable"] = True
         return renderer.render(
             serializer.data,
             None,
@@ -50,7 +57,7 @@ def ochre_render_form(
                 'uid' : uid,
                 'style': style,
                 "mode" : mode,
-                "tab_view" : tab_view,
+                #"tab_view" : tab_view,
                 "request" : context.get("request")
             }
         )

@@ -8,66 +8,79 @@
 @prefix wdp: <http://www.wikidata.org/prop/direct/> .
 @prefix dc: <http://purl.org/dc/terms/> .
 
+
 # <https://cdh.jhu.edu/ochre> rdf:type owl:Ontology .
 
-# Object properties
 
-# Data properties
+### These are the basic correspondences with OWL so that most of
+### the ontology can be written purely within the "ochre" prefix
 
-# Classes
-#ochre:Input rdf:type owl:Class .
-#ochre:Output rdf:type owl:Class .
-#ochre:Label rdf:type owl:Class .
+ochre:instanceOf owl:equivalentProperty wdp:P31 .
+ochre:instanceOf owl:equivalentProperty rdf:type .
 
-#ochre:Output rdf:type owl:Class .
-#ochre:Input rdf:type owl:Class .
-#ochre:Output rdf:type owl:Class .
-#ochre:Input rdf:type owl:Class .
-#ochre:Output rdf:type owl:Class .
+ochre:subClassOf owl:equivalentProperty wdp:P279 .
+ochre:subClassOf owl:equivalentProperty rdfs:subClassOf .
 
-# textarea wde:Q94100419
-# text file wde:Q86920
-# categorical distribution
-#
+ochre:subPropertyOf owl:equivalentProperty wdp:P1647 .
+ochre:subPropertyOf owl:equivalentProperty owl:subPropertyOf .
+
+ochre:equivalentProperty owl:equivalentProperty wdp:P1628 .
+ochre:equivalentProperty owl:equivalentProperty owl:equivalentProperty .
+
+ochre:equivalentClass owl:equivalentProperty wdp:P1709 .
+ochre:equivalentClass owl:equivalentProperty owl:equivalentClass .
+
+
+### These definitions are to allow defining various widgets for visualizing
+### and interacting with primary sources, models, and annotations
+
+# Interactions
+ochre:Interaction ochre:subClassOf wde:Q605117 .
+ochre:PrimarySourceInteraction ochre:subClassOf ochre:Interaction .
+ochre:ModelInteraction ochre:subClassOf ochre:Interaction .
+ochre:AnnotationInteraction ochre:subClassOf ochre:Interaction .
+#ochre:TextEditor ochre:subClassOf ochre:ModelInteraction .
+#ochre:AudioRecorder ochre:subClassOf ochre:ModelInteraction .
+#ochre:ImageRecorder ochre:subClassOf ochre:ModelInteraction .
+#ochre:Table ochre:subClassOf ochre:ModelInteraction .
+#ochre:VegaFigure ochre:subClassOf ochre:Interaction .
+# ochre:hasWidgetClass
+
 
 # Axioms
-#ochre:htmlElement rdfs:subPropertyOf wdp:_ .
+#ochre:htmlElement ochre:subPropertyOf wdp:_ .
+ochre:Input ochre:subClassOf wde:Q1125955 .
+ochre:Output ochre:subClassOf wde:Q778569 .
+ochre:Property ochre:subClassOf wde:Q937228 .
 
-ochre:Input rdfs:subClassOf wde:Q1125955 .
-ochre:Output rdfs:subClassOf wde:Q778569 .
-ochre:Property rdfs:subClassOf wde:Q937228 .
 
-ochre:Widget rdfs:subClassOf wde:Q605117 .
-ochre:MachineLearningWidget rdfs:subClassOf ochre:Widget .
-ochre:TabularVisualization ochre:isA ochre:MachineLearningWidget .
-ochre:VegaVisualization ochre:isA ochre:MachineLearningWidget .
-ochre:TextEditor ochre:isA ochre:MachineLearningWidget .
-ochre:AudioRecorder ochre:isA ochre:MachineLearningWidget .
-ochre:ImageRecorder ochre:isA ochre:MachineLearningWidget .
+# Annotations
+ochre:hasAnnotation ochre:subPropertyOf rdf:value .
+ochre:Annotation ochre:subClassOf wde:Q857525 .
+ochre:HumanAnnotation ochre:subClassOf wde:Q857525 .
+ochre:hasAnnotator ochre:equivalentProperty wdp:P11105 .
+ochre:Tag ochre:equivalentClass wde:Q658349 .
+ochre:Metadata ochre:equivalentClass wde:Q180160 .
 
-ochre:Topic rdfs:subClassOf ochre:CategoricalDistribution .
 
-ochre:isA owl:equivalentProperty wdp:P31 .
-ochre:isA owl:equivalentProperty rdf:type .
-ochre:hasLabel owl:equivalentProperty rdfs:label .
-ochre:hasLabel owl:equivalentProperty wdp:P2561 .
-ochre:hasValue owl:equivalentProperty rdf:value .
-ochre:hasDescription owl:equivalentProperty dc:description .
-ochre:isSubClassOf owl:equivalentProperty rdfs:subClassOf .
-ochre:hasOrdinal owl:equivalentProperty wdp:P1545 .
-ochre:hasProbability owl:equivalentProperty wdp:P2844 .
-ochre:hasMaterialId rdfs:subPropertyOf rdfs:seeAlso .
-ochre:hasPart owl:equivalentProperty rdfs:P527 .
-ochre:partOf owl:equivalentProperty rdfs:P361 .
-ochre:hasAuthor owl:equivalentProperty wdp:P50 .
-ochre:inLanguage owl:equivalentProperty wdp:P407 .
-ochre:basedOn owl:equivalentProperty wdp:P144 .
-ochre:hasGenre owl:equivalentProperty wdp:P136 .
-ochre:hasEditor owl:equivalentProperty wdp:P98 .
-ochre:hasPublisher owl:equivalentProperty wdp:P123 .
-ochre:hasOwner owl:equivalentProperty wdp:P127 .
-ochre:madeFrom owl:equivalentProperty wdp:P186 .
-ochre:hasUse owl:equivalentProperty wdp:P366 .
+ochre:hasLabel ochre:equivalentProperty rdfs:label .
+ochre:hasLabel ochre:equivalentProperty wdp:P2561 .
+ochre:hasValue ochre:equivalentProperty rdf:value .
+ochre:hasDescription ochre:equivalentProperty dc:description .
+ochre:hasOrdinal ochre:equivalentProperty wdp:P1545 .
+ochre:hasProbability ochre:equivalentProperty wdp:P2844 .
+ochre:hasMaterialId ochre:subPropertyOf rdfs:seeAlso .
+ochre:hasPart ochre:equivalentProperty rdfs:P527 .
+ochre:partOf ochre:equivalentProperty rdfs:P361 .
+ochre:hasAuthor ochre:equivalentProperty wdp:P50 .
+ochre:inLanguage ochre:equivalentProperty wdp:P407 .
+ochre:basedOn ochre:equivalentProperty wdp:P144 .
+ochre:hasGenre ochre:equivalentProperty wdp:P136 .
+ochre:hasEditor ochre:equivalentProperty wdp:P98 .
+ochre:hasPublisher ochre:equivalentProperty wdp:P123 .
+ochre:hasOwner ochre:equivalentProperty wdp:P127 .
+ochre:madeFrom ochre:equivalentProperty wdp:P186 .
+ochre:hasUse ochre:equivalentProperty wdp:P366 .
 	     #     "measurement" : "P111",
 	     #     "creator" : "P170",
 	     #     "collection" : "P195",
@@ -103,43 +116,109 @@ ochre:hasUse owl:equivalentProperty wdp:P366 .
 #    ] .
 
 # Probability
-ochre:CategoricalDistribution owl:equivalentClass wde:Q5051810 .
-ochre:hasProbability rdfs:subPropertyOf wdp:P1181 .
-ochre:Probability owl:equivalentClass wde:Q9492 .
+_:ProbabilityTerms ochre:instanceOf ochre:DomainLexicon ;
+    ochre:hasPart ochre:CategoricalDistribution , ochre:hasProbability , ochre:Probability ;
+    ochre:hasLabel "Probability" ;
+    ochre:hasDescription "Terms for describing probabilities, distributions, etc." .
+
+
+ochre:CategoricalDistribution ochre:equivalentClass wde:Q5051810 .
+ochre:hasProbability ochre:subPropertyOf wdp:P1181 .
+ochre:Probability ochre:equivalentClass wde:Q9492 .
+
+
 
 # Linguistics
-ochre:TextFile owl:equivalentClass wde:Q86920 .
-ochre:Text owl:equivalentClass wde:Q234460 .
-ochre:Word owl:equivalentClass wde:Q8171 .
-ochre:Token owl:equivalentClass wde:Q82837422 .
-ochre:Lemma owl:equivalentClass wde:Q18514 .
-ochre:Morpheme owl:equivalentClass wde:Q43249 .
-ochre:Character owl:equivalentClass wde:Q3241972 .
-ochre:Sentence owl:equivalentClass wde:Q41796 .
-ochre:GrammaticalTag owl:equivalentClass wde:Q658349 .
-ochre:Stress owl:equivalentClass wde:Q181767 .
-ochre:Syllable owl:equivalentClass wde:Q8188 .
+_:LinguisticsTerms ochre:instanceOf ochre:DomainLexicon ;
+    ochre:hasPart ochre:Text ,  ochre:Word ,  ochre:Token ,  ochre:Lemma ,  ochre:Morpheme ,  ochre:Character ,  ochre:Sentence , ochre:GrammaticalTag ,  ochre:Stress , ochre:Syllable , ochre:Elision , ochre:PartOfSpeech , ochre:Topic , ochre:hasScansion , ochre:hasGrammar ;
+    ochre:hasLabel "Linguistics" ;
+    ochre:hasDescription "Terms for describing linguistic properties, formalisms, etc." .
+
+ochre:TextFile ochre:equivalentClass wde:Q86920 .
+ochre:Text ochre:equivalentClass wde:Q234460 .
+ochre:Word ochre:equivalentClass wde:Q8171 .
+ochre:Token ochre:equivalentClass wde:Q82837422 .
+ochre:Lemma ochre:equivalentClass wde:Q18514 .
+ochre:Morpheme ochre:equivalentClass wde:Q43249 .
+ochre:Character ochre:equivalentClass wde:Q3241972 .
+ochre:Sentence ochre:equivalentClass wde:Q41796 .
+ochre:GrammaticalTag ochre:equivalentClass wde:Q658349 .
+ochre:Stress ochre:equivalentClass wde:Q181767 .
+ochre:Syllable ochre:equivalentClass wde:Q8188 .
+ochre:Elision ochre:equivalentClass wde:Q650250 .
+ochre:PartOfSpeech ochre:equivalentClass wde:Q82042 .
+ochre:Topic ochre:subClassOf ochre:CategoricalDistribution .
+
+ochre:hasScansion
+    rdfs:domain ochre:Syllable ;
+    rdfs:range [
+        owl:oneOf (ochre:Elision ochre:Stress)
+    ] .
+
+
+ochre:hasGrammar
+    rdfs:domain ochre:Syllable ;
+    rdfs:range [
+        owl:oneOf ()
+    ] .
+
+
 
 #ochre:Paragraph owl:equivalentClass wde:Q194431 .
 
+# Slavery
+_:SlaveryTerms ochre:instanceOf ochre:DomainLexicon ;
+    ochre:hasPart ochre:SlaveManifest , ochre:SlaveManumission , ochre:SlaveEscapeNotice , ochre:Slave , ochre:SlaveOwner , ochre:SlaveShip ;
+    ochre:hasLabel "Slavery" ;
+    ochre:hasDescription "Terms for describing people, events, etc from the history of American slavery." .
+
+ochre:SlaveManifest ochre:subClassOf wde:Q117289366 .
+ochre:SlaveManumission ochre:equivalentClass wde:Q3287079 .
+ochre:SlaveEscapeNotice ochre:subClassOf wde:Q4372150 ;
+    ochre:subClassOf wde:Q1004391 .
+ochre:Slave ochre:equivalentClass wde:Q12773225 .
+ochre:SlaveOwner ochre:equivalentClass wde:Q10076267 .
+ochre:SlaveShip ochre:subClassOf wde:Q11446 . # Q251355 (not quite)
+
 # Narrative
-ochre:Story owl:equivalentClass wde:Q1318295 .
-ochre:LineOfVerse owl:equivalentClass wde:Q285573 .
+_:NarrativeTerms ochre:instanceOf ochre:DomainLexicon ;
+    ochre:hasPart ochre:Story ;
+    ochre:hasLabel "Narrative" ;
+    ochre:hasDescription "Terms from Narrative Theory." .
+
+ochre:Story ochre:equivalentClass wde:Q1318295 .
+
+# Poetics
+_:PoeticsTerms ochre:instanceOf ochre:DomainLexicon ;
+    ochre:hasPart ochre:LineOfVerse , ochre:Stanza , ochre:Sestet , ochre:Couplet , ochre:Quatrain ;
+    ochre:hasLabel "Poetics" ;
+    ochre:hasDescription "Terms for describing the formal structure of verse" .
+
+ochre:LineOfVerse ochre:equivalentClass wde:Q285573 .
+ochre:Stanza ochre:subClassOf ochre:LineGroup .
+ochre:Sestet ochre:subClassOf ochre:LineGroup .
+ochre:Couplet ochre:subClassOf ochre:LineGroup .
+ochre:Quatrain ochre:subClassOf ochre:LineGroup .
+# ochre:Caesura ochre:Foot ochre:Rhyme metrical/enjambed
 
 # Near East Studies/Classics/Archeology
-ochre:hasDiscoverer owl:equivalentProperty wdp:P61 .
-ochre:hasTransliteration owl:equivalentProperty wdp:P2440 .
-ochre:Inscription owl:equivalentClass wde:Q1640824 .
-ochre:LineDrawing owl:equivalentClass wde:Q99887548 .
-ochre:Photo owl:equivalentClass wde:Q125191 .
+_:CuneiformTerms ochre:instanceOf ochre:DomainLexicon ;
+    ochre:hasPart ochre:hasDiscoverer , ochre:hasTransliteration , ochre:Inscription , ochre:LineDrawing ;
+    ochre:hasLabel "Cuneiform" ;
+    ochre:hasDescription "Terms for describing Cuneiform inscriptions and related information." .
+ochre:hasDiscoverer ochre:equivalentProperty wdp:P61 .
+ochre:hasTransliteration ochre:equivalentProperty wdp:P2440 .
+ochre:Inscription ochre:equivalentClass wde:Q1640824 .
+ochre:LineDrawing ochre:equivalentClass wde:Q99887548 .
 
 # Vision
-ochre:ImageFile owl:equivalentClass wde:Q860625 .
-ochre:Image owl:equivalentClass wde:Q478798 .
-ochre:hasImage owl:equivalentProperty wdp:P18 .
-ochre:hasRegion owl:equivalentProperty wdp:P8276 .
+ochre:ImageFile ochre:equivalentClass wde:Q860625 .
+ochre:Photo ochre:equivalentClass wde:Q125191 .
+ochre:Image ochre:equivalentClass wde:Q478798 .
+ochre:hasImage ochre:equivalentProperty wdp:P18 .
+ochre:hasRegion ochre:equivalentProperty wdp:P8276 .
 ochre:Coordinate
-    owl:equivalentClass wde:Q3250736 ;
+    ochre:equivalentClass wde:Q3250736 ;
     sh:property [
         sh:path ochre:x ;
         sh:datatype xsd:integer ;
@@ -152,8 +231,8 @@ ochre:Coordinate
     ] .
 
 ochre:BoundingBox
-    a owl:Class ;
-    a sh:NodeShape ;
+    ochre:instanceOf owl:Class ;
+    ochre:instanceOf sh:NodeShape ;
     sh:property [
         sh:path ochre:topLeft ;
         sh:class ochre:Coordinate ;
@@ -164,10 +243,10 @@ ochre:BoundingBox
     ] .
 
 # Audio
-ochre:AudioFile owl:equivalentClass wde:Q26987229 .
-ochre:Audio owl:equivalentClass wde:Q3302947 .
+ochre:AudioFile ochre:equivalentClass wde:Q26987229 .
+ochre:Audio ochre:equivalentClass wde:Q3302947 .
 
 # Video
-ochre:VideoFile owl:equivalentClass wde:Q98405806 .
-ochre:Video owl:equivalentClass wde:Q98069877 .
+ochre:VideoFile ochre:equivalentClass wde:Q98405806 .
+ochre:Video ochre:equivalentClass wde:Q98069877 .
 

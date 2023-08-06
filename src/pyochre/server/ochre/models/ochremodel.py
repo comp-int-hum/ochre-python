@@ -39,8 +39,12 @@ class OchreModel(MetadataMixin, Model):
     def get_absolute_url(self):
         return reverse("api:{}-detail".format(self._meta.model_name), args=(self.id,))
 
+    @classmethod
+    def get_create_url(self):
+        return reverse("api:{}-list".format(self._meta.model_name))
+
     def get_permissions_url(self):
-        return reverse("permissions", args=(self._meta.app_label, self._meta.model_name, self.id))
+        return reverse("api:{}-permissions".format(self._meta.model_name), args=(self.id,))
 
     @classmethod
     def get_list_url(self):
@@ -78,5 +82,5 @@ class OchreModel(MetadataMixin, Model):
         return "{}-{}-{}".format(self._meta.app_label, self._meta.model_name, self.id)
 
     @property
-    def creator(self):
-        return self.created_by.username
+    def creator_url(self):
+        return self.created_by.get_absolute_url()

@@ -4,7 +4,7 @@ import io
 from importlib.resources import files
 from rdflib import Dataset, Namespace, URIRef, Graph
 from rdflib.namespace import RDF, SH
-from rdflib.query import Result
+
 from rdflib.plugins.sparql import prepareQuery
 from pyochre.server.ochre.settings import OCHRE_NAMESPACE
 
@@ -14,20 +14,7 @@ OCHRE = Namespace(OCHRE_NAMESPACE)
 def create_domain(primarysource):
     domain_query = files("pyochre").joinpath("data/domain_query.sparql").read_text()
     entities = {}
-    #for binding in Result.parse(
-            #source=io.StringIO(
-                #json.dumps(
-    for binding in primarysource.query(
-            domain_query
-    ):
-                    #connection.post(
-                    #    primarysource["query_url"],
-                    #    {"query" : domain_query}
-                    #)
-                #),
-    #        ),
-    #        format="xml"            
-    #):
+    for binding in primarysource.query(domain_query):
         vals = {}
         for vn in ["st", "p", "ot", "odt"]:
             vals[vn] = binding.get(vn)
@@ -81,5 +68,4 @@ def create_domain(primarysource):
                 g.add((prop, SH["or"], uidd))
                 for i, v in enumerate(obj["values"]):
                     g.add((uidd, SH["class"], v))
-    
     return g

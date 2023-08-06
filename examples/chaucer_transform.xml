@@ -5,15 +5,16 @@
     xmlns:ochre="urn:ochre:"
     version="1.0"
     >
+  
   <xsl:output method="xml" indent="yes"/>
 
-  <xsl:param name="ochre_namespace"/>
-  <xsl:variable name="materials-dir"></xsl:variable>
+  <xsl:param name="ochre_namespace">urn:ochre:</xsl:param>
   <xsl:variable name="xsd">http://www.w3.org/2001/XMLSchema#</xsl:variable>
 
   <!-- do nothing with random text -->
   <xsl:template match="text()|@*"/>
-  
+
+  <!-- top level of document -->
   <xsl:template match="/">
     <rdf:RDF xml:base="{$ochre_namespace}">
       <xsl:apply-templates select="document/object/property"/>
@@ -23,81 +24,86 @@
   <!-- story -->
   <xsl:template match="/document/object/property">
     <rdf:Description>
-      <isA rdf:resource="Story" />
-      <hasOrdinal rdf:datatype="{$xsd}integer">
+      <ochre:instanceOf rdf:resource="Story" />
+      <ochre:hasOrdinal rdf:datatype="{$xsd}integer">
 	<xsl:value-of select="object/property[@name='group_ordinal']/text()" />
-      </hasOrdinal>
-      <hasTag rdf:datatype="{$xsd}string">
+      </ochre:hasOrdinal>
+      <ochre:hasTag rdf:datatype="{$xsd}string">
 	<xsl:value-of select="object/property[@name='group_name']/text()" />
-      </hasTag>
-      <hasLabel rdf:datatype="{$xsd}string">
+      </ochre:hasTag>
+      <ochre:hasLabel rdf:datatype="{$xsd}string">
 	<xsl:value-of select="@name" />
-      </hasLabel>
+      </ochre:hasLabel>
       <xsl:apply-templates select="object/property[@name='content']/object/property" />
     </rdf:Description>
   </xsl:template>
 
   <!-- line -->
   <xsl:template match="/document/object/property/object/property[@name='content']/object/property">
-    <hasPart rdf:parseType="Resource">
-      <isA rdf:resource="LineOfVerse" />
-      <hasOrdinal rdf:datatype="{$xsd}integer">
+    <ochre:hasPart rdf:parseType="Resource">
+      <ochre:instanceOf rdf:resource="LineOfVerse" />
+      <ochre:hasOrdinal rdf:datatype="{$xsd}integer">
 	<xsl:value-of select="@name"/>
-      </hasOrdinal>
+      </ochre:hasOrdinal>
       <xsl:apply-templates select="object/property" />
-    </hasPart>
+    </ochre:hasPart>
   </xsl:template>
 
   <!-- token -->
   <xsl:template match="/document/object/property/object/property[@name='content']/object/property/object/property">    
-    <hasPart rdf:parseType="Resource">
-      <isA rdf:resource="Token" />
-      <hasLabel>
+    <ochre:hasPart rdf:parseType="Resource">
+      <ochre:instanceOf rdf:resource="Token" />
+      <ochre:hasLabel>
 	<xsl:value-of select="object/property[@name='token']/text()" />
-      </hasLabel>
-      <hasOrdinal rdf:datatype="{$xsd}integer">
+      </ochre:hasLabel>
+      <ochre:hasOrdinal rdf:datatype="{$xsd}integer">
 	<xsl:value-of select="@name"/>
-      </hasOrdinal>
+      </ochre:hasOrdinal>
 
-      <xsl:apply-templates select="object/property[@name='annotations']/list/item/object/property[@name='type' and text()='grammar']" />
+      <xsl:apply-templates select="object/property[@name='grammar']" />
+      <xsl:apply-templates select="object/property[@name='syllables']/object/property" />
+      <!--<xsl:apply-templates select="object/property[@name='syllables']/object/property" />-->
+      
+      <!--<xsl:apply-templates select="object/property[@name='annotations']/list/item/object/property[@name='type' and text()='grammar']" />-->
+      
       <!--
-      <xsl:apply-templates select="property[@name='annotations']/list/item/object/property[@name='type' and text()='vowel_clusters']" />
-
-      <xsl:apply-templates select="property[@name='annotations']/list/item/object/property[@name='type' and text()='scansion']" />
+	  <xsl:apply-templates select="object/property[@name='annotations']/list/item/object/property[@name='type' and text()='vowel_clusters']" />
+	  -->
+      <!--
+      <xsl:apply-templates select="object/property[@name='annotations']/list/item/object/property[@name='type' and text()='scansion']" />
       -->
-    </hasPart>
+    </ochre:hasPart>
   </xsl:template>
     
   <!-- token grammar -->
-  <xsl:template match="property[@name='type' and text()='grammar']">
-    <hasPart rdf:parseType="Resource">
-      <isA rdf:resource="GrammaticalTag" />
-      <hasLabel>
-	<xsl:value-of select="../property[@name='value']/text()" />
-      </hasLabel>
-    </hasPart>
+  <xsl:template match="property[@name='grammar']">
+    <ochre:hasGrammar rdf:parseType="Resource">
+      <ochre:instanceOf rdf:resource="GrammaticalTag" />
+      <ochre:hasLabel>
+	<xsl:value-of select="text()" />
+	<!--<xsl:value-of select="../property[@name='value']/text()" />-->
+      </ochre:hasLabel>
+    </ochre:hasGrammar>
   </xsl:template>
   
-  <!-- token vowel clusters -->
-  <!--
-  <xsl:template match="property[@name='type' and text()='vowel_clusters']">
-    <hasPart rdf:parseType="Resource">
-      <isA rdf:resource="Syllable" />
-      <hasLabel>
-	<xsl:value-of select="../property[@name='value']/text()" />
-      </hasLabel>      
-    </hasPart>
+  <!-- syllable -->
+  <xsl:template match="property[@name='syllables']/object/property">
+    <ochre:hasPart rdf:parseType="Resource">
+      <ochre:instanceOf rdf:resource="Syllable" />
+      <ochre:hasLabel>
+	<xsl:value-of select="object/property[@name='syllable']/text()" />
+      </ochre:hasLabel>
+      <xsl:apply-templates select="object/property[@name='scansion']" />
+    </ochre:hasPart>
   </xsl:template>
-  -->
-  <!-- token scansion -->
-  <!--
-  <xsl:template match="property[@name='type' and text()='scansion']">
-    <hasPart rdf:parseType="Resource">
-      <isA rdf:resource="Stress" />
-      <hasLabel>
-	<xsl:value-of select="../property[@name='value']/text()" />
-      </hasLabel>      
-    </hasPart>
+
+  <!-- scansion -->
+  <xsl:template match="object/property[@name='scansion']">
+    <ochre:hasScansion>
+      <!--<ochre:hasLabel>-->
+	<xsl:value-of select="text()" />
+      <!--</ochre:hasLabel>-->
+    </ochre:hasScansion>
   </xsl:template>
-  -->
+  
 </xsl:transform>

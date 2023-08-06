@@ -1,22 +1,21 @@
 
-<div class="container w-75" id="{{widget.div_id}}_1">
+{% with uid=field.name %}
+<div class="container w-75" id="{{uid}}_div_1">
 </div>
-<div class="container w-75" id="{{widget.div_id}}_2">
+<div class="container w-75" id="{{uid}}_div_2">
 </div>
+<div class="overflow-scroll vh-100" id="{{uid}}_fig"></div>
 
-<div class="overflow-scroll vh-100" id="{{widget.value_id}}"></div>
-
-
-{{ vega_spec|json_script:widget.spec_id }}
+{{ field.value|json_script:uid }}
 
 <script type="text/javascript">  
   var view;
-  var spec = JSON.parse(document.getElementById("{{widget.spec_id}}").textContent);
+  var spec = JSON.parse(document.getElementById("{{uid}}").textContent);
   render(spec);
   function render(spec) {
       view = new vega.View(vega.parse(spec), {
           renderer:  'canvas',  // renderer (canvas or svg)
-          container: '#{{widget.value_id}}',   // parent DOM container
+          container: '#{{uid}}_fig',   // parent DOM container
           hover:     true       // enable hover processing
       });      
       view.resize();
@@ -28,3 +27,4 @@
       }
 </script>
 
+{% endwith %}

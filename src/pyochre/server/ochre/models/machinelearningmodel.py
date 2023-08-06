@@ -1,18 +1,17 @@
 import logging
 import json
+import io
 import os.path
 import os
 from django.conf import settings
 import requests
 import rdflib
+from rdflib.query import Result
 from pyochre.server.ochre.models import OchreModel, AsyncMixin
-from pyochre.utils import rdf_store, to_graph, from_graph
+from pyochre.utils import rdf_store, to_graph, from_graph, ochrequery as OQ
 from pyochre.server.ochre.decorators import ochre_cache_method
 from rdflib import Graph, BNode, URIRef, Literal
 from rdflib.namespace import RDF, RDFS, Namespace
-
-
-OCHRE = Namespace(settings.OCHRE_NAMESPACE)
 
 
 logger = logging.getLogger(__name__)
@@ -25,86 +24,111 @@ else:
         return func
 
 
+@shared_task
+def clear(pk, uris):
+    resp = requests.delete(
+        "{}/models/{}".format(
+            settings.TORCHSERVE_MANAGEMENT_ADDRESS,
+            pk
+        )
+    )
+    model_file = os.path.join(settings.MODELS_ROOT, "{}_model.mar".format(pk))
+    if os.path.exists(model_file):
+        os.remove(os.path.join(settings.MODELS_ROOT, "{}_model.mar".format(pk)))
+    store = rdf_store(settings=settings)
+    ds = rdflib.Dataset(store=store)
+    for uri in uris:
+        ds.remove_graph(uri)
+    ds.commit()        
+    
+
 class MachineLearningModel(AsyncMixin, OchreModel):
 
     class Meta(OchreModel.Meta):
         pass
-    
-    @property
-    def signature(self, *argv, **argd):
-        store = rdf_store(settings=settings)
-        ds = rdflib.Dataset(store=store)
-        g = rdflib.Graph()
-        for tr in ds.triples((None, None, None, self.signature_uri)):
-            g.add(tr)
-        return g
-    
+
     @property
     def signature_uri(self):
         return "{}{}_model_signature".format(settings.OCHRE_NAMESPACE, self.id)
 
+    def query_signature(self, query):
+        resp = requests.post(
+            os.path.join(settings.JENA_URL, "ochre", "query"),
+            data=OQ(query),
+            headers={
+                "Content-Type" : "application/sparql-query",
+                "Accept" : "application/sparql-results+xml",
+                "charset" : "utf-8"
+            },
+            params={"default-graph-uri" : [self.signature_uri, settings.ONTOLOGY_URI]}
+        )
+        return Result.parse(
+            source=io.StringIO(
+                resp.content.decode("utf-8")
+            )
+        )
+    
     @property
-    def signature(self):
-        store = rdf_store(settings=settings)
-        ds = rdflib.Dataset(store=store)
-        g = rdflib.Graph()
-        for tr in ds.triples((None, None, None, self.signature_uri)):
-            g.add(tr)
-        return g #.serialize(format="json-ld")
+    def signature(self, *argv, **argd):
+        resp = requests.get(
+            "{}/ochre/data".format(settings.JENA_URL),
+            params={"graph" : self.signature_uri},
+            headers={"Accept" : "text/turtle", "charset" : "utf-8"}
+        )
+        g = Graph()
+        g.parse(data=resp.content, format="turtle")
+        return g
+
+    def delete_signature(self):
+        resp = requests.delete(
+            "{}/ochre/data".format(settings.JENA_URL),
+            params={"graph" : self.signature_uri},
+        )
+        return None
     
     @property
     def properties_uri(self):
         return "{}{}_model_properties".format(settings.OCHRE_NAMESPACE, self.id)
 
     def query_properties(self, query):
-        store = rdf_store(
-            settings=settings,
-            return_format="application/rdf+xml"
+        resp = requests.post(
+            os.path.join(settings.JENA_URL, "ochre", "query"),
+            data=OQ(query),
+            headers={
+                "Content-Type" : "application/sparql-query",
+                "Accept" : "application/sparql-results+xml",
+                "charset" : "utf-8"
+            },
+            params={"default-graph-uri" : [self.properties_uri, settings.ONTOLOGY_URI]}
         )
-        pquery = """PREFIX ochre: <{}>
-        {}
-        """.format(
-            settings.OCHRE_NAMESPACE,
-            query
-        )
-        return store.query(
-            pquery,
-            queryGraph=self.properties_uri
+        return Result.parse(
+            source=io.StringIO(
+                resp.content.decode("utf-8")
+            )
         )
     
     @property
     def properties(self):
-        store = rdf_store(settings=settings)
-        ds = rdflib.Dataset(store=store)
-        g = rdflib.Graph()
-        for tr in ds.triples((None, None, None, self.properties_uri)):
-            g.add(tr)
-        return g #.serialize(format="json-ld")
+        resp = requests.get(
+            "{}/ochre/data".format(settings.JENA_URL),
+            params={"graph" : self.properties_uri},
+            headers={"Accept" : "text/turtle", "charset" : "utf-8"}
+        )
+        g = Graph()
+        g.parse(data=resp.content, format="turtle")
+        return g
 
-    
+    def delete_properties(self):
+        resp = requests.delete(
+            "{}/ochre/data".format(settings.JENA_URL),
+            params={"graph" : self.properties_uri},
+        )
+
     def apply(
             self,
-            #singleton=None,
-            #query_results=None,
             data_graph=None,
             domain_graph=None
     ):
-        
-        #data = {}
-        #print(123123)
-        #return None
-        #if singleton:
-        #    data["singleton"] = json.dumps(singleton)
-        #elif query_results:
-        #    print(type(query_results), type(domain_graph))
-        #    data["query_results"] =
-        #data = query_results.serialize(format="xml")
-        #print(data)
-            #json.dumps(query_results)
-        #    data["domain_graph"] = domain_graph.serialize("turtle")
-        #else:
-        #    data["data_graph"] = json.dumps(data_graph)
-        #    data["domain_graph"] = domain_graph.serialize("turtle")#json.dumps(domain_graph)
         response = requests.post(
             "{}/v2/models/{}/infer".format(
                 settings.TORCHSERVE_INFERENCE_ADDRESS,
@@ -114,24 +138,10 @@ class MachineLearningModel(AsyncMixin, OchreModel):
                 "data_graph" : data_graph.serialize(format="turtle"),
                 "domain_graph" : domain_graph.serialize(format="turtle")
             }
-            #files={k : v[0] if isinstance(v, list) else v for k, v in argd.items()}
         )
-        
-        return response.content
-    
-    def delete_signature(self):
-        store = rdf_store(settings=settings)
-        ds = rdflib.Dataset(store=store)        
-        ds.remove_graph(self.signature_uri)
-        ds.commit()
-        return None
-    
-    def delete_properties(self):
-        store = rdf_store(settings=settings)
-        ds = rdflib.Dataset(store=store)        
-        ds.remove_graph(self.properties_uri)
-        ds.commit()
-        return None
+        g = Graph()
+        g.parse(data=response.content, format="turtle")
+        return g
 
     def delete_from_torchserve(self, **argd):
         try:
@@ -146,20 +156,8 @@ class MachineLearningModel(AsyncMixin, OchreModel):
             pass
     
     def delete(self, **argd):
-        try:
-            resp = requests.delete(
-                "{}/models/{}".format(
-                    settings.TORCHSERVE_MANAGEMENT_ADDRESS,
-                    self.id
-                )
-            )
-            model_file = os.path.join(settings.MODELS_ROOT, "{}_model.mar".format(self.id))
-            if os.path.exists(model_file):
-                os.remove(os.path.join(settings.MODELS_ROOT, "{}_model.mar".format(self.id)))
-            self.delete_signature()
-            self.delete_properties()
-        except:
-            pass
+        uris = [self.properties_uri, self.signature_uri]
+        clear.delay(self.id, uris)
         return super(MachineLearningModel, self).delete(**argd)
     
     def save(self, **argd):

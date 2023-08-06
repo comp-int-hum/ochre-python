@@ -1,11 +1,55 @@
-{% extends "ochre/index.html" %}
-{% load ochre %}
+
 
 
 {% block content %}
-<table>
-  {% for term, props in terms %}
-  <tr><td>{{term}}</td></tr>
+<div class="px-4">
+<p>
+  These are the classes and properties in each domain currently defined on this OCHRE server.
+</p>
+
+{% for domain, terms in domains.items %}
+<h2>{{domain}}</h2>
+<h4>{{terms.description}}</h4>
+{% if terms.classes %}
+<table class="ontology">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+
+  {% for term, props in terms.classes.items %}
+  <tr>
+    <td class="name">{{term}}</td>
+    <td class="description"><a href={{props.external}}>{{props.description}}</a></td>
+  </tr>
   {% endfor %}
+
+  {% comment %}
 </table>
+{% endif %}
+
+{% if terms.properties %}
+<!--<h4>Properties</h4>-->
+<table>
+
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>    
+  </thead>
+  {% endcomment %}
+  {% for term, props in terms.properties.items %}
+  <tr>
+    <td class="name">{{term}}</td>
+    <td class="description"><a href={{props.external}}>{{props.description}}</a></td>
+  </tr>
+  {% endfor %}
+
+</table>
+{% endif %}
+{% endfor %}
+</div>
 {% endblock %}

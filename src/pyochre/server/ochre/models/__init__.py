@@ -3,9 +3,12 @@ from .asyncmixin import AsyncMixin
 from .ochremodel import OchreModel
 from .user import User
 from .documentation import Documentation
-from .slide import Slide
-from .researchartifact import ResearchArtifact
 from .primarysource import PrimarySource
 from .query import Query
 from .machinelearningmodel import MachineLearningModel
 from .annotation import Annotation
+from .researchproject import ResearchProject
+from .researchartifact import ResearchArtifact
+
+from .course import Course
+from .article import Article

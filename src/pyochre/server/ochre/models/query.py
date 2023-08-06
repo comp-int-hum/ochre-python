@@ -9,17 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class Query(OchreModel):
+
     class Meta(OchreModel.Meta):
-        verbose_name_plural = "Queries"
+        verbose_name_plural = "queries"        
+
     sparql = TextField()
-        
-
-    #def save(self, *argv, **argd):
-    #    print(argv, argd)
-    #def __str__(self):
-    #    return self.name
-
-    #def perform(self, limit=None, offset=None):
-    #    store = rdf_store(settings=settings)
-    #    ds = rdflib.Dataset(store=store)
-    #    return ds.query(query.getlist("query")[0])

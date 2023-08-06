@@ -19,13 +19,13 @@ rx = re.compile("^{}(.*)$".format(settings.OCHRE_NAMESPACE))
 
 class PrimarySourceDomainGraph(OchreVisualization):
 
-    def __init__(self, object, prefix=None):
+    def __init__(self, graph, prefix=None):
         self.prefix = prefix
         query = files("pyochre").joinpath(
             "data/domain_graph_visualization_query.sparql"
         ).read_text()
         entities, relationships, properties = {}, [], []
-        for s, np, sn, rc, pn, cn, dt in object.domain.query(query):
+        for s, np, sn, rc, pn, cn, dt in graph.query(query):
             sn = rx.sub(r"\1", str(sn))            
             pn = rx.sub(r"\1", str(pn))
             s = str(s)

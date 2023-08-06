@@ -8,7 +8,7 @@
   
   <xsl:output method="xml" indent="yes"/>
 
-  <xsl:param name="ochre_namespace"/>
+  <xsl:param name="ochre_namespace">urn:ochre:</xsl:param>
   <xsl:variable name="xsd">http://www.w3.org/2001/XMLSchema#</xsl:variable>
   
   <!-- do nothing with random text -->  
@@ -25,54 +25,54 @@
   <xsl:template match="/document/row">
     <xsl:variable name="id" select="concat('P', cell[@id='id']/@value)"/>
     <rdf:Description>
-      <isA rdf:resource="Inscription" />
-      <hasLabel rdf:datatype="{$xsd}string">
+      <ochre:instanceOf rdf:resource="Inscription" />
+      <ochre:hasLabel rdf:datatype="{$xsd}string">
 	<xsl:value-of select="$id" />
-      </hasLabel>
-      <hasTransliteration rdf:datatype="{$xsd}string">
+      </ochre:hasLabel>
+      <ochre:hasTransliteration rdf:datatype="{$xsd}string">
 	<xsl:value-of select="cell[@id='content']/@value" />
-      </hasTransliteration>
+      </ochre:hasTransliteration>
       <xsl:apply-templates select="cell" />
 
-      <hasImage rdf:parseType="Resource">
-	<isA rdf:resource="LineDrawing" />
-	<hasFile rdf:parseType="Resource">
-	  <isA rdf:resource="ImageFile" />
-	  <hasLabel rdf:datatype="{$xsd}string">
+      <ochre:hasImage rdf:parseType="Resource">
+	<ochre:instanceOf rdf:resource="LineDrawing" />
+	<ochre:hasFile rdf:parseType="Resource">
+	  <ochre:instanceOf rdf:resource="ImageFile" />
+	  <ochre:hasLabel rdf:datatype="{$xsd}string">
 	    <xsl:value-of select="concat($id, '_line.jpg')" />
-	  </hasLabel>
-	</hasFile>
-      </hasImage>
+	  </ochre:hasLabel>
+	</ochre:hasFile>
+      </ochre:hasImage>
 
-      <hasImage rdf:parseType="Resource">
-	<isA rdf:resource="Photo" />
-	<hasFile rdf:parseType="Resource">
-	  <isA rdf:resource="ImageFile" />
-	  <hasLabel rdf:datatype="{$xsd}string">
+      <ochre:hasImage rdf:parseType="Resource">
+	<ochre:instanceOf rdf:resource="Photo" />
+	<ochre:hasFile rdf:parseType="Resource">
+	  <ochre:instanceOf rdf:resource="ImageFile" />
+	  <ochre:hasLabel rdf:datatype="{$xsd}string">
 	    <xsl:value-of select="concat($id, '_photo.jpg')" />
-	  </hasLabel>
-	</hasFile>
-      </hasImage>
+	  </ochre:hasLabel>
+	</ochre:hasFile>
+      </ochre:hasImage>
     </rdf:Description>
   </xsl:template>
 
   <!-- metadata item -->
   <xsl:template match="/document/row/cell[@id='material']">
-    <madeFrom rdf:datatype="{$xsd}string">
+    <ochre:madeFrom rdf:datatype="{$xsd}string">
       <xsl:value-of select="@value"/>
-    </madeFrom>
+    </ochre:madeFrom>
   </xsl:template>
   
   <xsl:template match="/document/row/cell[@id='language']">
-    <inLanguage rdf:datatype="{$xsd}string">
+    <ochre:inLanguage rdf:datatype="{$xsd}string">
       <xsl:value-of select="@value"/>
-    </inLanguage>
+    </ochre:inLanguage>
   </xsl:template>
 
   <xsl:template match="/document/row/cell[@id='genre']">
-    <hasGenre rdf:datatype="{$xsd}string">
+    <ochre:hasGenre rdf:datatype="{$xsd}string">
       <xsl:value-of select="@value"/>
-    </hasGenre>
+    </ochre:hasGenre>
   </xsl:template>
 
 </xsl:transform>

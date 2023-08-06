@@ -1,9 +1,11 @@
 <div class="form-group {% if field.errors %}has-error{% endif %}">
   <div class="checkbox">
-    <label>
-      <input type="checkbox" name="{{ field.name }}" value="true" {% if field.value %}checked{% endif %}>
-        {% if field.label %}{{ field.label }}{% endif %}
-    </label>
+  {% if field.label %}
+  <label {% if style.hide_label %}class="sr-only"{% endif %} title="{{field.help_text|safe}}" data-bs-toggle="tooltip" data-bs-placement="left">
+    {{ field.label }}
+  </label>
+  {% endif %}      
+<input type="checkbox" name="{{ field.name }}" value="true" {% if field.value %}checked{% endif %}>
   </div>
 
   {% if field.errors %}
@@ -12,7 +14,5 @@
     {% endfor %}
   {% endif %}
 
-  {% if field.help_text %}
-    <span class="help-block">{{ field.help_text|safe }}</span>
-  {% endif %}
+
 </div>

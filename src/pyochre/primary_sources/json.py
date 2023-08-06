@@ -69,12 +69,23 @@ class JsonLineParser(TreeBuilder):
         else:
             self.data(str(value))
     
-    def __call__(self, fd):
-        self.start("document", {})
-        for line in fd:
-            self.start("item", {})
-            self.handle_value(json.loads(line))
-            self.end("item")
-        self.end("document")
+    def __call__(self, fd, split=False):
+        if split:
+            for i, line in enumerate(fd):
+                if i % 100 == 0:
+                    if i != 0:
+                        self.end("document")
+                        yield self.close()
+                    self.start("document", {})
+                self.handle_value(json.loads(line))
+            self.end("document")
+            yield self.close()
+        else:
+            self.start("document", {})
+            for line in fd:
+                self.start("item", {})
+                self.handle_value(json.loads(line))
+                self.end("item")
+            self.end("document")
         return self.close()
     

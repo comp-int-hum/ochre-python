@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.response import Response
 from pyochre.server.ochre.viewsets import OchreViewSet
-from pyochre.server.ochre.serializers import MachineLearningModelSerializer, MachineLearningModelTopicModelSerializer, MachineLearningModelHuggingfaceSerializer, MachineLearningModelStarcoderSerializer
+from pyochre.server.ochre.serializers import MachineLearningModelSerializer, MachineLearningModelTopicModelSerializer, MachineLearningModelHuggingfaceSerializer, MachineLearningModelStarcoderSerializer, MachineLearningModelInteractiveSerializer, PermissionsSerializer
 from pyochre.server.ochre.models import MachineLearningModel
 from pyochre.server.ochre.renderers import OchreTemplateHTMLRenderer
 from pyochre.server.ochre.autoschemas import OchreAutoSchema
@@ -25,54 +25,55 @@ class MachineLearningModelViewSet(OchreViewSet):
         operation_id_base="machinelearningmodel",
         response_serializer=MachineLearningModelSerializer
     )
-
+    detail_template_name = "ochre/template_pack/tabs.html"
+    
     def get_serializer_class(self):
-        if self.action == "train_topic_model":
+        if self.action == "create_topic_model":
             return MachineLearningModelTopicModelSerializer
-        elif self.action == "import_huggingface_model":
+        elif self.action == "create_huggingface_model":
             return MachineLearningModelHuggingfaceSerializer
         elif self.action == "create_starcoder_model":
             return MachineLearningModelStarcoderSerializer
+        elif isinstance(self.request.accepted_renderer, OchreTemplateHTMLRenderer) and self.action == "list":
+            return MachineLearningModelSerializer        
+        elif isinstance(self.request.accepted_renderer, OchreTemplateHTMLRenderer) and self.request.headers.get("Mode") == "view":
+            return MachineLearningModelInteractiveSerializer        
         else:
             return MachineLearningModelSerializer
 
-    @action(detail=True, methods=["post"])
-    def apply(self, request, pk=None):
-        if "primarysource_id" in request.data:
-            apply_machinelearningmodel.delay(
-                pk,
-                request.data.get("name"),
-                request.user.id,            
-                request.data["primarysource_id"],
-                request.data.get("query_id", None)
-            )
-            return Response({"status" : "success"})
-        else:
-            data = {k : v for k, v in request.data.items() if not isinstance(v, InMemoryUploadedFile)}
-            files = {k : v for k, v in request.data.items() if isinstance(v, InMemoryUploadedFile)}
-            response = requests.post(
-                "{}/v2/models/{}/infer".format(
-                    settings.TORCHSERVE_INFERENCE_ADDRESS,
-                    pk
-                    #model_id
-                ),
-                data=data,
-                files=files
-            )
-            #print(request.data)
-            #print(response)
-            #print(response.reason)
-            out = response.json()
-            return Response(out)
-        
-        #print(out)
-        #    return Response({"status" : "success"})
+    @action(
+        detail=True,
+        methods=["get"],
+    )
+    def properties(self, request, pk=None):
+        mlm = MachineLearningModel.objects.get(id=pk)
+        return Response(json.loads(mlm.properties.serialize(format="json-ld")))
 
     @action(
-        detail=False,
-        methods=["post", "options"],
-        url_path="create/topic_model"
+        detail=True,
+        methods=["get"],
     )
+    def signature(self, request, pk=None):
+        mlm = MachineLearningModel.objects.get(id=pk)
+        return Response(json.loads(mlm.signature.serialize(format="json-ld")))
+        
+    @action(detail=True, methods=["POST"]) # add "GET" but without breaking cmdline!
+    def apply(self, request, pk=None):
+        """
+        Directly apply a model to directly-specified data.
+        """
+        data = {k : v for k, v in request.data.items() if not isinstance(v, InMemoryUploadedFile)}
+        files = {k : v for k, v in request.data.items() if isinstance(v, InMemoryUploadedFile)}
+        response = requests.post(
+            "{}/v2/models/{}/infer".format(
+                settings.TORCHSERVE_INFERENCE_ADDRESS,
+                pk
+            ),
+            data=data,
+            files=files
+        )
+        out = response.json()
+        return Response(out)
         
     def create_model(self, request, pk=None):
         ser = self.get_serializer_class()(
@@ -80,32 +81,91 @@ class MachineLearningModelViewSet(OchreViewSet):
             context={"request" : request}
         )
         if ser.is_valid():
-            ser.create(ser.validated_data)
-            return Response({"status" : "success"})
+            obj = ser.create(ser.validated_data)
+            resp_ser = MachineLearningModelSerializer(obj, context={"request" : request})
+            return Response(resp_ser.data)            
         else:
             return Response(
                 ser.errors,
                 status=status.HTTP_400_BAD_REQUEST
             )
     
-    @action(detail=False, methods=["POST"], url_path="create/topicmodel")
-    def train_topic_model(self, request, pk=None):
+    @action(
+        detail=False,
+        methods=["POST", "GET"],
+        url_path="create/topicmodel",
+        url_name="create_topic_model"
+    )
+    def create_topic_model(self, request, pk=None):
         """
-        Create a topic model
+        Train a topic model.
         """
-        return self.create_model(request, pk=None)
+        if request.method == "GET":
+            ser = self.get_serializer_class()()
+            return Response(ser.data)
+        else:
+            return self.create_model(request, pk=None)
         
-    @action(detail=False, methods=["POST"], url_path="create/huggingface")
-    def import_huggingface_model(self, request, pk=None):
+    @action(
+        detail=False,
+        methods=["POST", "GET"],
+        url_path="create/huggingface",
+        url_name="create_huggingface_model"
+    )
+    def create_huggingface_model(self, request, pk=None):
         """
-        Import a HuggingFace model
+        Import a HuggingFace model.
         """
-        return self.create_model(request, pk=None)
+        if request.method == "GET":
+            ser = self.get_serializer_class()()
+            return Response(ser.data)
+        else:
+            return self.create_model(request, pk=None)
 
-    @action(detail=False, methods=["POST"], url_path="create/starcoder")
+    @action(
+        detail=False,
+        methods=["POST", "GET"],
+        url_path="create/starcoder",
+        url_name="create_starcoder_model"
+    )
     def create_starcoder_model(self, request, pk=None):
         """
-        Create a StarCoder model
+        Create a StarCoder model.
         """
-        return self.create_model(request, pk=None)
+        if request.method == "GET":
+            ser = self.get_serializer_class()()
+            return Response(ser.data)
+        else:
+            return self.create_model(request, pk=None)
+    
+    def list(self, request, pk=None):
+        """
+        List machine learning models.
+        """
+        return self._list(request)
+
+    def retrieve(self, request, pk=None):
+        """
+        Get information about a particular machine learning model.
+        """
+        return self._retrieve(request, pk)
+        # obj = self.get_object()
+        # logger.info("Retrieve of %s invoked by %s", obj, request.user)
+        # ser = self.get_serializer_class()(obj)
+        # logger.info("Using serializer class:  %s", type(ser).__name__)
+        # return Response(ser.data)
+
+    def destroy(self, request, pk=None):
+        """
+        Destroy (delete) a machine learning model.
+        """
+        return self._destroy(request, pk)
+
+    @action(
+        detail=True,
+        methods=["GET", "PATCH"],
+        serializer_class=PermissionsSerializer
+    )
+    def permissions(self, request, pk=None):
+        return self._permissions(request, pk)
     

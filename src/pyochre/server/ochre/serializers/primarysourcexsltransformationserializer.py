@@ -2,14 +2,14 @@ import os.path
 import logging
 import re
 import tempfile
-from rest_framework.serializers import HyperlinkedIdentityField, FileField, BooleanField
+from rest_framework.serializers import HyperlinkedIdentityField, FileField, BooleanField, ChoiceField
 from django.conf import settings
 from rdflib import Namespace, Graph, Dataset
-from lxml.etree import XML, XSLT, parse, TreeBuilder, tostring, XSLTExtension
+from lxml.etree import XML, XSLT, parse, TreeBuilder, tostring, XSLTExtension, fromstring
 from pyochre.server.ochre.models import PrimarySource, Query, Annotation
 from pyochre.server.ochre.serializers import OchreSerializer
 from pyochre.utils import meta_open, rdf_store
-from pyochre.primary_sources import TsvParser, CsvParser, JsonParser, create_domain, enrich_uris, NoHeaderTsvParser, NoHeaderCsvParser, XmlParser
+from pyochre.primary_sources import TsvParser, CsvParser, JsonParser, create_domain, enrich_uris, NoHeaderTsvParser, NoHeaderCsvParser, XmlParser, JsonLineParser, parsers
 
 
 logger = logging.getLogger(__name__)
@@ -24,15 +24,6 @@ else:
     def shared_task(func):
         return func
 
-formats = {
-    "csv" : CsvParser,
-    "tsv" : TsvParser,
-    "ncsv" : NoHeaderCsvParser,
-    "ntsv" : NoHeaderTsvParser,    
-    "xml" : XmlParser,
-    "json" : JsonParser,
-    #"jsonl" : JsonlParser,
-}
 
 def file_type(fname):
     _, ext = os.path.splitext(re.sub(r"\.(gz|bz2)$", "", fname))
@@ -43,8 +34,8 @@ def file_type(fname):
 def primarysource_from_xsl_transformation(
         object_id,
         data_file,
+        data_file_type,
         transformation_file,
-        materials_file,
         split_data
 ):
     try:
@@ -52,112 +43,25 @@ def primarysource_from_xsl_transformation(
         
         logger.info("Load the XML-to-RDF transformation rules")
         with meta_open(transformation_file, "rt") as ifd:
-            transform = XSLT(parse(ifd))
+            tr_str = re.sub(
+                r"xmlns:ochre\s*=\s*\"urn:ochre:\"",
+                "xmlns:ochre=\"{}\"".format(settings.OCHRE_NAMESPACE),
+                ifd.read()
+            )
+            transform = XSLT(fromstring(tr_str.encode()))
 
         logger.info("Instantiating the necessary X-to-XML parser")
-        ft = file_type(data_file)
-        parser = formats[ft]()
+        parser = parsers[data_file_type]()
 
         logger.info("Creating XML from the original data")
         with meta_open(data_file, "rt") as ifd:
             for xml in parser(ifd, split=split_data):
-        
                 logger.info("Creating RDF from XML")
-                tr = transform(xml) #, ochre_namespace=settings.OCHRE_NAMESPACE)
+                tr = transform(xml, ochre_namespace="'{}'".format(settings.OCHRE_NAMESPACE))
+                logger.info("Loading the RDF")
+                resp = obj.add(tostring(tr))
                 
-
-                logger.info("Loading the RDF and skolemizing it")
-                g = Graph(base="http://test/")
-                g.parse(data=tostring(tr), format="xml", publicID=OCHRE)
-                g = g.skolemize()
-
-                # create or replace the primary source graph on the RDF server
-                #obj = connection.create_or_replace_object(
-                #   model_name="primarysource",
-                #   object_name=args.name,
-                #   data={"name" : args.name}
-                #)
-
-                logger.info("Creating dataset handle from a SPARQL connection to the RDF server")
-                store = rdf_store(settings=settings)
-                dataset = Dataset(store=store, default_graph_base=OCHRE)
-
-                logger.info("Getting the named graph corresponding to the primary source")
-                ng = dataset.graph(
-                    OCHRE["{}_data".format(obj.id)]
-                )
-
-                # information to collect
-                uris = set()
-                potential_materials = {}
-                ignore = set()
-                materials = {}
-
-                # modalities = {
-                #     OCHRE[x] : x for x in [
-                #         "image",
-                #         "video",
-                #         "text",
-                #         "audio",
-                #         "tensor"
-                #     ]
-                # }
-
-                #for s, p, o in g:
-                #    if p in modalities:
-                #        potential_materials[o] = modalities[p]
-
-                #for uri, name in modalities.items():
-                #    ng.add((uri, OCHRE["hasLabel"], Literal(name)))
-
-                #for s, _, o in g.triples((None, OCHRE["hasLabel"], None)):
-                #    if s in potential_materials:
-                #        fname = os.path.join(args.base_path, o)
-                #        if os.path.exists(fname):
-                #            materials[s] = (fname, potential_materials[s])
-                #        else:
-                #            ignore.add(s)
-                logger.info("Sending triples to the server")
-                #ng.parse(data=g.serialize(format="turtle"), format="turtle")
-                #every = 10000
-                for i, (s, p, o) in enumerate(g):
-                    #if s in ignore or o in ignore:
-                    #    continue
-                    #for n in [s, p, o]:
-                    #    if isinstance(n, URIRef) and "wikidata" in n:
-                    #        uris.add(n)
-                    ng.add(
-                        (
-                            s,
-                            p,
-                            o
-                        )
-                    )
-                #     break
-                    #if i % every == 0:
-                    #    store.commit()
-                    #    print(i)
-                #if i % every != 0:
-                store.commit()
-
-        dg = dataset.graph(
-           OCHRE["{}_domain".format(obj.id)]
-        )
-        for s, p, o in create_domain(obj):
-            dg.add((s, p, o))
-        store.commit()
-
-        # for uri, (fname, mode) in materials.items():
-        #     ext = os.path.splitext(fname)[-1][1:]
-        #     with open(fname, "rb") as ifd:
-        #         connection.create_object(
-        #             "material",
-        #             {
-        #                 "uid" : str(uri),
-        #                 "content_type" : "{}/{}".format(mode, ext)
-        #             },
-        #             files={"file" : ifd}
-        #         )
+        obj.infer_domain()
         obj.state = obj.COMPLETE
         obj.save()
     except Exception as e:
@@ -165,7 +69,7 @@ def primarysource_from_xsl_transformation(
             obj.delete()
         raise e
     finally:
-        for fname in [data_file, transformation_file, materials_file]:
+        for fname in [data_file, transformation_file]:
             if fname:
                 os.remove(fname)
 
@@ -177,61 +81,56 @@ class PrimarySourceXslTransformationSerializer(OchreSerializer):
         help_text="Data in some supported non-RDF format (e.g. XML, JSON, CSV)"
     )
 
+    data_file_type = ChoiceField(
+        write_only=True,
+        help_text="Format of data file",
+        choices=list(parsers.keys())
+    )
+    
     transformation_file = FileField(
         write_only=True,
         required=True,
         help_text="XSL file describing the transformation of the data into RDF"
     )
-
-    materials_file = FileField(
-        write_only=True,
-        help_text="Data in some supported non-RDF format (e.g. XML, JSON, CSV)",
+    force = BooleanField(
         required=False,
-        allow_null=True
+        write_only=True,
+        allow_null=True,
+        default=False,
+        help_text="Overwrite any existing primary source of the same name and creator"
     )
 
     split_data = BooleanField(
         write_only=True,
-        default=True,
+        default=False,
         required=False,
         allow_null=True,
         help_text="Split data files to emulate streaming (may lead to incorrect RDF for some formats/transformations)"
     )
     
-    domain_url = HyperlinkedIdentityField(
-        view_name="api:primarysource-domain"
-    )
-    
-    clear_url = HyperlinkedIdentityField(
-        view_name="api:primarysource-clear"
-    )
-    
-    query_url = HyperlinkedIdentityField(
-        view_name="api:primarysource-query"
-    )
-    
-    update_url = HyperlinkedIdentityField(
-        view_name="api:primarysource-sparqlupdate"
-    )    
     
     class Meta:
         model = PrimarySource
+        slug = "Using an XSL transformation"
         fields = [
             "name",
+            "force",
             "data_file",
+            "data_file_type",
             "transformation_file",
-            "materials_file",
             "split_data",
-            "domain_url",
-            "creator",
-            "id",
-            "url",
-            "clear_url",
-            "query_url",
-            "update_url"
+            #"id",
+            #"url",
+            "created_by"
         ]
 
     def create(self, validated_data):
+        if validated_data.get("force", False):
+            for existing in PrimarySource.objects.filter(
+                    name=validated_data["name"],
+                    created_by=validated_data["created_by"]
+            ):
+                existing.delete()
         logger.info("Creating new primarysource")
         obj = PrimarySource(
             name=validated_data["name"],
@@ -248,17 +147,17 @@ class PrimarySourceXslTransformationSerializer(OchreSerializer):
             suffix=os.path.basename(validated_data["transformation_file"].name),
             dir=settings.TEMP_ROOT
         )
-        if validated_data.get("materials_file", False):
-            _, mf_name = tempfile.mkstemp(
-                suffix=os.path.basename(validated_data["materials_file"].name),
-                dir=settings.TEMP_ROOT
-            )
-        else:
-            mf_name = None
+        #if validated_data.get("materials_file", False):
+        #    _, mf_name = tempfile.mkstemp(
+        #        suffix=os.path.basename(validated_data["materials_file"].name),
+        #        dir=settings.TEMP_ROOT
+        #    )
+        #else:
+        #    mf_name = None
         for stream, fname in [
                 (validated_data.get("data_file"), d_name),
                 (validated_data.get("transformation_file"), tr_name),
-                (validated_data.get("materials_file"), mf_name)
+                #(validated_data.get("materials_file"), mf_name)
         ]:
             if fname:
                 with open(fname, "wb") as ofd:
@@ -267,8 +166,9 @@ class PrimarySourceXslTransformationSerializer(OchreSerializer):
         obj.task_id = primarysource_from_xsl_transformation.delay(
             obj.id,
             d_name,
+            validated_data["data_file_type"],
             tr_name,
-            mf_name,
+            #mf_name,
             validated_data.get("split_data", False)
         )
         obj.save()

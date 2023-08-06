@@ -1,9 +1,7 @@
 import logging
 from rest_framework.serializers import CharField, IntegerField, HyperlinkedRelatedField, ListField, FloatField, BooleanField
-from pyochre.server.ochre.serializers import OchreSerializer
-from pyochre.server.ochre.fields import ActionOrInterfaceField
+from pyochre.server.ochre.serializers import OchreSerializer, MaterialSerializer
 from pyochre.server.ochre.models import MachineLearningModel, Query, PrimarySource
-from pyochre.server.ochre.fields import MachineLearningModelInteractionField
 import io
 import time
 import zipfile
@@ -34,6 +32,8 @@ from rdflib.namespace import RDF, RDFS, XSD, Namespace
 from gensim.models.callbacks import Metric
 import gensim.parsing.preprocessing as gpp
 from pyochre.server.ochre.models import MachineLearningModel, Query, PrimarySource, User
+from pyochre.utils import ochrequery as OQ
+from pyochre.utils import ochreturtle as OT
 
 
 OCHRE = Namespace(settings.OCHRE_NAMESPACE)
@@ -69,7 +69,7 @@ class EpochLogger(Metric):
         return 0
 
 
-def create_topic_model_mar(topic_model, name, fname, lowercase):
+def create_topic_model_mar(topic_model, name, fname, lowercase, word_regex, stopwords):
     #from importlib.resources import files
     handler_string = files("pyochre").joinpath("data/topic_model_handler.py").read_text()
     sig_string = files("pyochre").joinpath("data/topic_model_signature.ttl").read_text()
@@ -85,7 +85,11 @@ def create_topic_model_mar(topic_model, name, fname, lowercase):
             "modelFile": "model.py",
             "modelVersion": "1.0",
             "modelSignature" : sig_string,
-            "lowercase" : lowercase
+            "properties" : {
+                "lowercase" : lowercase,
+                "word_regex" : word_regex,
+                "stopwords" : stopwords
+            }
         }
     }
     with zipfile.ZipFile(fname, "w") as zfd:
@@ -117,57 +121,55 @@ def train_topic_model(
         maximum_proportion,
         minimum_occurrence,
         maximum_documents,
+        word_regex,
         query_id=None,        
         **argd
 ):
     from importlib.resources import files
-    signature_string = "@prefix ochre: <{}> .\n".format(settings.OCHRE_NAMESPACE) + files("pyochre").joinpath("data/topic_model_signature.ttl").read_text()
-    training_query_string = """PREFIX ochre: <{}>
-        {}
-        """.format(
-            settings.OCHRE_NAMESPACE,
-            files("pyochre").joinpath("data/topic_model_training_signature.sparql").read_text()
-        )
-    user = User.objects.get(id=created_by_id)
-    query = Query.objects.get(id=query_id) if query_id else None
-    primarysource = PrimarySource.objects.get(id=primarysource_id)
-    split_pattern = r"\s+"
-    token_pattern_in = r"(\S+)"
-    token_pattern_out = r"\1"
-    model = MachineLearningModel.objects.get(id=model_id)
+    signature_string = OT(files("pyochre").joinpath("data/topic_model_signature.ttl").read_text())
     signature_graph = Graph()
-    signature_graph.parse(data=signature_string)
+    signature_graph.parse(data=signature_string, format="turtle")
+    for binding in signature_graph.query(
+            OQ(
+                """
+                SELECT ?q WHERE {
+                  ?s ochre:instanceOf ochre:InputSignature .
+                  ?s ochre:hasValue ?q .
+                }
+                """
+            )
+    ):
+        input_query_string = binding["q"]
+
+    user = User.objects.get(id=created_by_id)
+    initial_query = Query.objects.get(id=query_id) if query_id else None
+    primarysource = PrimarySource.objects.get(id=primarysource_id)
+    model = MachineLearningModel.objects.get(id=model_id)
     if random_seed != None:
         random.seed(random_seed)
     docs = {}
-    try:        
-        if query:
-            g = Graph()            
-            for s, p, o in primarysource.query(query.sparql):
-                g.add((s, p, o))
-            for binding in g.query(training_query_string):
+    tdocs = {}
+    ms = MaterialSerializer()
+    try:
+        for binding in primarysource.query(OQ(input_query_string)):
+            if binding.get("word"):
                 doc = str(binding.get("doc"))
                 word = binding.get("word").value
                 docs[doc] = docs.get(doc, [])
-                word = re.sub(r"^\W+", "", word)
-                word = re.sub(r"\W+$", "", word)
                 word = word.lower() if lowercase else word
                 if word not in stopwords and len(word) >= minimum_token_length:
                     docs[doc].append(word)
-        else:
-            g = Graph()
-            g.parse(data=primarysource.data)
-            for s, p, o in g:
-                if p == OCHRE["hasValue"]:
-                    txt = o.value.lower() if lowercase else o.value
-                    key = len(docs)
-                    docs[key] = []
-                    for word in txt.split():
-                        word = re.sub(r"^\W+", "", word)
-                        word = re.sub(r"\W+$", "", word)
-                        word = word.lower() if lowercase else word
-                        if word not in stopwords and len(word) >= minimum_token_length:
-                            docs[key].append(word)
+            else:
+                doc = str(binding.get("doc"))
+                mid = binding.get("mid").value
+                docs[doc] = docs.get(doc, [])
+                text = ms.retrieve(mid)["content"]
+                for m in re.finditer(word_regex, text.decode("utf-8")):
+                    word = m.group(0)
+                    word = word.lower() if lowercase else word
+                    if word not in stopwords and len(word) >= minimum_token_length:
+                        docs[doc].append(word)
+                        
         subdocs = []
         for doc in docs.values():
             while len(doc) > 0:
@@ -211,7 +213,9 @@ def train_topic_model(
                 topic_model,
                 name,
                 mar_path,
-                lowercase
+                lowercase,
+                word_regex,
+                stopwords
             )
             with open(mar_path, "rb") as mar, open(sig_path, "rb") as sig:
                 files = {
@@ -225,23 +229,24 @@ def train_topic_model(
                 num_words=len(dictionary.token2id),
                 formatted=False
             )
+            
             g = Graph()
             word_uris = {}
             for word, _ in dists[0][1]:
                 word_uris[word] = BNode()
                 g.add((word_uris[word], OCHRE["hasLabel"], Literal(word)))
-                g.add((word_uris[word], OCHRE["isA"], OCHRE["Word"]))
+                g.add((word_uris[word], OCHRE["instanceOf"], OCHRE["Word"]))
             for topic, dist in dists:
                 topic_uri = BNode()
                 g.add((topic_uri, OCHRE["hasOrdinal"], Literal(topic)))
                 g.add((topic_uri, OCHRE["hasLabel"], Literal("Topic #{}".format(topic))))
-                g.add((topic_uri, OCHRE["isA"], OCHRE["CategoricalDistribution"]))
+                g.add((topic_uri, OCHRE["instanceOf"], OCHRE["CategoricalDistribution"]))
                 for word, prob in dist:
                     occ_uri = BNode()
                     g.add((occ_uri, OCHRE["hasProbability"], Literal(prob, datatype=XSD.float)))
                     g.add((occ_uri, OCHRE["partOf"], topic_uri))
                     g.add((occ_uri, OCHRE["partOf"], word_uris[word]))
-                    g.add((occ_uri, OCHRE["isA"], OCHRE["Probability"]))
+                    g.add((occ_uri, OCHRE["instanceOf"], OCHRE["Probability"]))
             with open(prop_path, "wt") as ofd:
                 ofd.write(g.skolemize().serialize(format="turtle"))
             with open(mar_path, "rb") as mar, open(sig_path, "rb") as sig, open(prop_path, "rb") as prop:
@@ -266,6 +271,9 @@ def train_topic_model(
 
 
 class MachineLearningModelTopicModelSerializer(OchreSerializer):
+    name = CharField(
+        help_text="Name of this topic model"
+    )
     primarysource = HyperlinkedRelatedField(
         queryset=PrimarySource.objects.all(),
         view_name="api:primarysource-detail",
@@ -351,6 +359,13 @@ class MachineLearningModelTopicModelSerializer(OchreSerializer):
         allow_null=True,
         help_text="Number of iterations for variational optimization"
     )
+    word_regex = CharField(
+        required=False,
+        write_only=True,
+        default="\w+",
+        allow_null=True,
+        help_text="Regular expression defining what counts as a 'word', used to enumerate the tokens in a non-pre-tokenized document"
+    )
     maximum_vocabulary_size = IntegerField(
         required=False,
         write_only=True,
@@ -383,6 +398,7 @@ class MachineLearningModelTopicModelSerializer(OchreSerializer):
             "url",
             "created_by",
             "id",
+            "word_regex",
             "stopwords",
             "random_seed",
             "maximum_documents",
@@ -403,13 +419,13 @@ class MachineLearningModelTopicModelSerializer(OchreSerializer):
                     created_by=validated_data["created_by"]
             ):
                 existing.delete()
-        model = MachineLearningModel(
+        obj = MachineLearningModel(
             created_by=validated_data["created_by"],
             name=validated_data["name"],
             message="Training topic model",
             state=MachineLearningModel.PROCESSING
         )
-        model.save()
+        obj.save()
         args = {}
         for k, v in validated_data.items():
             if isinstance(v, Model):
@@ -417,6 +433,7 @@ class MachineLearningModelTopicModelSerializer(OchreSerializer):
             else:
                 args[k] = v
         train_topic_model.delay(
-            model.id,
+            obj.id,
             **args
         )
+        return obj

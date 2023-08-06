@@ -95,10 +95,10 @@ def create_primary_source(args, connection):
     # create XML from the primary sources
     with meta_open(args.input_file, "rt") as ifd:
         xml = parser(ifd)
-
+    print(type(xml))
     if args.output_xml_file:
         with open(args.output_xml_file, "wb") as ofd:
-            xml.getroottree().write(ofd, pretty_print=True)
+            xml.getroottree().write(ofd, pretty_print=True, encoding="utf-8")
 
     # create RDF from the XML (lots of memory!)
     tr = transform(xml)

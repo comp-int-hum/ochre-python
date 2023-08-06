@@ -7,6 +7,13 @@ logger = logging.getLogger(__name__)
 
 class OchreTemplateHTMLRenderer(TemplateHTMLRenderer):
     format = "ochre"
+
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        return super(OchreTemplateHTMLRenderer, self).render(
+            data,
+            accepted_media_type,
+            renderer_context
+        )
     
     def get_template_context(self, data, renderer_context):
         context = super(
@@ -16,17 +23,7 @@ class OchreTemplateHTMLRenderer(TemplateHTMLRenderer):
             data,
             renderer_context
         )
-        context = {
-            "items" : context
-        } if isinstance(context, list) else context
-        for k, v in renderer_context.items():
-            if not context.get(k):
-                context[k] = v
-            else:
-                logger.debug(
-                    "Not replacing %s with %s for context item %s",
-                    context.get(k),
-                    v,
-                    k
-                )
+        if not isinstance(context, dict):
+            context = {"items" : context}
+        context["serializer"] = renderer_context.get("serializer")
         return context

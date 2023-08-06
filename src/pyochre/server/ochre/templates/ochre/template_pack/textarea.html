@@ -1,8 +1,6 @@
 <div class="form-group {% if field.errors %}has-error{% endif %}">
   {% if field.label %}
-    <label {% if style.hide_label %}class="sr-only"{% endif %}>
-      {{ field.label }}
-    </label>
+  <label {% if style.hide_label %}class="sr-only"{% endif %} title="{{field.help_text|safe}}" data-bs-toggle="tooltip" data-bs-placement="left">{{ field.label }}</label>
   {% endif %}
     {% if style.editable == True %}
     <textarea name="{{ field.name }}" class="form-control" {% if style.placeholder %}placeholder="{{ style.placeholder }}"{% endif %} {% if style.rows %}rows="{{ style.rows }}"{% endif %}>{% if field.value %}{{ field.value }}{% endif %}</textarea>
@@ -11,8 +9,5 @@
     {% endif %}
   {% if field.errors %}
     {% for error in field.errors %}<span class="help-block">{{ error }}</span>{% endfor %}
-  {% endif %}
-  {% if field.help_text %}
-    <span class="help-block">{{ field.help_text|safe }}</span>
   {% endif %}
 </div>

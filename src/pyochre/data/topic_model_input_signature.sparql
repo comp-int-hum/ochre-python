@@ -8,7 +8,7 @@ CONSTRUCT {
 } WHERE
 {
   ?doc ochre:hasPart ?token .
-  ?token ochre:isA ochre:Token .
+  ?token ochre:instanceOf ochre:Token .
   ?token ochre:hasLabel ?word .
   #OPTIONAL {
   #  ?doc ochre:hasDate ?date .

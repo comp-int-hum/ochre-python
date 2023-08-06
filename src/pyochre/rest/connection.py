@@ -11,70 +11,42 @@ class Connection(Session):
 
     def __init__(self, config=None):
         super(Connection, self).__init__()
-        self.user = env("USER") #config.get("USER")
+        self.user = env("USER")
         self.session = Session()
         if self.user:
             self.session.auth = (self.user, env("PASSWORD"))
-
-        self.session.headers = {"Accept" : "application/vnd.oai.openapi"}            
+        self.session.headers = {"Accept" : "application/vnd.oai.openapi"}
         x = self.session.get(
             "{PROTOCOL}://{HOSTNAME}:{PORT}/openapi/".format(
                 PROTOCOL=env("PROTOCOL"),
                 HOSTNAME=env("HOSTNAME"),
                 PORT=env("PORT")
             )
-            #**config),
         )
         self.openapi = yaml.load(x.text, Loader=yaml.FullLoader)
-            
         self.session.headers = {"Accept" : "application/json"}
-        # self.url = "{PROTOCOL}://{HOSTNAME}/".format(
-        #     PROTOCOL=env("PROTOCOL"),
-        #     HOSTNAME=env("HOSTNAME")
-        # )
-        #     #**config)
-        # self.base_url = "{PROTOCOL}://{HOSTNAME}:{PORT}/".format(
-        #     PROTOCOL=env("PROTOCOL"),
-        #     HOSTNAME=env("HOSTNAME"),
-        #     PORT=env("PORT"),
-        # )
-        # #**config)
+        self.user_urls = {}
+        for user in self.session.get("{}://{}:{}/api/user/".format(env("PROTOCOL"), env("HOSTNAME"), env("PORT"))).json():
+            self.user_urls[user["username"]] = user["url"]
+        self.list_urls = {}
+        for obj in self.openapi["components"]["schemas"].keys():
+            actions = []
+            for path, methods in self.openapi["paths"].items():
+                path = "{}://{}:{}{}".format(env("PROTOCOL"), env("HOSTNAME"), env("PORT"), path)
+                relevant = False
+                for method, method_info in methods.items():
+                    tags = method_info["tags"]
+                    if obj.lower() in tags:
+                        relevant = True
+                        if method_info["operationId"].startswith("list") and not method_info["operationId"].startswith("list_"):
+                            self.list_urls[obj] = path
 
 
-        # try:
-        #     resp = self.session.get(self.base_url)
-        # except Exception as e:
-        #     logger.info(
-        #         "Could not connect to OCHRE server: %s",
-        #         e
-        #     )
-        #     return
-        # if resp.status_code == 403:
-        #     logger.warn("Connected to, but could not authenticate with, server with user '%s' and the provided password.  Falling back to AnonymousUser.", self.user)
-        #     self.session.auth = None
-        #     resp = self.session.get(self.base_url)
-        # if resp.status_code != 200:
-        #     logger.warn("Could not connect to server via '%s'", self.base_url)
-        #     raise Exception(resp.reason)
-        # print(resp.content, 123123)
-        #self.types = self.openapi["components"]["schemas"].keys()
-        # type=object, properties, some properties w/ readOnly!=True
-        #print(self.openapi["paths"].keys())
-        
-        
-        #sys.exit()
-        #self.endpoints = resp.json()
-
+            
     def action(self, action_name, url, data=None, expected=None, files={}):
         files = {k : open(v, "rb") if isinstance(v, str) else v for k, v in files.items()}
         resp = getattr(self.session, action_name)(url, data=data, files=files)
         return resp
-        if expected and resp.status_code != expected:
-            raise Exception("Expected {} but got {} ({})".format(expected, resp.status_code, resp.reason))
-        try:
-            return resp.json() if resp.ok == True else {}
-        except:
-            return {}
 
     def get_objects(self, model_name):
         return self.get(self.endpoints[model_name])

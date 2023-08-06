@@ -1,10 +1,10 @@
 {% load rest_framework %}
 <div class="form-group {% if field.errors %}has-error{% endif %}">
   {% if field.label %}
-    <label {% if style.hide_label %}class="sr-only"{% endif %}>
-      {{ field.label }}
-    </label>
-  {% endif %}
+  <label {% if style.hide_label %}class="sr-only"{% endif %} title="{{field.help_text|safe}}" data-bs-toggle="tooltip" data-bs-placement="left">
+    {{ field.label }}
+  </label>
+  {% endif %}      
 
   <select class="form-control" name="{{ field.name }}">
     {% if field.allow_null or field.allow_blank %}
@@ -25,9 +25,5 @@
     {% for error in field.errors %}
       <span class="help-block">{{ error }}</span>
     {% endfor %}
-  {% endif %}
-
-  {% if field.help_text %}
-    <span class="help-block">{{ field.help_text|safe }}</span>
   {% endif %}
 </div>

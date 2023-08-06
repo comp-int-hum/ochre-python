@@ -17,3 +17,22 @@ class DocumentationViewSet(OchreViewSet):
         component_name="documentation",
         operation_id_base="documentation"
     )
+
+    def list(self, request, pk=None):
+        """
+        List documentation objects.
+        """
+        return self._list(request)
+
+    def retrieve(self, request, pk=None):
+        """
+        Get information about a documentation object.
+        """
+        return self._retrieve(request, pk=pk)
+
+    def destroy(self, request, pk=None):
+        """
+        Destroy (delete) a documentation object.
+        """
+        return self._destroy(request, pk)
+    

@@ -1,7 +1,8 @@
 import logging
+from django.core.validators import RegexValidator, EmailValidator, URLValidator
 from django.conf import settings
 from django.urls import reverse
-from django.db.models import CharField, ImageField, TextField, EmailField, URLField, ForeignKey, DateTimeField, SET_NULL
+from django.db.models import CharField, ImageField, TextField, EmailField, URLField, ForeignKey, DateTimeField, SET_NULL, IntegerField
 from django.contrib.auth.models import AbstractUser
 from pyochre.server.ochre.models import OchreModel
 
@@ -10,16 +11,35 @@ if settings.USE_LDAP:
     import ldap
 
 
+phone_validator = RegexValidator(regex=r"^\s*\+?[\d\s\-]+$")
+email_validator = EmailValidator()
+url_validator = URLValidator()
+    
+
 logger = logging.getLogger(__name__)
 
 
 class User(AbstractUser, OchreModel):
-    homepage = URLField(blank=True)
+    homepage = URLField(
+        blank=True,
+        validators=[url_validator]
+    )
+    ordering = IntegerField(default=0)    
     photo = ImageField(blank=True, upload_to="user_photos")
     title = CharField(blank=True, max_length=300)
-    description = TextField(blank=True, max_length=1000)
+    research_interests = TextField(blank=True, max_length=1000)
+    biography = TextField(blank=True)
     username = CharField(unique=True, null=True, max_length=40)
-    email = EmailField(unique=True)    
+    email = EmailField(
+        unique=True,
+        validators=[email_validator]
+    )
+    location = CharField(null=True, max_length=100)
+    phone = CharField(
+        null=True,
+        validators=[phone_validator],
+        max_length=20
+    )
     created_at = DateTimeField(auto_now_add=True, editable=False)
     modified_at = DateTimeField(auto_now=True, editable=False)
     created_by = ForeignKey(

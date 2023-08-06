@@ -1,50 +1,47 @@
 {% load i18n %}
 
-{% if not style.editable and field.write_only %}
-{% elif field.name == "name" and not style.editable %}
-{% else%}
+
+{% with uid=field.name %}
+
 
 <div
-  class="form-group {% if field.errors %}has-error{% endif %}"
+  class="form-group {% if field.errors %}has-error{% endif %} float-start"
   >
-  {% if style.hide_label %}
-  {% else %}
-    {% if field.label %}
-      <label {% if style.hide_label %}class="sr-only"{% endif %}>{{ field.label }}</label>
-      {% endif %}      
-  {% endif %}    
-  {% if style.editable or style.interactive %}
+  {% if field.label and not style.hide_label %}
+  <label {% if style.hide_label %}class="sr-only"{% endif %} title="{{field.help_text|safe}}" data-bs-toggle="tooltip" data-bs-placement="left">
+    {{ field.label }}
+  </label>
+  {% endif %}
+
+  
     <div      
       field_name="{{field.name}}"
-      value_id="{{style.value_id}}"
+      value_id="{{uid}}"
       parent_id="{{style.parent_id}}"
       {% if style.endpoint %}
-      output_id="{{style.output_id}}"
-      endpoint_url="{{style.endpoint}}"
+      output_id="{{uid}}_output"
+      endpoint_url="{% url style.endpoint field.value %}"
       {% endif %}
       language="{{style.language}}"
       class="{% if style.class %}{{style.class}}{% else %}ochre-editor{% endif %} container-fluid"
-      style="width: 600px; height: 200px; border: 1px solid grey">
+      style="height:200px;width:800px;border: 1px solid grey">
     </div>
-    
-    {{ field.value|json_script:style.value_id }}
-    
+
+    {{ field.value|json_script:uid }}
+
     <input
       type="hidden"
       name="{{field.name}}"
       class="form-control"
-      id="{{style.value_id}}-hidden"
+      id="{{uid}}-hidden"
       value="{{field.value}}"/>
-    
+
     {% if style.endpoint %}
-    <button class="btn btn-primary ochre-editor-action" endpoint_url="{{style.endpoint}}">Submit</button>
-    <div id="{{style.output_id}}" class="container">
+    <button class="btn btn-primary ochre-editor-action">Submit</button>
+    <div id="{{uid}}_output" class="container">
     </div>
     {% endif %}
 
-      {% else %}
-      <pre>{{field.value}}</pre>
-  {% endif %}
 
 
   {% if field.errors %}
@@ -52,13 +49,7 @@
       <span class="help-block">{{ error }}</span>
     {% endfor %}
   {% endif %}
-
-  {% if field.help_text %}
-    <span class="help-block">{{ field.help_text|safe }}</span>
-  {% endif %}
     
 </div>
 
-{% endif %}
-
-
+{% endwith %}

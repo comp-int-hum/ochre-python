@@ -9,19 +9,19 @@ from django.conf import settings
 from django.urls import include
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django_registration.backends.activation.views import RegistrationView
 from django.conf.urls.static import static
 from rest_framework.schemas import get_schema_view
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import ModelSerializer
 from pyochre.server.ochre.forms import UserCreateForm
-from pyochre.server.ochre.views import PermissionsView, MarkdownView, SparqlView
 from pyochre.server.ochre.routers import OchreRouter
-from pyochre.server.ochre.viewsets import OchreViewSet, PrimarySourceViewSet, MaterialViewSet, DocumentationViewSet, UserViewSet, MachineLearningModelViewSet, QueryViewSet, SlideViewSet, ResearchArtifactViewSet, AnnotationViewSet, PermissionsViewSet, OntologyViewSet
-from pyochre.server.ochre.models import ResearchArtifact, Slide
+from pyochre.server.ochre.viewsets import OchreViewSet, PrimarySourceViewSet, MaterialViewSet, DocumentationViewSet, UserViewSet, MachineLearningModelViewSet, QueryViewSet, ArticleViewSet, ResearchArtifactViewSet, AnnotationViewSet, PermissionsViewSet, OntologyViewSet, CourseViewSet, ResearchProjectViewSet
+from pyochre.server.ochre.models import ResearchArtifact, Article, Course, ResearchProject
 from pyochre.server.ochre.serializers import ResearchArtifactSerializer
 from pyochre.server.ochre.schemagenerators import OchreSchemaGenerator
+
 
 logger = logging.getLogger(__name__)
 
@@ -41,10 +41,12 @@ class CustomPasswordResetView(PasswordResetView):
             self
         ).dispatch(*argv, **argd)
 
+# TODO: actions for cleaning, backup, getting namespace
+    
 
 router = OchreRouter()
 for vs in [
-        SlideViewSet,
+        ArticleViewSet,
         ResearchArtifactViewSet,
         AnnotationViewSet,
         QueryViewSet,
@@ -53,24 +55,15 @@ for vs in [
         MaterialViewSet,
         UserViewSet,
         DocumentationViewSet,
-        PermissionsViewSet,
-        OntologyViewSet
-        # MarkdownViewSet,
-        # SparqlViewSet,
+        #ContentType,
+        #PermissionsViewSet,
+        OntologyViewSet,
+        ResearchProjectViewSet,
+        CourseViewSet
         ]:    
     name = vs.schema.component_name
     router.register(name, vs, name)
 
-class ContentTypeSerializer(ModelSerializer):
-    class Meta:
-        model = ContentType
-        fields = ['id']
-    
-class ContentTypeViewSet(ModelViewSet):
-    queryset = ContentType.objects.all()
-    serializer_class = ContentTypeSerializer
-    
-router.register("contenttype", ContentTypeViewSet, "contenttype")
 
 app_name = "ochre"
 urlpatterns = [
@@ -78,47 +71,147 @@ urlpatterns = [
     path(
         '',
         TemplateView.as_view(
-            template_name="ochre/template_pack/slideshow.html",
+            template_name="ochre/template_pack/index.html",
             extra_context={
-                "items" : Slide.objects.all(),
-                "include" : "api:slide-list",
-                "style" : "slideshow",
-                "image_field" : "image",
-                "content_field" : "article"
+                "dynamic_view" : "api:article-list",
+                "archival_link" : "/articles/"
             }
         ),
         name="index"
     ),
     path(
+        'articles/',
+        TemplateView.as_view(
+            template_name="ochre/template_pack/ochre.html",
+            extra_context={
+                "view_name" : "api:article-list",
+                "uid" : "articles",
+                "mode" : "articles"
+            }
+        ),
+        name="article_list"
+    ),    
+    path(
+        'articles/<int:pk>/',
+        DetailView.as_view(
+            template_name="ochre/template_pack/article_detail.html",
+            model=Article
+        ),
+        name="article_detail"
+    ),
+
+    path(
         'about/',
         TemplateView.as_view(
-            template_name="ochre/about.html"
+            template_name="ochre/template_pack/about.html"
         ),
         name="about"
     ),
-    path(
-        "wiki/",
-        include("wiki.urls"),
-        name="wiki"
-    ),
+
     path(
         'people/',
         TemplateView.as_view(
-            template_name="ochre/template_pack/accordion.html",
-            extra_context={"items" : User.objects.exclude(username="AnonymousUser")}
+            template_name="ochre/template_pack/people.html",
+            extra_context={
+                "view_name" : "api:user-list",
+                "uid" : "people",
+            }
         ),
-        name="people"
+        name="user_list"
     ),
+    path(
+        'people/<int:pk>/',
+        DetailView.as_view(
+            template_name="ochre/template_pack/user_detail.html",
+            model=User
+        ),
+        name="user_detail"
+    ),
+
     path(
         'research/',
         TemplateView.as_view(
-            template_name="ochre/template_pack/accordion.html",
+            template_name="ochre/template_pack/research.html",
             extra_context={
-                "items" : ResearchArtifact.objects.all()
+                "dynamic_view" : "api:researchproject-list"
+            }            
+        ),
+        name="research"
+    ),
+    path(
+        'research/<int:pk>/',
+        DetailView.as_view(
+            template_name="ochre/template_pack/researchproject_detail.html",
+            model=ResearchProject
+        ),
+        name="researchproject_detail"
+    ),
+
+    path(
+        'research_artifacts/',
+        TemplateView.as_view(
+            template_name="ochre/template_pack/ochre.html",
+            extra_context={
+                "view_name" : "api:researchartifact-list",
+                "uid" : "artifacts",
+                "mode" : "artifacts"
             }
         ),
         name="researchartifact_list"
     ),
+    path(
+        'research_artifacts/<int:pk>/',
+        DetailView.as_view(
+            template_name="ochre/template_pack/researchartifact_detail.html",
+            model=ResearchArtifact
+        ),
+        name="researchartifact_detail"
+    ),
+
+    path(
+        'teaching/',
+        TemplateView.as_view(
+            template_name="ochre/template_pack/teaching.html",
+            extra_context={
+                "dynamic_view" : "api:course-list"
+            }
+        ),
+        name="teaching"
+    ),
+    path(
+        'teaching/<int:id>/',
+        DetailView.as_view(
+            template_name="ochre/template_pack/course_detail.html",
+            model=Course
+        ),
+        name="course"
+    ),
+
+    # path(
+    #     "archive/<int:pk>/",
+    #     TemplateView.as_view(
+    #         template_name="ochre/template_pack/ochre.html",
+    #         extra_context={
+    #             "view_name" : "api:article-detail",
+    #             "uid" : "archive",
+    #             "mode" : "archive"                
+    #         }
+    #     ),
+    #     name="archive_detail"
+    # ),
+    # path(
+    #     'research/',
+    #     TemplateView.as_view(
+    #         template_name="ochre/template_pack/ochre.html",
+    #         extra_context={                
+    #             "view_name" : "api:researchartifact-list",
+    #             "uid" : "research",
+    #         }
+    #     ),
+    #     name="researchartifact_list"
+    # ),
+
+    # OCHRE
     path(
         "primary_sources/",
         include("pyochre.server.ochre.urls.primary_sources_urls")
@@ -132,7 +225,7 @@ urlpatterns = [
         include("pyochre.server.ochre.urls.scholarly_knowledge_urls")
     ),
     
-    # account-related end-points
+    # account-related
     path(
         'accounts/register/',
         RegistrationView.as_view(
@@ -153,23 +246,6 @@ urlpatterns = [
         include('django.contrib.auth.urls')
     ),
 
-    # legacy special purpose end-points
-    path(
-       "markdown/",
-       MarkdownView.as_view(),
-       name="markdown"
-    ),
-    path(
-       "sparql/",
-       SparqlView.as_view(),
-       name="sparql"
-    ),
-    path(
-       'permissions/<str:app_label>/<str:model>/<int:pk>/',
-       PermissionsView.as_view(),        
-       name="permissions"
-    ),    
-    
     # api-related
     path(
         "api/",
@@ -189,12 +265,20 @@ urlpatterns = [
     ),
     path(
         'ontology/',
-        OntologyViewSet.as_view(
-            actions={"get" : "retrieve"},
-            template_name="ochre/template_pack/ontology.html",
+        TemplateView.as_view(
+            template_name="ochre/template_pack/ochre.html",
+            extra_context={"view_name" : "api:ontology-list", "uid" : "ontology"}
         ),
         name='ontology'
-    )
+    ),
+    # path(
+    #     'sitemap/',
+    #     TemplateView.as_view(
+    #         template_name="ochre/template_pack/index.html",
+    #     ),
+    #     name="index"
+    # ),
+    
 ]
 
 

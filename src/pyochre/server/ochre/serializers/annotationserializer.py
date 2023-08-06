@@ -8,15 +8,22 @@ logger = logging.getLogger(__name__)
 
 
 class AnnotationSerializer(OchreSerializer):
+
     class Meta:
         model = Annotation
-        fields = [
+        exclude = [
             "machinelearningmodel",
             "primarysource",
-            "user",
-            "name",
-            "creator",
-            "created_by",
-            "url",
-            "id"
+            "user"
         ]
+        # fields = [
+        #     "annotations",
+        #     #"machinelearningmodel",
+        #     #"primarysource",
+        #     #"user",
+        #     "name",
+        #     "creator",
+        #     "created_by",
+        #     "url",
+        #     "id"
+        # ]

@@ -1,9 +1,7 @@
 import logging
 from rest_framework.serializers import CharField, IntegerField, HyperlinkedRelatedField, ListField, FloatField, BooleanField
 from pyochre.server.ochre.serializers import OchreSerializer
-from pyochre.server.ochre.fields import ActionOrInterfaceField
 from pyochre.server.ochre.models import MachineLearningModel, Query, PrimarySource
-from pyochre.server.ochre.fields import MachineLearningModelInteractionField
 import io
 import time
 import zipfile
@@ -72,7 +70,7 @@ input_names = {
 
 
 @shared_task
-def import_huggingface_model(model_id, name, created_by_id, huggingface_name):
+def import_huggingface_model(model_id, name, created_by_id, huggingface_name, force):
     model = MachineLearningModel.objects.get(id=model_id)
     user = User.objects.get(id=created_by_id)
     hf_org, hf_name = huggingface_name.split("/")

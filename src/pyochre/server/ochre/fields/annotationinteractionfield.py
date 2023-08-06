@@ -77,7 +77,7 @@ class AnnotationInteractionField(Field):
         ]
         if len(tab_list) == 0:
             self.style["base_template"] = "interaction.html"
-            self.style["rendered_widget"] = {"html" : "There does not seem to be anything to show about this model."}
+            self.style["rendered_widget"] = {"html" : "There does not seem to be anything to show about this annotation."}
         elif len(tab_list) == 1:
             self.style["base_template"] = "interaction.html"
             self.style["rendered_widget"] = tab_list[0]

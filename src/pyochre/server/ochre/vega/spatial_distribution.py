@@ -9,11 +9,18 @@ logger = logging.getLogger(__name__)
 class SpatialDistribution(OchreVisualization):
 
     def __init__(self, values, prefix=None):
-        self.values = values[0]
-        self.model_info = values[2]
-        self.topic_names = list(set([v["topic"] for v in self.values]))
-        for i in range(len(self.values)):
-            self.values[i]["topic_num"] = self.topic_names.index(self.values[i]["topic"])
+        #store = rdf_store(settings=settings)        
+        #query_string = query % {
+        #    "data" : ann.primarysource.data_uri,
+        #    "annotation" : ann.uri
+        #}
+        self.topic_names = []
+        self.values = []
+        #self.values = values[0]
+        #self.model_info = values[2]
+        #self.topic_names = list(set([v["topic"] for v in self.values]))
+        #for i in range(len(self.values)):
+        #    self.values[i]["topic_num"] = self.topic_names.index(self.values[i]["topic"])
         self.prefix = prefix
         super(SpatialDistribution, self).__init__()
 
@@ -113,7 +120,7 @@ class SpatialDistribution(OchreVisualization):
             },
             {
                 "name" : "world",
-                "url" : "/static/primary_sources/data/countries-110m.json",
+                "url" : "https://unpkg.com/world-atlas@2.0.2/countries-110m.json",
                 "format": {"type": "topojson", "feature" : "countries"},
             },
             {

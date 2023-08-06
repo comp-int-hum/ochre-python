@@ -231,10 +231,10 @@ class Command(object):
                                         "type" : argparse.FileType("rb") if fm == "binary" else int if tp == "integer" else float if tp == "float" else str,
                                         "nargs" : "*" if tp == "array" else None,
                                     }
-                                    if (tp == "array" and prop["items"].get("format") == "object"):
-                                        self.object_fields[(action_name, prop_name)] = prop["items"]["discriminator"]
-                                    elif prop.get("format") == "object" and "discriminator" in prop:
-                                        self.object_fields[(action_name, prop_name)] = prop["discriminator"]            
+                                    #if (tp == "array" and prop["items"].get("format") == "object"):
+                                    #    self.object_fields[(action_name, prop_name)] = prop["items"]["discriminator"]
+                                    #elif prop.get("format") == "object" and "discriminator" in prop:
+                                    #    self.object_fields[(action_name, prop_name)] = prop["discriminator"]            
                                     if prop.get("enum"):
                                         argp["choices"] = prop["enum"]
                                         

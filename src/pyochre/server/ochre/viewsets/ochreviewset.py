@@ -174,7 +174,7 @@ class OchreViewSet(GenericViewSet):
                     self.model._meta.app_label,
                     self.model._meta.model_name
                 )
-        ):
+        ) or request.user.is_staff:
             logger.info("Permission verified")
             try:
                 ser = self.get_serializer_class()(
@@ -248,7 +248,7 @@ class OchreViewSet(GenericViewSet):
         if self.model.get_change_perm() in get_perms(
                 request.user,
                 self.get_object()
-        ):
+        ) or request.user.is_staff:
             logger.info("Permission verified")
             retval = super(OchreViewSet, self).update(request, pk)
             retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "update", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
@@ -272,7 +272,7 @@ class OchreViewSet(GenericViewSet):
         if self.model.get_change_perm() in get_perms(
                 request.user,
                 self.get_object()
-        ):
+        ) or request.user.is_staff:
             logger.info("Permission verified")
             obj = self.get_queryset().get(id=pk)
             ser = self.get_serializer_class()(

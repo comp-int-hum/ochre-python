@@ -65,6 +65,16 @@
 		"photo" : {"path" : "examples/blurred.jpeg"},		
 		"biography" : "Nadejda recieved her PhD in English and Comparative Media Analysis and Practice from Vanderbilt University in 2021.",
 		"research_interests" : "Equity, opportunity, and community organization"
+	    },
+	    {
+		"username" : "lcelnik1",
+		"email" : "lcelnik1@jhu.edu",
+		"first_name" : "Leib",
+		"last_name" : "Celnik",
+		"title" : "Graduate Student",		
+		"photo" : {"path" : "examples/blurred.jpeg"},		
+		"biography" : "Leib is a doctoral student in the Department of History of Science and Technology, where he focuses on the material culture of art production and conservation.",
+		"research_interests" : "History of physical sciences, art production and curation"
 	    }	    
 	]
     }

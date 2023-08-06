@@ -1,0 +1,9 @@
+{% for item in items %}
+<div
+  hx-get="{{item.get_absolute_url}}"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "view"}'
+  hx-trigger="intersect"
+  hx-swap="outerHTML"
+  >
+</div>
+{% endfor %}

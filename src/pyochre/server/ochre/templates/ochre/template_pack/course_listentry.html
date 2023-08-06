@@ -1,0 +1,42 @@
+{% load rest_framework %}
+<div
+  class="course-listentry card mb-3 w-75"
+  >
+  <div
+    class="row g-0"
+    >
+    <div
+      class="col-md-2 course-listentry-identifier"
+      >
+      {{identifier}}
+    </div>
+    <div
+      class="col-md-8"
+      >
+      <div
+	class="course-listentry-title"
+	>
+	{{title}}
+      </div>
+      <div
+	class="course-listentry-description"
+	>
+	{{description}}
+      </div>
+      <div
+	class="course-listentry-instructors"
+	>
+	{% if instructors|length > 0 %}
+	{% if instructors|length > 1 %}Instructors:{% else %}Instructor:{% endif %}
+	{% with field=serializer.fields.instructors %}
+	{% for select in field.iter_options %}
+        {% if select.value|as_string in instructors|as_list_of_strings %}
+	<a href="{{select.value}}">{{select.display_text}}</a>	
+	{% endif %}
+	{% endfor %}
+	{% endwith %}
+	{% endif %}
+      </div>
+    </div>
+  </div>
+</div>

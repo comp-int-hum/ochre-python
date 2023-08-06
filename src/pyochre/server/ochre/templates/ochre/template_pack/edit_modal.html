@@ -1,0 +1,90 @@
+{% load ochre %}
+
+
+<!-- begin modal trigger (basically, just icons) -->
+<button
+  class="btn ochre-modal ochre-interactive {{edit_icon}}"
+  type="button"
+  data-bs-toggle="modal"
+  data-bs-target="#{{mode}}_modal-{{uid}}_{{index}}"
+  >
+</button>
+
+
+<!-- begin modal content -->
+<div
+  class="modal fade"
+  id="{{mode}}_modal-{{uid}}_{{index}}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="{{mode}}_modal_label-{{uid}}_{{index}}"
+  aria-hidden="true"
+  >
+  <div
+    class="modal-dialog modal-xl"
+    role="document"
+    >
+    <div
+      class="modal-content"
+      >
+      <div
+	class="modal-header"
+	>
+        <h5
+	  class="modal-title"
+	  id="{{mode}}_modal_label-{{uid}}_{{index}}"
+	  >
+	  Editing {{item.model_title_singular}} '{{item}}'
+	</h5>
+        <button
+	  type="button"
+	  class="close"
+	  data-bs-dismiss="modal"
+	  aria-label="Close"
+	  >
+          <span
+	    aria-hidden="true"
+	    >
+	    &times;
+	  </span>
+        </button>
+      </div>
+      <form
+	id="form-{{mode}}_{{uid}}_{{index}}"
+	hx-patch="{{item.get_absolute_url}}"
+	hx-encoding="multipart/form-data"
+	hx-headers='{"uid" : "{{mode}}_{{uid}}_{{index}}", "style" : "modal", "X-CSRFToken" : "{{csrf_token}}", "include" : true}'
+	>
+      <div
+	class="modal-body"
+	hx-trigger="intersect"
+	hx-swap="innerHTML"
+	hx-get="{{item.get_absolute_url}}"
+	hx-headers='{"uid" : "{{mode}}_{{uid}}_{{index}}", "style" : "modal", "X-CSRFToken" : "{{csrf_token}}", "mode" : "edit"}'
+	>
+      </div>
+      </form>
+	<div
+	  class="modal-footer"
+	  >
+          <button
+	    type="button"
+	    class="btn btn-secondary"
+	    data-bs-dismiss="modal"
+	    >
+	    Never mind
+	  </button>
+	  <!-- make conditional on success -->
+          <button
+	    type="submit"
+	    class="btn btn-primary"
+	    form="form-{{mode}}_{{uid}}_{{index}}"
+	    id="{{mode}}_button-{{uid}}_{{index}}"	    
+	    data-bs-dismiss="modal"	    
+	    >
+	    Save
+	  </button>
+	</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+{% extends "ochre/template_pack/jhu.html" %}
+{% load static %}
+
+{% block banner_image %}
+<img width="1920" height="500" src="{% static 'honey_banner.png' %}" class="card-img" alt="panel discussion" decoding="async" loading="eager" sizes="(max-width: 1920px) 100vw, 1920px" />
+{% endblock %}
+
+{% block banner_overlay %}
+{% endblock %}
+
+{% block description %}
+The primary mandate of the <b>Center for Digital Humanities</b> is to research, develop, and apply computational methods to areas of traditional humanistic scholarship.  Below, you can explore some current research projects and associated publications, presentations, and other artifacts.
+{% endblock %}
+
+
+{% block dynamic_content %}
+<div
+  class="container w-100 ochre-{{mode}} article-list"
+  >
+<div
+  class="container w-100 ochre-{{mode}}"
+  hx-get="{% url dynamic_view %}"
+  hx-swap="outerHTML"
+  hx-trigger="intersect"
+  hx-headers='{"uid" : "{{uid}}", "Accept" : "text/html include=true", "mode" : "{% if mode %}{{mode}}{% else %}view{% endif %}"}'
+  >
+</div>
+</div>
+{% endblock %}
+

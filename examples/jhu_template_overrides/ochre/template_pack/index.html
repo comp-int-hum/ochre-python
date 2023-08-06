@@ -1,0 +1,98 @@
+{% extends "ochre/template_pack/jhu.html" %}
+{% load static %}
+
+
+
+
+
+{% block content %}
+
+<header class="banner mb-0" role="banner" aria-label="Explore the Krieger School Slider">
+
+  <div class="card mb-0">
+
+    {% block banner_image %}
+    <img width="1920" height="500" src="{% static 'reading_room_banner.png' %}" class="card-img" alt="Gilman Hall" />
+    {% endblock %}
+	  
+    {% block banner_overlay %}
+    <div class="card-img-overlay banner-overlay">
+      <h1>Explore interactions between human and computational intelligence</h1>
+      <ul>
+	<li>Research Areas: A, B</li>
+	<li>Courses Offered: X, Y</li>
+      </ul>
+    </div>
+    {% endblock %}
+  </div>
+</header>
+
+<main class="intro mb-0">
+  <div class="container px-2 mb-0">
+    <p>
+    {% block description %}
+    The <b>Center for Digital Humanities</b> focuses on the development and application of machine learning models to areas of traditional scholarship.
+    {% endblock %}
+    </p>
+  </div>    
+</main>
+<div
+  class="container w-100 ochre-{{mode}} article-list"
+  >
+
+{% block dynamic_content %}
+<div
+  class="container w-100 ochre-{{mode}}"
+  hx-get="{% url dynamic_view %}"
+  hx-swap="outerHTML"
+  hx-trigger="intersect"
+  hx-headers='{"uid" : "{{uid}}", "Accept" : "text/html include=true", "mode" : "{% if mode %}{{mode}}{% else %}view{% endif %}"}'
+  >
+</div>
+
+{% endblock %}
+
+{% if archival_link %}
+<a href="{{archival_link}}">Archive</a>
+{% endif %}
+</div>
+{% endblock %}
+
+
+
+
+{% block footer %}
+<div class="footer-container">
+  <div class="container quick-links">
+    <div class="row">
+      <!--<div class="col"/>-->
+      <div class="col">
+	<!--<a href="/sitemap/" target="_blank">Sitemap</a>-->
+	<a href="https://accessibility.jhu.edu/" target="_blank">Accessibility</a>
+	<a href="https://jobs.jhu.edu/" target="_blank">Careers</a>
+	<a href="https://it.johnshopkins.edu/policies/privacystatement" target="_blank">Privacy Statement</a>
+      </div>
+      <!--
+      <div class="col">
+	<a href="http://facebook.com/JHUArtsSciences"><span class="fa-brands fa-facebook fa-2x"></span><span class="screen-reader-text">Facebook</span></a>
+	<a href="https://www.instagram.com/JHUArtsSciences/"><span class="fa-brands fa-instagram fa-2x"></span><span class="screen-reader-text">Instagram</span></a>
+	<a href="https://twitter.com/JHUArtsSciences"><span class="fa-brands fa-twitter fa-2x"></span><span class="screen-reader-text">Twitter</span></a>
+	<a href="https://www.youtube.com/jhuartssciences"><span class="fa-brands fa-youtube fa-2x"></span><span class="screen-reader-text">YouTube</span></a>	
+      </div>      -->
+    </div>
+  </div>
+  <div class="grid-x">
+    <div class="small-12 cell copydate">
+      <p>
+      <a href="https://www.jhu.edu/" class="hide-for-print" aria-label="Johns Hopkins University">
+	  <img class="jhushield" src="https://english.jhu.edu/wp-content/themes/ksas_academic_department/dist/assets/images/university.logo.white.png" alt="Johns Hopkins University"  width="283" height="54" loading="lazy">
+      </a>
+      </p>
+      <p>&copy; 2023 Johns Hopkins University, Zanvyl Krieger School of Arts & Sciences,<br />
+	Center for Digital Humanities, 195 Gilman Hall<br />3400 N. Charles Street, Baltimore, MD 21218<br />
+	<!--Email: <a href=mailto:english@jhu.edu>english@jhu.edu</a> | Phone: 410-516-7544 | Fax: 410-516-4757-->
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

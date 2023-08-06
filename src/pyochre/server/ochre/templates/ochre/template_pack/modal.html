@@ -1,0 +1,65 @@
+<div
+  class="modal fade h-75"
+  id="modal-{{uid}}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modal_label-{{uid}}"
+  aria-hidden="true"
+  >
+  <div
+    class="modal-dialog modal-xl"
+    role="document"
+    >
+    <div
+      class="modal-content container-fluid"
+      >
+      <div
+	class="modal-header"
+	>
+        <h5
+	  class="modal-title"
+	  id="modal_label-{{uid}}"
+	  >
+	  {{title}}
+	</h5>
+	<div
+	  class="btn-group w-25"
+	  >
+
+	  <button
+	    type="submit"
+	    class="{{commit_icon}}"
+	    form="form_{{uid}}"
+	    id="button-{{uid}}"
+	    data-bs-dismiss="modal"	    
+	    >
+	  </button>
+	  <button
+	    class="{{cancel_icon}}"
+	    data-bs-dismiss="modal"
+	    id="dismiss_button-{{uid}}"
+	    >
+	  </button>
+	</div>
+      </div>
+      <form
+	id="form_{{uid}}"
+	hx-{{method}}="{% url url %}"
+	hx-swap="none"
+	hx-encoding="multipart/form-data"
+	hx-headers='{"uid" : "{{uid}}", "style" : "modal", "X-CSRFToken" : "{{csrf_token}}", "include" : true}'
+	>
+	<div
+	  hx-get="{% url url %}"
+	  hx-headers='{"uid" : "{{uid}}", "mode" : "{{mode}}", "Accept" : "text/html include=true"}'
+	  hx-trigger="show.bs.collapse from:#content-{{mode}}_{{uid}}, intersect"
+	  hx-swap="outerHTML"
+	  >
+	</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+

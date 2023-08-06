@@ -1,0 +1,132 @@
+{% extends "ochre/template_pack/index.html" %}
+{% load ochre %}
+{% load rest_framework %}
+
+{% with request.headers.uid as uid %}
+{% block content %}
+<div
+  class="container w-75"
+  >
+  <div
+    class="row g-0"
+    >    
+    <h3>{{object.first_name}} {{object.last_name}}</h3>
+
+  </div>
+  <div
+    class="row g-0"
+    >
+    <div
+      class="col md-2"
+      >
+      {% if object.photo %}
+      <img
+	src="{{object.photo.url}}"
+	alt="Picture of {{object.first_name}} {{object.last_name}}"
+	class="large-headshot"
+	/>
+      {% else %}
+      <div
+	class="{{headshot_icon}}"
+	/>
+      {% endif %}
+    </div>
+    <div
+      class="col md-2"
+      >
+      {% if object.title %}
+      <h5 class="card-subtitle">{{object.title}}</h5>
+      {% endif %}
+      <ul class="contact" style="list-style:none;">
+	{% if object.location %}
+	<li class="{{location_icon}}"><span>{{object.location}}</span></li>
+        {% endif %}	  
+	{% if object.email %}
+	<li class="{{email_icon}}"><span><a href="mailto:{{object.email}}">{{object.email}}</a></span></li>
+        {% endif %}
+	{% if object.phone %}
+	<li class="{{phone_icon}}"><span><a>{{object.phone}}</a></span></li>
+        {% endif %}	  	
+	{% if object.homepage %}
+	<li class="{{homepage_icon}}"><span><a href="{{object.homepage}}">{{object.homepage}}</a></span></li>
+        {% endif %}
+      </ul>
+
+    </div>
+  </div>
+  <div
+    class="row"
+    >
+
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+	<button class="nav-link active" id="bio-tab" aria-current="page" data-bs-toggle="tab" data-bs-target="#bio">Biography</button>
+      </li>
+      <li class="nav-item">
+	<button class="nav-link" id="research-tab" aria-current="page" data-bs-toggle="tab" data-bs-target="#research">Research</button>
+      </li>
+      {% if object.teaches.all|length > 0 %}
+      <li class="nav-item">
+	<button class="nav-link" data-bs-toggle="tab" id="teaching-tab" aria-current="page" data-bs-target="#teaching">Teaching</button>
+      </li>
+      {% endif %}
+    </ul>
+    
+    <div
+      class="tab-content"
+      id="tabContent"
+      >
+      <div
+	class="tab-pane fade show active"
+	id="bio"
+	role="tabpanel"
+	aria-labelledby="bio-tab"
+	>
+	{% render_markdown object.biography %}
+      </div>
+      <div
+	class="tab-pane fade"
+	id="research"
+	role="tabpanel"
+	aria-labelledby="research-tab"
+	>
+	<h4>Current projects</h4>
+	<ul>
+	{% for proj in object.participates_in.all %}
+	  <li>
+	    <a href="{% url 'researchproject_detail' proj.id %}">{{proj.title}}</a>
+	  </li>
+	{% endfor %}
+	</ul>
+
+	<h4>Publications, presentations, etc</h4>
+	<ul>
+	{% for art in object.contributed_to.all %}
+	  <li>
+	    <a href="{% url 'researchartifact_detail' art.id %}">{{art.title}}</a>
+	  </li>
+	{% endfor %}
+	</ul>
+      </div>
+      {% if object.teaches.all|length > 0 %}
+      <div
+	class="tab-pane fade"
+	id="teaching"
+	role="tabpanel"
+	aria-labelledby="teaching-tab"
+	>
+	<ul>
+	  {% for class in object.teaches.all %}
+	  <li>
+	    <a href="{% url 'course_detail' class.id %}">{{class.id}}: {{class.title}}</a>
+	  </li>
+	{% endfor %}
+	</ul>
+      </div>
+      {% endif %}
+    </div>
+    
+  </div>
+</div>
+{% endblock %}
+{% endwith %}

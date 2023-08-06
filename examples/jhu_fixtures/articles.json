@@ -1,0 +1,25 @@
+[
+    {
+	"operationId" : "createarticle",
+	"defaults" : {
+	    "force" : true,
+	    "is_active" : true
+	},
+	"items" : [
+	    {
+		"name" : "keystonedh",
+		"title" : "Johns Hopkins hosts KeystoneDH 2023",
+		"content" : "The JHU Center for Digital Humanities hosted the 2023 meeting of KeystoneDH, a conference for digital humanists in the mid-Atlantic region.",
+		"date" : "2023-06-16",
+		"people" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"},
+			{"last_name" : "Webb"}
+		    ]
+		}
+	    }
+	]
+    }
+]
+

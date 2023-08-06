@@ -1,0 +1,72 @@
+[
+    {
+	"operationId" : "partialUpdateuser",
+	"defaults" : {
+	    "is_active" : true
+	},
+	"items" : [
+	    {
+		"username" : "sli159",
+		"email" : "sli159@jhu.edu",
+		"first_name" : "Sabrina",
+		"last_name" : "Li",
+		"title" : "Graduate Student",
+		"photo" : {"path" : "examples/blurred.jpeg"},
+		"biography" : "Sabrina is a student in the joint BS-MS Computer Science program, having completed requirements for double-majoring in CS and Cognitive Science.  She received the English Department's 2023 Senior Essay Prize for her essay titled 'Unstable Bodies, Unstable Texts'.",
+		"research_interests" : "Narrative and modernism"
+	    },
+	    {
+		"username" : "tom",
+		"email" : "tom.lippincott@jhu.edu",
+		"first_name" : "Tom",
+		"last_name" : "Lippincott",
+		"title" : "Assistant Research Professor",
+		"homepage" : "http://www.logical-space.org",
+		"photo" : {"path" : "examples/blurred.jpeg"},		
+		"biography" : "Tom received his PhD in Computational Linguistics from Cambridge University in 2015.",
+		"research_interests" : "Compositional forces of cultural transmission"
+	    },
+	    {
+		"username" : "hsirin1",
+		"email" : "hsirin1@jhu.edu",
+		"first_name" : "Hale",
+		"last_name" : "Sirin",
+		"title" : "Post-Doctoral Researcher",
+		"photo" : {"path" : "examples/blurred.jpeg"},		
+		"biography" : "Hale received her PhD in Comparative Thought and Literature from Johns Hopkins in 2022.",
+		"research_interests" : "Intellectual history"
+	    },
+	    {
+		"username" : "messner1",
+		"email" : "cmessne4@jhu.edu",
+		"first_name" : "Craig",
+		"last_name" : "Messner",
+		"title" : "Lecturer",
+		"photo" : {"path" : "examples/blurred.jpeg"},		
+		"biography" : "Craig received his PhD in English from UCLA in 2021.",
+		"research_interests" : "19th-century literature, non-standard orthography"
+	    },
+	    {
+		"username" : "sbacker2",
+		"email" : "sbacker2@jhu.edu",
+		"first_name" : "Sam",
+		"last_name" : "Backer",
+		"title" : "Post-Doctoral Researcher",		
+		"photo" : {"path" : "examples/blurred.jpeg"},		
+		"biography" : "Sam recieved his PhD in History from JHU in 2022.",
+		"research_interests" : "Early American entertainment industry"
+	    },
+	    {
+		"username" : "nwebb11",
+		"email" : "nwebb11@jhu.edu",
+		"first_name" : "Nadejda",
+		"last_name" : "Webb",
+		"title" : "Post-Doctoral Researcher",		
+		"photo" : {"path" : "examples/blurred.jpeg"},		
+		"biography" : "Nadejda recieved her PhD in English and Comparative Media Analysis and Practice from Vanderbilt University in 2021.",
+		"research_interests" : "Equity, opportunity, and community organization"
+	    }	    
+	]
+    }
+]
+

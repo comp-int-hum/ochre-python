@@ -1,0 +1,29 @@
+{% load rest_framework %}
+<form
+  enctype="multipart/form-data"
+  hx-patch="{{url}}"
+  hx-target="this"
+  hx-swap="outerHTML"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "view", "X-CSRFToken" : "{{csrf_token}}"'
+  >
+  <div class="card">
+    {% render_form serializer %}
+  <div
+    class="btn-group position-absolute top-0 end-0"
+    >
+    <button
+      class="{{commit_icon}}"
+      >
+    </button>
+    <button
+      hx-get="{{url}}"
+      class="{{cancel_icon}}"
+      >
+    </button>
+  </div>
+
+  
+  </div>
+
+
+</form>

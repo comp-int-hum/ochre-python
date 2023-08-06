@@ -1,0 +1,90 @@
+{% extends "ochre/template_pack/index.html" %}
+{% load ochre %}
+{% with request.headers.uid as uid %}
+
+{% block content %}
+<div
+  class="container"
+  >
+<div
+  class="container w-100 ochre-{{mode}}"
+  hx-get="{% url 'api:article-list' %}"
+  hx-swap="outerHTML"
+  hx-trigger="intersect"
+  hx-headers='{"uid" : "{{uid}}", "Accept" : "text/html include=true", "mode" : "{% if mode %}{{mode}}{% else %}view{% endif %}"}'
+  >
+</div>
+</div>
+{% endblock %}
+
+
+
+{% comment %}
+<ul>
+{% for item in items %}
+{% join uid forloop.counter as next_uid %}
+<li>
+  <a href="/archive/{{item.id}}/">
+    {{item.title}}
+  </a>
+</li>
+{% endfor %}
+</ul>
+
+
+<div class="container w-75">
+  {% if model.get_add_perm in perms %}
+
+
+  {% if serializer.creation_methods|length > 1 %}
+  <div class="dropdown">
+    <button
+      class="btn dropdown-toggle ochre-modal ochre-interactive {{create_icon}}"
+      type="button"
+      data-bs-toggle="dropdown"
+      id="modal_dropdown-{{uid}}"
+      >
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="create_modal_dropdown-{{uid}}">
+      {% for method in serializer.creation_methods %}
+      {% join uid forloop.counter as next_uid %}
+      <li>
+	<button
+	  class="dropdown-item"
+	  type="button"
+	  data-bs-toggle="modal"
+	  data-bs-target="#create_modal-{{next_uid}}"
+	  >
+	  {{method.title}}
+	</button>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% else %}
+  {% join uid 1 as next_uid %}
+  <button
+  class="btn ochre-modal ochre-interactive {{create_icon}}"
+  type="button"
+  data-bs-toggle="modal"
+  data-bs-target="#modal-{{next_uid}}"
+  title="{{method.title}}"
+  id="modal_button-{{next_uid}}"
+  >
+  </button>
+  {% endif %}
+
+
+  {% for method in serializer.creation_methods %}
+  {% join uid forloop.counter as next_uid %}
+  {% include "ochre/template_pack/modal.html" with uid=next_uid csrf_token=csrf_token item=model serializer=serializer url=method.url title=method.title mode="create" method="post" %}
+  {% endfor %}
+
+
+
+{% endif %}
+</div>
+  {% endcomment %}
+
+
+{% endwith %}

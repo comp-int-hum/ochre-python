@@ -1,0 +1,23 @@
+{% extends "ochre/template_pack/index.html" %}
+{% load ochre %}
+{% load rest_framework %}
+
+{% with request.headers.uid as uid %}
+{% block content %}
+<div class="card" hx-target="this" hx-swap="outerHTML">
+  <div class="row no-gutters">    
+    <div class="col-8">
+      <div class="card-block px-2">
+        <h6 class="card-title">
+	  {{object.author}}. {% if object.biburl %}<a href="{{object.biburl}}">{% endif %}"{{object.title}}"{% if object.biburl %}</a>{% endif %},
+	  {% if object.journal %}
+	  <i>{{object.journal}}</i>,
+	  {% endif %}
+	  {{object.year}}.
+	</h6>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% endwith %}

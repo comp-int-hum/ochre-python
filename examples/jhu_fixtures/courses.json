@@ -1,0 +1,36 @@
+[
+    {
+	"operationId" : "createcourse",
+	"defaults" : {
+	    "force" : true,
+	    "is_active" : true
+	},	
+	"items" : [
+	    {
+		"name" : "intro",
+		"title" : "Introduction to Computational Methods",
+		"description" : "Basic command-line use, programming, and experimental design.",
+		"identifier" : "AS.365",
+		"instructors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Sirin"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "intell",
+		"title" : "Computational Intelligence for the Humanities",
+		"description" : "Algorithmic and machine learning approaches to traditional scholarship.",
+		"identifier" : "AS.366",
+		"instructors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Messner"}
+		    ]
+		}
+	    }	    
+	]
+    }
+]
+

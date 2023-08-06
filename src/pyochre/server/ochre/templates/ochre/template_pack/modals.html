@@ -1,0 +1,20 @@
+{% if request.user.is_authenticated %}      
+{% if item.model and item.model.get_add_perm in perms and item.create %}
+{% include "ochre/template_pack/create_modal.html" with uid=uid index=index csrf_token=csrf_token item=item creation_methods=item.create %}
+{% endif %}
+{% endif %}
+
+
+{% if entry.item.is_object and entry.item.get_change_perm in perms %}
+{% include "ochre/template_pack/edit_modal.html" with mode="edit" uid=uid index=index csrf_token=csrf_token entry=entry %}
+{% endif %}
+      
+{% if entry.item.is_object and entry.item.get_delete_perm in perms %}
+{% include "ochre/template_pack/permissions_modal.html" with mode="permissions" uid=uid index=index csrf_token=csrf_token entry=entry %}
+{% include "ochre/template_pack/modal.html" with mode="delete" uid=uid index=index csrf_token=csrf_token entry=entry %}
+{% endif %}
+
+
+{% if doc_info.can_edit %}
+{% include "ochre/template_pack/modal.html" with mode="documentation" uid=uid index=index csrf_token=csrf_token entry=entry doc_info=doc_info %}
+{% endif %}

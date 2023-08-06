@@ -1,0 +1,13 @@
+{% load static %}
+{% comment %}{% with uid=serializer.context.view.uid %}{% endcomment %}
+  <div
+    class="accordion-collapse ochre-accordion-collapse collapse w-95 ps-4"
+    id="content-{{uid}}"
+    aria-labelledby="header-{{uid}}"
+    data-bs-parent="#accordion-{{uid}}"
+    >
+    Test
+  </div>
+{% comment %}{% endwith %}{% endcomment %}
+
+

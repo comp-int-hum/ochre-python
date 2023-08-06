@@ -1,0 +1,12 @@
+{% load static %}
+{% load rest_framework %}
+{% with uid=serializer.context.view.uid %}
+<div
+  class="accordion-collapse ochre-accordion-collapse collapse w-95 ps-4"
+  id="content-{{uid}}"
+  aria-labelledby="header-{{uid}}"
+  data-bs-parent="#accordion-{{uid}}"
+  >
+  {{description}}
+</div>
+{% endwith %}

@@ -1,0 +1,45 @@
+{% extends "ochre/template_pack/index.html" %}
+{% load static %}
+{% load rest_framework %}
+
+{% block content %}
+<div
+  class="container"
+  >
+  <h4>{{object.title}}</h4>
+  {% render_markdown object.content %}
+  {% if object.people.all|length > 0 or object.courses.all|length > 0 or object.researchartifacts.all|length > 0 or object.researchprojects.all|length > 0 %}
+  <h5>Mentioned in this article:</h5>
+  <ul>
+    {% for person in object.people.all %}
+    <li>
+      <a href="{% url 'user_detail' person.id %}">
+	{{person.first_name}} {{person.last_name}}
+      </a>
+    </li>
+    {% endfor %}
+    {% for project in object.researchprojects.all %}
+    <li>
+      <a href="{% url 'researchproject_detail' project.id %}">
+	{{project.title}}
+      </a>
+    </li>
+    {% endfor %}
+    {% for art in object.researchartifact.all %}
+    <li>
+      <a href="{% url 'researchartifact_detail' art.id %}">
+	{{art.title}}
+      </a>
+    </li>
+    {% endfor %}
+    {% for course in object.courses.all %}
+    <li>
+      <a href="{% url 'course_detail' course.id %}">
+	{{course.title}}
+      </a>
+    </li>
+    {% endfor %}      
+  </ul>
+  {% endif %}
+</div>
+{% endblock %}

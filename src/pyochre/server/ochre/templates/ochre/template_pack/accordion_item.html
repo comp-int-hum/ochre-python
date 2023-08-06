@@ -1,0 +1,86 @@
+{% load ochre %}
+{% load sekizai_tags static %}
+{% load guardian_tags %}
+
+{% if item.is_model or item.is_object %}
+{% get_obj_perms request.user for item as "perms" %}
+{% endif %}
+
+
+<div
+  class="accordion-item ochre-accordion-item {% if item.is_object %}{{item.object_class}}{% endif %}"
+  id="{{uid}}-accordionitem"
+  >
+    <div
+    class="accordion-header ochre-accordion-header w-100"
+    id="{{uid}}-accordionheader"
+    >
+    <div
+      class="btn-group w-100"
+      role="group"
+      aria-label="actions"
+      >
+      <button
+        class="accordion-button ochre-accordion-button collapsed {% if request.user.is_authenticated %}w-75{% else %}w-100{% endif %}"
+        data-bs-toggle="collapse"
+        type="button"
+        aria-expanded="false"
+        data-bs-target="#{{uid}}-accordioncontent"
+        id="{{uid}}-accordionbutton"
+        aria-controls="{{uid}}-accordioncontent"
+        >
+        {% if item.is_model and not item.is_object %}
+          {{item.model_title_plural}}
+        {% elif item.is_object %}
+        {{item}}
+	{% elif item.title %}
+          {{item.title}}
+        {% else %}
+          {{item.name}}
+        {% endif %}
+      </button>
+
+      {% if item.creation_methods %}
+      {% include "ochre/template_pack/creation_methods.html" %}
+      {% endif %}
+      
+
+
+      </div>
+  </div>
+
+    
+    <div
+    class="accordion-collapse ochre-accordion-collapse collapse w-95 ps-4"
+    id="{{uid}}-accordioncontent"
+    aria-labelledby="{{uid}}-accordionheader"
+    data-bs-parent="#{{uid}}-accordion"
+    >
+
+
+
+
+      <!-- start content -->
+    <div
+      {% if item.is_object %}
+      hx-get="{{item.get_absolute_url}}"
+      {% elif item.is_model %}
+      hx-get="{{item.get_list_url}}"
+      {% elif item.view_name %}
+      hx-get="{% url item.view_name %}"
+      {% else %}
+      hx-get="{{item.url}}"
+      {% endif %}
+      hx-headers='{"uid" : "{{uid}}", "Accept" : "text/html include=true", "mode" : "view"}'
+      hx-trigger="show.bs.collapse from:#{{uid}}-accordioncontent, intersect"
+      hx-swap="outerHTML"
+      >
+    </div>
+
+    <!-- end content -->
+    
+  </div>
+
+  
+</div>
+

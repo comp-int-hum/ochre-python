@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:transform
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:ochre="urn:ochre:"
+    version="1.0"
+    >
+  
+  <xsl:output method="xml" indent="yes"/>
+
+  <xsl:param name="ochre_namespace">urn:ochre:</xsl:param>
+  <xsl:variable name="xsd">http://www.w3.org/2001/XMLSchema#</xsl:variable>
+
+  <!-- do nothing with random text -->
+  <xsl:template match="text()|@*"/>
+
+  <!-- top level of document -->
+  <xsl:template match="/">
+    <rdf:RDF xml:base="{$ochre_namespace}">
+      <xsl:apply-templates select="document/object"/>
+    </rdf:RDF>
+  </xsl:template>
+
+  <!-- article -->
+  <xsl:template match="/document/object">
+    <rdf:Description>
+      <ochre:instanceOf rdf:resource="Text" />
+      <ochre:hasLabel rdf:datatype="{$xsd}string">
+	<xsl:value-of select="property[@name='id']/text()" />
+      </ochre:hasLabel>
+      <ochre:hasYear rdf:datatype="{$xsd}integer">
+	<xsl:value-of select="property[@name='pubyear']/text()" />
+      </ochre:hasYear>
+      <!--
+	  <xsl:apply-templates select="property[@name='tokens']/list/item" />
+      -->
+    </rdf:Description>
+  </xsl:template>
+
+  <!-- token -->
+  <xsl:template match="/document/object/property[@name='tokens']/list/item">
+    <ochre:hasPart rdf:parseType="Resource">
+      <ochre:instanceOf rdf:resource="Token" />
+      <ochre:hasOrdinal rdf:datatype="{$xsd}integer">
+	<xsl:value-of select="position()"/>
+      </ochre:hasOrdinal>
+      <ochre:hasLabel>
+	<xsl:value-of select="text()"/>
+      </ochre:hasLabel>
+    </ochre:hasPart>
+  </xsl:template>
+
+</xsl:transform>

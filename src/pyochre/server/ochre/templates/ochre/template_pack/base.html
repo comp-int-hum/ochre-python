@@ -1,0 +1,187 @@
+{% load sekizai_tags static %}
+{% load guardian_tags %}
+
+<!doctype html>
+<html lang="en" >
+  <head>
+
+
+    <link rel="icon" href="{% if favicon %}{{favicon}}{% else %}data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-signpost-2' viewBox='0 0 16 16'><path d='M7 1.414V2H2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h5v1H2.5a1 1 0 0 0-.8.4L.725 8.7a.5.5 0 0 0 0 .6l.975 1.3a1 1 0 0 0 .8.4H7v5h2v-5h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H9V6h4.5a1 1 0 0 0 .8-.4l.975-1.3a.5.5 0 0 0 0-.6L14.3 2.4a1 1 0 0 0-.8-.4H9v-.586a1 1 0 0 0-2 0zM13.5 3l.75 1-.75 1H2V3h11.5zm.5 5v2H2.5l-.75-1 .75-1H14z'/></svg>{% endif %}" type="image/svg+xml" />
+    {% addtoblock "css" %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0-dev.20221215/min/vs/editor/editor.main.min.css" integrity="sha512-VXdscc7YAdVxdUsM3isoUitRJhe0tNnhMARDlBsSnOKaKziMth8PcjrExNIP9pHvQmD/XOTREsJR8ww6dNG4jg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel='stylesheet' id='main-stylesheet-css'  href="{% static 'ochre/css/ochre.css' %}" type='text/css' media='all' />
+    {% endaddtoblock %}
+    
+    {% render_block "css" %}
+    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />    
+
+    {% block icon %}
+    {% endblock %}
+
+
+
+
+
+
+
+
+
+
+    
+    {% addtoblock "initial_js" %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js" integrity="sha512-JynkyJ/1167qkDbZ09NFUGKV3ARgnmySSzQLA1pEAnQuZqPodAD/gNhPkPjtqF5vMp4FPbILFW41Il7Zy3O+Bg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js" integrity="sha512-tWHlutFnuG0C6nQRlpvrEhE4QpkG1nn2MOUMWmUeRePl4e3Aki0VB6W1v3oLjFtd0hVOtRQ9PHpSfN6u6/QXkQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js" integrity="sha512-3j3VU6WC5rPQB4Ld1jnLV7Kd5xr+cq9avvhwqzbH/taCRNURoeEpoPBK9pDyeukwSxwRPJ8fDgvYXd6SkaZ2TA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.3/jquery.scrollTo.min.js" integrity="sha512-PsJ1f4lw0Jrga4wbDOvdWs9DFl88C1vlcH2VQYqgljHBmzmqtGivUkzRHWx2ZxFlnysKUcROqLeuOpYh9q4YNg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega/5.22.1/vega.min.js" integrity="sha512-rlIN4CAAk7ObfoJ3XCJ4f6cfP9zf0yLR42OZYAMp+CNKjrCkRp7E8lRT7dNu7mpTpoYjhMzoKUFgKUeX4i/P1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/1.9.2/htmx.min.js" integrity="sha512-ULbUWm8wCS6zRoxK/2v51vUHGhKvK8PSiqA02tyUYlYoeQm5wB8xr8lObq5zmNGpYaZsED0NLhaiPAAm2VbhXw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    {% endaddtoblock %}
+    
+    {% render_block "initial_js" %}
+
+    {% block pagetitle %}    
+    {% endblock %}
+    
+    {% block extra_head %}
+    {{ block.super }}
+    {% endblock %}
+    
+    {% block extrahead %}
+    {{ block.super }}
+    {% endblock %}
+    
+    {% block extrastyle %}
+    {{ block.super }}
+    {% endblock %}
+    
+    {% block extra_style %}
+    {{ block.super }}
+    {% endblock %}
+    
+  </head>
+  <body>
+
+
+    <header class="site-header">
+    {% block header %}
+    {% block top_links %}  
+      <div class="roof-header-top hide-for-print">
+	<div class="row align-justify">
+	    <div class="roof-header-top-links">
+	      <ul class="menu simple roof-menu align-right">
+		<li>
+		  {% if request.user.is_authenticated %}
+		  <a
+		    class="{{logout_icon}}"
+		    href="/accounts/logout?next={{request.path_info}}"
+		    title="Log out as {{request.user.first_name}} {{request.user.last_name}}"
+		    >
+		  </a>
+		  {% else %}
+		  <a
+		    class="{{login_icon}}"
+		    href="/accounts/login?next={{request.path_info}}"
+		    title="Log in or create an account"
+		    >
+		  </a>
+		  {% endif %}
+		</li>
+	      </ul>
+	    </div>
+	  </div>
+      </div>
+      {% endblock %}
+	<div class="small-site-holder">
+	  <div class="site-information hide-for-print">
+	    <div class="nav-shield">
+	      {% block brand_image %}
+	      {% endblock %}
+	    </div>
+	    <div class="site-desktop-title">
+	      <div class="top-bar-title">
+		{% block title %}
+		{% endblock %}
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<nav class="top-bar main-navigation navbar-toggler" aria-label="Main Menu" style="z-index:10">
+	  <ul class="nav nav-tabs menu">
+	  {% for k, v in builtin_pages.items %}
+	  <li class="nav-item">
+	    <a class="nav-link {% if top_level == k %}active{% endif %}" href="/{{k}}/">
+	      {{v}}
+	    </a>
+	  </li>
+	  {% endfor %}
+
+	  <li class="nav-item dropdown">
+	    <a class="nav-link dropdown-toggle {% if top_level in apps or top_level == 'manage' %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	      OCHRE{% if top_level in apps %}[{{ interaction_name }}]{% endif %}
+	    </a>
+	    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	      {% for k, v in apps.items %}
+	      <li>
+		<a class="dropdown-item {% if top_level == k %}active{% endif %}" href="/{{k}}/">
+		  {{v}}
+		</a>
+	      </li>
+	      {% endfor %}
+<!--	      <li>
+		<a class="dropdown-item" href="/ontology/">Ontology</a>
+	      </li>
+	      <li>
+		<a class="dropdown-item" href="/api/">API</a>
+	      </li>-->
+	    </ul>
+	  </li>
+	</ul>
+	</nav>
+	{% endblock %}
+    </header>
+
+
+
+    
+    {% block modals %}
+    {{ block.super }}
+    {% endblock %}
+    {% render_block "modals" %}
+
+    
+    {% block content %}{% endblock %}
+
+      <footer class="footer mt-0">
+	{% block footer %}
+	{% endblock %}
+      </footer>
+
+    
+      
+    <div id="to-preserve" hx-preserve="1">
+      {% block js %}{{block.super}}{% endblock %}      
+      {% addtoblock "js" %}
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.35.0-dev.20221215/min/vs/loader.min.js" integrity="sha512-BZkLVRxigK3UazsQIYAM64dYuFw4giK5YyBrjDlUhKIMeC2j+XLIAr4vs312JiDq4OaJwZEDfB27c7ffROEKBQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script type='text/javascript' src="{% static 'ochre/js/ochre.js' %}" id='ochre-js'></script>
+      {% endaddtoblock %}      
+      {% render_block "js" %}
+      {% block finaljs %}{{block.super}}{% endblock %}
+      {% render_block "finaljs" %}
+      <script>
+	ochreSetup(document.body, false);
+	htmx.on("htmx:load", function(evt) {
+	    ochreSetup(evt.detail.elt, true);
+	});
+	document.body.addEventListener("ochreEvent", handleOchreEvent);
+      </script>
+      </div>
+      {% csrf_token %}
+  </body>
+</html>

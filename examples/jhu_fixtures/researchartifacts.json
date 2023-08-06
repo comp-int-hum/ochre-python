@@ -1,0 +1,431 @@
+[
+    {
+	"operationId" : "createresearchartifact",
+	"defaults" : {
+	    "force" : true,
+	    "is_active" : true
+	},	
+	"items" : [
+	    {
+		"name" : "fent2023",
+		"title" : "Trends in fentanyl content on Reddit substance use forums, 2013-2021",
+		"type" : "article",
+		"doi" : "10.1007/s11606-023-08256-7",
+		"journal" : "Journal of General Internal Medicine",
+		"year" : 2023,
+		"month" : "June",
+		"author" : "Amanda M. Bunting, Noa Krawczyk, Tom Lippincott, Yuanqi Gu, Simran Arya, Suhas Nagappala, and Meredith C. Meacham",
+		"biburl" : "https://pubmed.ncbi.nlm.nih.gov/37296360/",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "huscho2022",
+		"title" : "Humanities Scholarship: Brainstorming for the Future",		
+		"publisher" : "Project MUSE",
+		"author" : "Arthur Levine, Allison Levy, Tom Lippincott, Lisa Marie Rhody, and Kelley Squazzo",
+		"year" : 2022,
+		"month" : "April",
+		"type" : "misc",
+		"howpublished" : "Symposium",
+		"biburl" : "https://about.muse.jhu.edu/about/muse-meets/",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "cinema2022",
+		"title" : "Teaching Comparative Cinema with Omeka",
+		"type" : "article",
+		"author" : "Hale Sirin and Anne Eakin-Moss",
+		"year" : 2022,
+		"month" : "July",
+		"journal" : "Pedagogy",
+		"volume" : "2",
+		"biburl" : "https://ii.library.jhu.edu/2022/04/07/teaching-cinema-with-omeka/",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Sirin"}
+		    ]
+		}
+
+	    },
+	    {
+		"name" : "dht2021",
+		"title" : "Digital Humanities Today",
+		"type" : "techreport",
+		"author" : "Hale Sirin",
+		"year" : 2021,
+		"school" : "Johns Hopkins University",
+		"institution" : "Digital Research and Curation Center",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Sirin"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "asylum2017",
+		"title" : "Early predictability of asylum court decisions",
+		"type" : "article",
+		"author" : "Matt Dunn, Levent Sagun, Hale Sirin, and Daniel Chen",
+		"year" : 2017,
+		"booktitle" : "Proceedings of the 16th edition of the International Conference on Artificial Intelligence and Law",
+		"publisher" : "Association for Computing Machinery",
+		"address" : "New York, NY, USA",
+		"biburl" : "https://doi.org/10.1145/3086512.3086537",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Sirin"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "dahs2017",
+		"title" : "Data Analysis and the Human Sciences",
+		"type" : "article",
+		"author" : "Hale Sirin",
+		"year" : 2017,
+		"booktitle" : "The Structuralist Controversy and its Legacy 1966 Anniversary Conference Proceedings",
+		"school" : "Johns Hopkins University",
+		"address" : "Baltimore, MD",
+		"month" : "April",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Sirin"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "nbih2020",
+		"title" : "New Books in History",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2020,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}
+
+	    },
+	    {
+		"name" : "m4n2020",
+		"title" : "Money 4 Nothing: A Podcast of Music and Capitalism",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2020,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "dance2016",
+		"title" : "Roots and Future: A History of UK Dance",
+		"type" : "misc",		
+		"author" : "Samuel E. Backer",
+		"year" : 2016,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "shake2017",
+		"title" : "Shake It Fo Yah Hood: Bounce, New Orleans Hip Hop",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2017,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "rr2022",
+		"title" : "Reconstructed Routes: Performance Data and the Origins of Mass Culture",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2022,
+		"month" : "March",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "peoria2022",
+		"title" : "Will it Play In Peoria?: Patterns of Mass Culture in Progressive America",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2022,
+		"month" : "January",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "microculture2021",
+		"title" : "Micro-Culture to Mass Culture: Using Local Mapping to Explore the History of American Entertainment",		
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2021,
+		"month" : "July",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "past2021",
+		"title" : "Speaking the Past: Podcasts and Historical Knowledge",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2021,
+		"month" : "October",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "podcasts2021",
+		"title" : "Aesthetics, Design, and Historiography in Podcasts",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2021,
+		"month" : "October",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "intro2020",
+		"title" : "An Introduction to Digital History",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2020,
+		"month" : "December",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "ea2020",
+		"title" : "Entertaining America: Small Towns and Mass Culture in the United States, 1870-1920",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2020,
+		"month" : "January",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "mapping2019",
+		"title" : "Mapping Mass Culture from the Bottom Up",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2019,
+		"month" : "October",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "narrative2019",
+		"title" : "Narrativity in a Digital Age: Podcasts, Louis O. Mink, and the Anglo-American Philosophy of History",
+		"type" : "misc",
+		"author" : "Samuel E. Backer",
+		"year" : 2019,
+		"month" : "April",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "ortho2022",
+		"title" : "Pretrained Transformer Models for the Alignment of Orthographic Variants",
+		"type" : "misc",
+		"author" : "Craig Messner",
+		"year" : 2022,
+		"month" : "April",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Messner"}
+		    ]
+		},
+		"related_to" : {
+		    "type" : "ResearchProject",
+		    "selectors" : [
+			{"name" : "orthography"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "bert2022",
+		"title" : "BERT: Structure and Knowledge",
+		"type" : "misc",
+		"author" : "Craig Messner",
+		"year" : 2022,
+		"month" : "June",
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Messner"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "numa2019",
+		"title" : "The Numa-rete: A Biologically-Inspired Shape Recognition System",
+		"type" : "misc",
+		"author" : "Craig Messner",
+		"biburl" : "http://cmessner.me/numarete/index.html",
+		"year" : 2019,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Messner"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "gcn2020",
+		"title" : "Graph convolutional networks for exploring authorship hypotheses",
+		"type" : "article",
+		"author" : "Tom Lippincott",
+		"year" : 2020,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "lid2021",
+		"title" : "Active learning and negative evidence for language identification",
+		"type" : "article",
+		"author" : "Tom Lippincott",
+		"year" : 2021,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "starcoder2020",
+		"title" : "Starcoder: a general neural ensemble technique to support traditional scholarship, illustrated with a study of the post-Atlantic slave trade",
+		"type" : "article",
+		"author" : "Tom Lippincott",
+		"year" : 2020,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "comphum2021",
+		"title" : "Applying computational techniques to traditional humanistic domains",
+		"type" : "misc",
+		"author" : "Tom Lippincott",
+		"year" : 2021,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "hist2021",
+		"title" : "Translating simple historical inquiries into computation",
+		"type" : "misc",
+		"author" : "Tom Lippincott",
+		"year" : 2021,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "cassa2022",
+		"title" : "Ethical usage of computer science and the limits of automatic analysis",		
+		"type" : "misc",
+		"author" : "Lisa Singh, Philip Resnik, Sarah Oates, and Tom Lippincott",
+		"year" : 2022,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}
+		    ]
+		}		
+	    },
+	    {
+		"name" : "sawyer2021",
+		"title" : "Primary sources, computational intelligence, and discovering connections between fields",
+		"type" : "misc",
+		"author" : "Tom Lippincott",
+		"year" : 2021,
+		"contributors" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}
+		    ]
+		}		
+	    }
+	]
+    }
+]
+

@@ -1,0 +1,9 @@
+SELECT ?s ?p ?o ?rt ?external ?description WHERE
+{
+  ?s ochre:subClassOf|ochre:subPropertyOf|ochre:equivalentClass|ochre:equivalentProperty|rdfs:domain ?external .
+  ?s ?rt ?external .  
+  ?s ?p ?o .
+  OPTIONAL {
+    ?external rdfs:comment ?description .
+  }
+}

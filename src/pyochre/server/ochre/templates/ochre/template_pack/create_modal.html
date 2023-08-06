@@ -1,0 +1,166 @@
+{% load ochre %}
+{% load rest_framework %}
+
+<!-- begin modal trigger (basically, just icons) -->
+{% if creation_methods|length > 1 %}
+<div class="dropdown">
+<button
+  class="btn dropdown-toggle ochre-modal ochre-interactive {{create_icon}}"
+  type="button"
+  data-bs-toggle="dropdown"
+  id="create_modal-{{uid}}_{{index}}"
+  >
+</button>
+<ul class="dropdown-menu" aria-labelledby="create_modal-{{uid}}_{{index}}">
+  {% for title, endpoint in creation_methods.items %}
+  <li>
+    <button
+      class="dropdown-item"
+      type="button"
+      data-bs-toggle="modal"
+      data-bs-target="#create_modal-{{uid}}_{{index}}_{{forloop.counter}}"
+      >
+      {{title}}
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+</div>
+{% for title, endpoint in creation_methods.items %}
+<div
+  class="modal fade h-75"
+  id="create_modal-{{uid}}_{{index}}_{{forloop.counter}}"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="create_modal_label-{{uid}}_{{index}}_{{forloop.counter}}"
+  aria-hidden="true"
+  >
+  <div
+    class="modal-dialog modal-xl"
+    role="document"
+    >
+    <div
+      class="modal-content container-fluid"
+      >
+      <div
+	class="modal-header"
+	>
+        <h5
+	  class="modal-title"
+	  id="create_modal_label-{{uid}}_{{index}}_{{forloop.counter}}"
+	  >
+	  Creating a new {{item.model_title_singular}}
+	</h5>
+	{% comment %}
+        <button
+	  type="button"
+	  class="close"
+	  data-bs-dismiss="modal"
+	  aria-label="Close"
+	  >
+          <span
+	    aria-hidden="true"
+	    >
+	    &times;
+	  </span>
+        </button>
+	{% endcomment %}
+      </div>
+      <form
+	id="form-create_{{uid}}_{{index}}_{{forloop.counter}}"
+	hx-post="{% url endpoint %}"
+	hx-swap="none"
+	hx-encoding="multipart/form-data"
+	hx-headers='{"uid" : "create_{{uid}}_{{index}}_{{forloop.counter}}", "style" : "modal", "X-CSRFToken" : "{{csrf_token}}", "include" : true}'
+	>
+	<div
+	  hx-get="{% url endpoint %}"
+	  hx-vals='{"uid" : "{{mode}}_{{uid}}_{{index}}" {% if relation %}, "relation" : "{{relation}}", "pk" : "{{pk}}"{% endif %} }'
+	  hx-headers='{"uid" : "{{mode}}_{{uid}}_{{index}}", "mode" : "create", "Accept" : "text/html include=true"}'
+	  hx-trigger="show.bs.collapse from:#content-{{mode}}_{{uid}}_{{index}}, intersect"
+	  hx-swap="outerHTML"
+	  >
+	</div>
+	  
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% else %}
+<button
+  class="btn ochre-modal ochre-interactive {{create_icon}}"
+  type="button"
+  data-bs-toggle="modal"
+  data-bs-target="#create_modal-{{uid}}_{{index}}_1"
+  title="{{title}}"
+  id="create_modal-{{uid}}_{{index}}"
+  >
+</button>
+<div
+  class="modal fade h-75"
+  id="create_modal-{{uid}}_{{index}}_1"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="create_modal_label-{{uid}}_{{index}}_1"
+  aria-hidden="true"
+  >
+  <div
+    class="modal-dialog modal-xl"
+    role="document"
+    >
+    <div
+      class="modal-content container-fluid"
+      >
+      <div
+	class="modal-header"
+	>
+        <h5
+	  class="modal-title"
+	  id="create_modal_label-{{uid}}_{{index}}_1"
+	  >
+	  Creating a new {{item.model_title_singular}}
+	</h5>
+	<div
+	  class="btn-group w-25"
+	  >
+
+	  <button
+	    type="submit"
+	    class="{{commit_icon}}"
+	    form="form-create_{{uid}}_{{index}}_1"
+	    id="create_button-{{uid}}_{{index}}_1"
+	    data-bs-dismiss="modal"	    
+	    >
+	  </button>
+	  <button
+	    class="{{cancel_icon}}"
+	    data-bs-dismiss="modal"
+	    id="dismiss_button-{{uid}}_{{index}}_1"
+	    >
+	  </button>
+	</div>
+      </div>
+      <form
+	id="form-create_{{uid}}_{{index}}_1"
+	hx-post="{{model.get_create_url}}"
+	hx-swap="none"
+	hx-encoding="multipart/form-data"
+	hx-headers='{"uid" : "create_{{uid}}_{{index}}_1", "style" : "modal", "X-CSRFToken" : "{{csrf_token}}", "include" : true}'
+	>
+	<div
+	  hx-get="{{model.get_create_url}}"
+	  hx-vals='{"uid" : "{{mode}}_{{uid}}_{{index}}" {% if relation %}, "relation" : "{{relation}}", "pk" : "{{pk}}"{% endif %} }'
+	  hx-headers='{"uid" : "{{mode}}_{{uid}}_{{index}}", "mode" : "create", "Accept" : "text/html include=true"}'
+	  hx-trigger="show.bs.collapse from:#content-{{mode}}_{{uid}}_{{index}}, intersect"
+	  hx-swap="outerHTML"
+	  >
+	</div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+

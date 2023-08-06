@@ -1,0 +1,9 @@
+{% for person in items %}
+<div
+  hx-get="{% url 'api:user-detail' person.id %}"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "view", "template" : "ochre/template_pack/user_listentry.html"}'
+  hx-trigger="intersect"
+  hx-swap="outerHTML"
+  >
+</div>
+{% endfor %}

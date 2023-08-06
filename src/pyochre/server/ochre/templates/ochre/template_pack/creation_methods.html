@@ -1,0 +1,47 @@
+{% load ochre %}
+
+{% if request.user.is_authenticated and not item.is_object %}      
+{% if item.creation_methods|length > 1 %}
+<div class="dropdown">
+  <button
+    class="btn dropdown-toggle ochre-modal ochre-interactive {{create_icon}}"
+    type="button"
+    data-bs-toggle="dropdown"
+    id="modal_dropdown-{{uid}}"
+    >
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="create_modal_dropdown-{{uid}}">
+    {% for method in item.creation_methods %}
+    {% join uid forloop.counter as next_uid %}
+    <li>
+      <button
+	class="dropdown-item"
+	type="button"
+	data-bs-toggle="modal"
+	data-bs-target="#modal-{{next_uid}}"
+	>
+	{{method.title}}
+      </button>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% else %}
+{% join uid 1 as next_uid %}
+<button
+  class="btn ochre-modal ochre-interactive {{create_icon}}"
+  type="button"
+  data-bs-toggle="modal"
+  data-bs-target="#modal-{{next_uid}}"
+  title="{{method.title}}"
+  id="modal_button-{{next_uid}}"
+  >
+</button>
+{% endif %}
+
+
+{% for method in item.creation_methods %}
+{% join uid forloop.counter as next_uid %}
+{% include "ochre/template_pack/modal.html" with uid=next_uid csrf_token=csrf_token item=model url=method.url title=method.title mode="create" method="post" %}
+{% endfor %}
+{% endif %}

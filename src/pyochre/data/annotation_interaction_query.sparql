@@ -1,0 +1,10 @@
+SELECT DISTINCT ?s ?desc ?field_class ?paramLabel ?paramValue WHERE {
+  ?s ochre:instanceOf ochre:AnnotationInteraction .
+  ?s ochre:hasDescription ?desc .
+  ?s ochre:hasFieldClass ?field_class .
+  OPTIONAL {
+    ?s ochre:hasParameter ?param .
+    ?param ochre:hasLabel ?paramLabel .
+    ?param ochre:hasValue ?paramValue .
+  }
+}

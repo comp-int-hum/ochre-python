@@ -1,0 +1,7 @@
+PREFIX ochre: <urn:ochre:>
+PREFIX wde: <http://www.wikidata.org/entity/>
+PREFIX wdp: <http://www.wikidata.org/prop/direct/>
+
+SELECT ?text WHERE {
+  ?s wdp:P2440 ?text .
+}

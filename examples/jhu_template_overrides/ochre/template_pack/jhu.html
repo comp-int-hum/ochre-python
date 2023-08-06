@@ -1,0 +1,161 @@
+{% extends "ochre/template_pack/base.html" %}
+{% load static %}
+
+{% block pagetitle %}
+<title>JHU | The Center for Digital Humanities</title>
+{% endblock %}
+
+{% block brand_image %}
+<img src="https://english.jhu.edu/wp-content/themes/ksas_academic_department/dist/assets/images/krieger.white.svg" alt="KSAS Shield" loading="eager" width="300" height="87"/>
+{% endblock %}
+
+{% block title %}
+<h1>
+  <a id="index-link" href="/">
+    <small>The Center for</small> Digital Humanities
+  </a>
+</h1>
+{% endblock %}
+
+
+{% block top_links %}  
+<div class="roof-header-top hide-for-print">
+  <div class="row align-justify">
+    <div class="roof-header-top-links">
+      <ul class="menu simple roof-menu align-right">
+	<li class="top-link">
+	  <a>Visit</a>
+	</li>
+	<li class="bar"></li>
+	<li class="top-link">
+	  <a>A&S Magazine</a>
+	</li>
+	<li>
+	  <button class="btn header-button" aria-label="Explore JHU" data-bs-toggle="offcanvas" data-bs-target="#offCanvasTop1" style="background: white;" aria-controls="offCanvasTop1">Explore JHU</button></li>
+	<li>
+	  {% if request.user.is_authenticated %}
+	  <a
+	    class="{{logout_icon}}"
+	    href="/accounts/logout?next={{request.path_info}}"
+	    title="Log out as {{request.user.first_name}} {{request.user.last_name}}"
+	    >
+	  </a>
+	  {% else %}
+	  <a
+	    class="{{login_icon}}"
+	    href="/accounts/login?next={{request.path_info}}"
+	    title="Log in or create an account"
+	    >
+	  </a>
+	  {% endif %}
+	</li>
+      </ul>
+      <div class="offcanvas position-top is-transition-overlap is-closed" id="offCanvasTop1" tabindex="-1">
+	
+	<div id="global-links" class="grid-x grid-padding-x small-up-2 medium-up-3 large-up-3">
+	  <h1 class="show-for-sr">Explore JHU</h1>
+	  <div class="cell">
+	    <h2>Inside the Krieger School</h2>
+	    <ul class="vertical menu" role="menu">
+	      <li role="menuitem"><a href="https://krieger.jhu.edu/academics/departments-programs-and-centers/" onclick="ga('send', 'event', 'Offcanvas', 'Academics', 'Departments')">Departments, Programs, and Centers</a></li>
+	      <li role="menuitem"><a href="https://krieger.jhu.edu/people/faculty-directory/" onclick="ga('send', 'event', 'Offcanvas', 'Academics', 'Faculty')">Faculty Directory</a></li>
+	      <li role="menuitem"><a href="https://krieger.jhu.edu/academics/fields/" onclick="ga('send', 'event', 'Offcanvas', 'Academics', 'Fields of Study')">Fields of Study</a></li>
+	      <li role="menuitem"><a href="https://krieger.jhu.edu/academics/majors-minors/" onclick="ga('send', 'event', 'Offcanvas', 'Academics', 'Majors &amp; Minors')">Majors &amp; Minors</a></li>
+	    </ul>
+	  </div>
+	  <div class="cell">
+	    <h2>Student &amp; Faculty Resources</h2>
+	    <ul class="vertical menu" role="menu">
+	      <li role="menuitem"><a href="https://e-catalogue.jhu.edu/" onclick="ga('send', 'event', 'Offcanvas', 'Resources', 'Academic Catalog')">Academic Catalog</a></li>
+	      <li role="menuitem"><a href="https://livejohnshopkins.sharepoint.com/sites/KSASFacultyHandbook" onclick="ga('send', 'event', 'Offcanvas', 'Resources', 'Faculty Handbook')">Faculty Handbook <span class="fa-solid fa-right-to-bracket"></span></a></li>
+	      <li role="menuitem"><a href="https://studentaffairs.jhu.edu/registrar/" onclick="ga('send', 'event', 'Offcanvas', 'Resources', 'Registrars')">Registrar's Office</a></li>
+	      <li role="menuitem"><a href="https://policies.jhu.edu/" onclick="ga('send', 'event', 'Offcanvas', 'Resources', 'Policy Library')">University Policies &amp; Document Library <span class="fa-solid fa-right-to-bracket"></span></a></li>
+	    </ul>
+	  </div>
+	  <div class="cell">
+	    <h2>Across Campus</h2>
+	    <ul class="vertical menu" role="menu">
+	      <li role="menuitem"><a href="https://www.jhu.edu/admissions/" onclick="ga('send', 'event', 'Offcanvas', 'Campus', 'Admissions')">Admissions &amp; Aid</a></li>
+	      <li role="menuitem"><a href="https://www.jhu.edu/" onclick="ga('send', 'event', 'Offcanvas', 'Campus', 'JHU Home')">Johns Hopkins University Website</a></li>
+	      <li role="menuitem"><a href="https://www.jhu.edu/maps-directions/" onclick="ga('send', 'event', 'Offcanvas', 'Campus', 'Maps/Directions')">Maps &amp; Directions</a></li>
+	      <li role="menuitem"><a href="https://my.jh.edu/myJH/" onclick="ga('send', 'event', 'Offcanvas', 'Campus', 'myJHU')">myJHU</a></li>
+	    </ul>
+	  </div>
+	  <button class="close-button" aria-label="Close menu" type="button" data-bs-dismiss="offcanvas" >
+	    <span aria-hidden="true">×</span>
+	  </button>
+	</div>
+	
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+{% block content %}
+
+<header class="banner mb-0" role="banner" aria-label="Explore the Krieger School Slider">
+
+  <div class="card mb-0">
+    {% block banner_image %}
+    {% endblock %}
+	  
+    {% block banner_overlay %}
+    {% endblock %}
+  </div>
+</header>
+
+<main class="intro mb-0">
+  <div class="container px-2 mb-0">
+    <p>
+    {% block description %}
+    {% endblock %}
+    </p>
+  </div>    
+</main>
+
+{% block dynamic_content %}
+{% endblock %}
+
+{% endblock %}
+
+
+
+
+{% block footer %}
+<div class="footer-container">
+  <div class="container quick-links">
+    <div class="row">
+      <!--<div class="col"/>-->
+      <div class="col">
+	<!--<a href="/sitemap/" target="_blank">Sitemap</a>-->
+	<a href="https://accessibility.jhu.edu/" target="_blank">Accessibility</a>
+	<a href="https://jobs.jhu.edu/" target="_blank">Careers</a>
+	<a href="https://it.johnshopkins.edu/policies/privacystatement" target="_blank">Privacy Statement</a>
+      </div>
+      <!--
+      <div class="col">
+	<a href="http://facebook.com/JHUArtsSciences"><span class="fa-brands fa-facebook fa-2x"></span><span class="screen-reader-text">Facebook</span></a>
+	<a href="https://www.instagram.com/JHUArtsSciences/"><span class="fa-brands fa-instagram fa-2x"></span><span class="screen-reader-text">Instagram</span></a>
+	<a href="https://twitter.com/JHUArtsSciences"><span class="fa-brands fa-twitter fa-2x"></span><span class="screen-reader-text">Twitter</span></a>
+	<a href="https://www.youtube.com/jhuartssciences"><span class="fa-brands fa-youtube fa-2x"></span><span class="screen-reader-text">YouTube</span></a>	
+      </div>      -->
+    </div>
+  </div>
+  <div class="grid-x">
+    <div class="small-12 cell copydate">
+      <p>
+      <a href="https://www.jhu.edu/" class="hide-for-print" aria-label="Johns Hopkins University">
+	  <img class="jhushield" src="https://english.jhu.edu/wp-content/themes/ksas_academic_department/dist/assets/images/university.logo.white.png" alt="Johns Hopkins University"  width="283" height="54" loading="lazy">
+      </a>
+      </p>
+      <p>&copy; 2023 Johns Hopkins University, Zanvyl Krieger School of Arts & Sciences,<br />
+	Center for Digital Humanities, 195 Gilman Hall<br />3400 N. Charles Street, Baltimore, MD 21218<br />
+	<!--Email: <a href=mailto:english@jhu.edu>english@jhu.edu</a> | Phone: 410-516-7544 | Fax: 410-516-4757-->
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

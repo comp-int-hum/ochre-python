@@ -1,0 +1,50 @@
+{% load rest_framework %}
+<form
+  enctype="multipart/form-data"
+  hx-patch="{{url}}"
+  hx-target="this"
+  hx-swap="outerHTML"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "view", "X-CSRFToken" : "{{csrf_token}}"}'
+  >
+  <div
+    class="card"
+    >
+    <div
+      class="card-header"
+      >
+      <h2>{{serializer.instance}}</h2>
+      <div
+	class="btn-group w-25"
+	>
+	<button
+	  class="{{commit_icon}}"
+	  >
+	</button>
+	{% if serializer.instance != request.user %}
+	<button
+	  class="{{delete_icon}}"
+	  hx-delete="{{url}}"
+	  >
+	</button>
+	{% endif %}
+	<button
+	  class="{{cancel_icon}}"
+	  hx-get="{{url}}"
+	  >
+	</button>
+      </div>
+    </div>
+    {% comment %}
+    <div class="h-75">
+    <div
+      class="h-75"
+      style="overflow-y:auto;"
+      >
+      {% endcomment %}
+      {% render_form serializer %}
+      {% comment %}
+    </div>
+    </div>
+    {% endcomment %}
+  </div>
+</form>

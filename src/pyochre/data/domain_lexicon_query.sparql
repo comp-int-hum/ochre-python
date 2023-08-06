@@ -1,0 +1,7 @@
+SELECT ?id ?label ?desc ?part WHERE
+{
+  ?id ochre:instanceOf ochre:DomainLexicon .
+  ?id ochre:hasLabel ?label .
+  ?id ochre:hasDescription ?desc .
+  ?id ochre:hasPart ?part .
+}

@@ -1,0 +1,93 @@
+[
+    {
+	"operationId" : "createresearchproject",
+	"defaults" : {
+	    "force" : true,
+	    "is_active" : true
+	},
+	"items" : [
+	    {
+		"name" : "holographicnarrative",
+		"title" : "Narrative time and holographic identity formation",
+		"abstract" : "Periods in the life of an author, narrator, or character are often reified as a discrete developmental stage: childhood is a frequent example (e.g. throughout Proust or Joyce), and before/after traumatic events (e.g. Wuthering Heights, Ethan Frome).  Can we correlate this with the dilation of narrative time with respect to the text?  If so, can it shed light on authorial practices of character formation that lie outside the typical wavelengths of human reading?",
+		"content" : "Periods in the life of an author, narrator, or character are often reified as a discrete developmental stage: childhood is a frequent example (e.g. throughout Proust or Joyce), and before/after traumatic events (e.g. Wuthering Heights, Ethan Frome).  Can we correlate this with the dilation of narrative time with respect to the text?  If so, can it shed light on authorial practices of character formation that lie outside the typical wavelengths of human reading?",		
+		"researchers" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Li"},
+			{"last_name" : "Sirin"},
+			{"last_name" : "Messner"},
+			{"last_name" : "Lippincott"}			
+		    ]
+		}
+	    },
+	    {
+		"name" : "armenoturkish",
+		"title" : "Disentangling mixed use of script and language in the Ottoman Empire",
+		"abstract" : "The heterogeneity of the Ottoman Empire ensured that written records contain a variety of language and script combinations.  At the same time, the dislocation and regulation of constituent populations has created difficulty in finding such materials in existing archives.  By training a small language model on expert annotations, we are uncovering and cataloging hidden texts, along with practices they reflect from communities that often no longer exist in living memory.",
+		"content" : "The heterogeneity of the Ottoman Empire ensured that written records contain a variety of language and script combinations.  At the same time, the dislocation and regulation of constituent populations has created difficulty in finding such materials in existing archives.  By training a small language model on expert annotations, we are uncovering and cataloging hidden texts, along with practices they reflect from communities that often no longer exist in living memory.",		
+		"researchers" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Sirin"},
+			{"last_name" : "Lippincott"}
+		    ]
+		}
+	    },
+	    {
+		"name" : "orthography",
+		"title" : "Literary representations of orthographic variation in the Nineteenth Century",
+		"abstract" : "Writers of the 19th century used orthographic variation as a productive channel of meaning: characters were often marked by their dialect, setting expectations that could be followed or undermined.  Authors developed a variety of tropes to signal properties like race, economic status, masculinity, and so forth, but these could easily become detached from reality, or confused by unintended correlations, and owe more to intertextuality than observation of speakers.  To explore this mosaic, we are developing a machine learning approach to recognizing and matching orthographic variants with their canonical form, incorporating insights from large language models and metric learning.",
+		"content" : "Writers of the 19th century used orthographic variation as a productive channel of meaning: characters were often marked by their dialect, setting expectations that could be followed or undermined.  Authors developed a variety of tropes to signal properties like race, economic status, masculinity, and so forth, but these could easily become detached from reality, or confused by unintended correlations, and owe more to intertextuality than observation of speakers.  To explore this mosaic, we are developing a machine learning approach to recognizing and matching orthographic variants with their canonical form, incorporating insights from large language models and metric learning.",		
+		"researchers" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Messner"},
+			{"last_name" : "Lippincott"}			
+		    ]
+		}
+	    },
+	    {
+		"name" : "poetics",
+		"title" : "Non-parametric modeling of poetic grammar: regularity and innovation in Chaucer",
+		"abstract" : "Poetry is defined by structure, and structure is represented in grammar.  But in the purely descriptive view, a grammar is essentially the reification of a particular analytic process: while interesting and useful in many scenarios, it has limited ability to directly add insight.  We are considering the use of \"Adaptor Grammars\", a non-parametric extension of context-free grammars, to minimally specify the structure that (basically) all readers agree on, and allow the machine learning process to choose additional structure based on its information-theoretic objectives.  If and how this structure aligns with human intuitions (about e.g. rhyme, scansion) is the underlying question.",
+		"content" : "Poetry is defined by structure, and structure is represented in grammar.  But in the purely descriptive view, a grammar is essentially the reification of a particular analytic process: while interesting and useful in many scenarios, it has limited ability to directly add insight.  We are considering the use of \"Adaptor Grammars\", a non-parametric extension of context-free grammars, to minimally specify the structure that (basically) all readers agree on, and allow the machine learning process to choose additional structure based on its information-theoretic objectives.  If and how this structure aligns with human intuitions (about e.g. rhyme, scansion) is the underlying question.",
+		"researchers" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Lippincott"}			
+		    ]
+		}
+
+	    },
+	    {
+		"name" : "ochre",
+		"title" : "Characteristic shifts in the syntax and semantics of Latin: broadening Auerbach's hypothesis-space",
+		"abstract" : "Erich Auerbach, a seminal figure of literary criticism, catalogued specific patterns in the evolution Latin's syntax and semantics over the early Christian period.  Working in Istanbul during World War 2, his direct access to sources was constrained, and of course he lacked the computational mechanisms that would be particularly helpful for such a temporally wide-ranging study.  We are constructing a general Latin corpus, additionally annotated for whether Auerbach had access to each document.  By performing unsupervised semantic learning and supervised syntactic parsing over the corpus, we hope to better understand how constraints affected Auerbach's scholarship, how his conclusions generalize, and to expand his hypotheses and consider the broad class of potential syntactic and semantic shifts in Latin from the early Republic through the Middle Ages.",
+		"content" : "Erich Auerbach, a seminal figure of literary criticism, catalogued specific patterns in the evolution Latin's syntax and semantics over the early Christian period.  Working in Istanbul during World War 2, his direct access to sources was constrained, and of course he lacked the computational mechanisms that would be particularly helpful for such a temporally wide-ranging study.  We are constructing a general Latin corpus, additionally annotated for whether Auerbach had access to each document.  By performing unsupervised semantic learning and supervised syntactic parsing over the corpus, we hope to better understand how constraints affected Auerbach's scholarship, how his conclusions generalize, and to expand his hypotheses and consider the broad class of potential syntactic and semantic shifts in Latin from the early Republic through the Middle Ages.",		
+		"researchers" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Sirin"},
+			{"last_name" : "Lippincott"}
+		    ]
+		}
+
+	    },
+	    {
+		"name" : "scores",
+		"title" : "OCR and topic modeling of musical scores to explore the development of minstrelsy through the Nineteenth Century",
+		"abstract" : "Johns Hopkins holds the Lester S. Levy collection of 19th and early 20th-century popular sheet music: it offers a unique opportunity to study the development of minstrelsy through the pre- and post-Civil War eras, but poses unique challenges for automatic transcription.  We are running initial transcription experiments using open-source OCR models, followed by temporal topic modeling, to attempt to characterize the shifting emphasis across time and between genres.  A likely next step will involve gathering a small amount of expert annotation to fine-tune the OCR process and perhaps expand it to include the musical notation itself.",
+		"content" : "Johns Hopkins holds the Lester S. Levy collection of 19th and early 20th-century popular sheet music: it offers a unique opportunity to study the development of minstrelsy through the pre- and post-Civil War eras, but poses unique challenges for automatic transcription.  We are running initial transcription experiments using open-source OCR models, followed by temporal topic modeling, to attempt to characterize the shifting emphasis across time and between genres.  A likely next step will involve gathering a small amount of expert annotation to fine-tune the OCR process and perhaps expand it to include the musical notation itself.",		
+		"researchers" : {
+		    "type" : "User",
+		    "selectors" : [
+			{"last_name" : "Backer"},
+			{"last_name" : "Lippincott"}
+		    ]
+		}
+	    }
+	]
+    }
+]
+

@@ -99,7 +99,7 @@
 	{% endfor %}
 	</ul>
 
-	<h4>Publications, presentations, etc</h4>
+	<h4>Publications and presentations</h4>
 	<ul>
 	{% for art in object.contributed_to.all %}
 	  <li>
@@ -115,6 +115,7 @@
 	role="tabpanel"
 	aria-labelledby="teaching-tab"
 	>
+	<h4>Courses taught</h4>
 	<ul>
 	  {% for class in object.teaches.all %}
 	  <li>

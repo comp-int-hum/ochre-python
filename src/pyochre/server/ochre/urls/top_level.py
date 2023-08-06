@@ -184,7 +184,7 @@ urlpatterns = [
             template_name="ochre/template_pack/course_detail.html",
             model=Course
         ),
-        name="course"
+        name="course_detail"
     ),
 
     # path(

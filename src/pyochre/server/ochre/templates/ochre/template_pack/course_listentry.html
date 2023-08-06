@@ -31,7 +31,8 @@
 	{% with field=serializer.fields.instructors %}
 	{% for select in field.iter_options %}
         {% if select.value|as_string in instructors|as_list_of_strings %}
-	<a href="{{select.value}}">{{select.display_text}}</a>	
+	
+	<a href="{% url 'user_detail' select.display_text.id %}">{{select.display_text}}</a>	
 	{% endif %}
 	{% endfor %}
 	{% endwith %}

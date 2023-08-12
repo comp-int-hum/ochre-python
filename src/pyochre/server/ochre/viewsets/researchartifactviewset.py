@@ -20,7 +20,7 @@ class ResearchArtifactViewSet(OchreViewSet):
     )
     detail_template_name = "ochre/template_pack/researchartifact_detail.html"
     #edit_template_name = "ochre/template_pack/researchartifact_edit.html"
-    list_template_name = "ochre/template_pack/generic_list.html"
+    list_template_name = "ochre/template_pack/researchartifact_list.html"
 
     def get_serializer_class(self):
         return ResearchArtifactSerializer

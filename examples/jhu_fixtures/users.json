@@ -11,7 +11,7 @@
 		"first_name" : "Sabrina",
 		"last_name" : "Li",
 		"title" : "Graduate Student",
-		"photo" : {"path" : "examples/blurred.jpeg"},
+#		"photo" : {"path" : "examples/blurred.jpeg"},
 		"biography" : "Sabrina is a student in the joint BS-MS Computer Science program, having completed requirements for double-majoring in CS and Cognitive Science.  She received the English Department's 2023 Senior Essay Prize for her essay titled 'Unstable Bodies, Unstable Texts'.",
 		"research_interests" : "Narrative and modernism"
 	    },
@@ -22,7 +22,7 @@
                 "last_name" : "Lippincott",
                 "title" : "Director, Assistant Research Professor",
                 "homepage" : "http://www.logical-space.org",
-                "photo" : {"path" : "examples/blurred.jpeg"},           
+#                "photo" : {"path" : "/export/cdh_prod_site_data/media/user_photos/tom.jpg"},
                 "biography" : "Dr. Lippincott received his PhD in Computational Linguistics from Cambridge University in 2015.  His research focuses on computational models of the mechanisms that produce, transmit, modify, and interpret the cultural artifacts at the center of empirical humanistic scholarship.",
                 "research_interests" : "Compositional forces of cultural transmission"
             },
@@ -32,7 +32,7 @@
 		"first_name" : "Hale",
 		"last_name" : "Sirin",
 		"title" : "Post-Doctoral Researcher",
-		"photo" : {"path" : "examples/blurred.jpeg"},		
+#		"photo" : {"path" : "/export/cdh_prod_site_data/media/user_photos/hale.jpg"},		
 		"biography" : "Dr. Sirin received her PhD in Comparative Thought and Literature from Johns Hopkins in 2022.",
 		"research_interests" : "Intellectual history"
 	    },
@@ -42,7 +42,7 @@
 		"first_name" : "Craig",
 		"last_name" : "Messner",
 		"title" : "Lecturer",
-		"photo" : {"path" : "examples/blurred.jpeg"},		
+#		"photo" : {"path" : "/export/cdh_prod_site_data/media/user_photos/craig.jpg"},		
                 "biography" : "Dr. Messner received his PhD in English from UCLA in 2021, subsequently joined the CDH as a post-doctoral researcher focused on the variety of phenomena related to non-standard (dialectal) English of 19th Century literature, and is now building the center's curriculum as the first faculty lecturer.",
 		"research_interests" : "19th-century literature, non-standard orthography"
 	    },
@@ -52,7 +52,7 @@
 		"first_name" : "Sam",
 		"last_name" : "Backer",
 		"title" : "Post-Doctoral Researcher",		
-		"photo" : {"path" : "examples/blurred.jpeg"},		
+#		"photo" : {"path" : "/export/cdh_prod_site_data/media/user_photos/sam.jpg"},		
                 "biography" : "Dr. Backer recieved his PhD in History from JHU in 2022, following several years of close involvement with the emerging digital teaching and research at the university.  His interests include areas of early American entertainmant, such as Vaudeville and the music industry, and their relationships to change along other axes, such as the proliferation of railroads.",
 		"research_interests" : "Early American entertainment industry"
 	    },
@@ -62,7 +62,7 @@
 		"first_name" : "Nadejda",
 		"last_name" : "Webb",
 		"title" : "Post-Doctoral Researcher",		
-		"photo" : {"path" : "examples/blurred.jpeg"},		
+#		"photo" : {"path" : "examples/blurred.jpeg"},		
                 "biography" : "Dr. Webb recieved her PhD in English and Comparative Media Analysis and Practice from Vanderbilt University in 2021.  She works closely with Professor Jessica Marie Johnson (History) on community-engaged projects focused on the experiences and well-being of marginalized and minority communities.",
 		"research_interests" : "Equity, opportunity, and community organization"
 	    },
@@ -72,20 +72,20 @@
 		"first_name" : "Leib",
 		"last_name" : "Celnik",
 		"title" : "Graduate Student",		
-		"photo" : {"path" : "examples/blurred.jpeg"},		
+#		"photo" : {"path" : "examples/blurred.jpeg"},		
 		"biography" : "Leib is a doctoral student in the Department of History of Science and Technology, where he focuses on the material culture of art production and conservation.",
 		"research_interests" : "History of physical sciences, art production and curation"
-	    }
-#           {
-#               "username" : "jmj",
-#               "email" : "jmj@jhu.edu",
-#               "first_name" : "Jessica",
-#               "last_name" : "Marie Johnson",
-    #           "title" : "Affiliate, Associate Professor",
-#               "photo" : {"path" : "examples/blurred.jpeg"},           
-#               "biography" : ""
-#               "research_interests" : "Equity, opportunity, and community organization"
-#           }       
+	    },
+           {
+               "username" : "jmj",
+               "email" : "jmj@jhu.edu",
+               "first_name" : "Jessica",
+               "last_name" : "Marie Johnson",
+              "title" : "Affiliate, Associate Professor",
+#               "photo" : {"path" : "/export/cdh_prod_site_data/media/user_photos/jessica.jpg"},           
+               "biography" : "Jessica Marie Johnson is a faculty affiliate of the CDH and Associate Professor in the Department of History, and a former fellow at the Hutchins Center for African and African American Studies at Harvard University. Johnson is a historian of Atlantic slavery and the Atlantic African diaspora.",
+               "research_interests" : "Women, gender, and sexuality in the African diaspora, histories of slavery and the slave trade, and digital history and new media"
+           }       
 	    
 	]
     }

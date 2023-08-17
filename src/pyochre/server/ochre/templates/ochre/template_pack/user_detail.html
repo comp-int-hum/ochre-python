@@ -119,7 +119,7 @@
 	<ul>
 	  {% for class in object.teaches.all %}
 	  <li>
-	    <a href="{% url 'course_detail' class.id %}">{{class.id}}: {{class.title}}</a>
+	    <a href="{% url 'course_detail' class.id %}">{{class.identifier}}: {{class.title}}</a>
 	  </li>
 	{% endfor %}
 	</ul>

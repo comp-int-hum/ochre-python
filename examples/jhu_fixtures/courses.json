@@ -9,7 +9,7 @@
 	    {
 		"name" : "intro",
 		"title" : "Introduction to Computational Methods",
-		"description" : "Basic command-line use, programming, and experimental design.",
+		"description" : "This course introduces basic computational techniques in the context of empirical humanistic scholarship.  Topics covered include the command-line, basic Python programming, and experimental design.  While illustrative examples are drawn from humanistic domains, the primary focus is on methods: those with specific domains in mind should be aware that such applied research is welcome and exciting, but will largely be their responsibility beyond the confines of the course.  Students will come away with tangible understanding of how to cast simple humanistic questions as empirical hypotheses, ground and test these hypotheses computationally, and justify the choices made while doing so.",
 		"identifier" : "AS.365",
 		"instructors" : {
 		    "type" : "User",
@@ -21,7 +21,7 @@
 	    {
 		"name" : "intell",
 		"title" : "Computational Intelligence for the Humanities",
-		"description" : "Algorithmic and machine learning approaches to traditional scholarship.",
+		"description" : "This course introduces substantial machine learning methods of particular relevance to humanistic scholarship.  Areas covered include standard models for classification, regression, and topic modeling, before turning to the array of open-source pretrained deep neural models, and the common mechanisms for employing them.  Students are expected to have some previous programming experience, ideally in Python, such as from AS.365 or equivalent.  Students will come away with an understanding of the strengths and weaknesses of different machine learning models, the ability to discuss them in relation to human intelligence and to make informed decisions of when and how to employ them, and an array of related technical knowledge.",
 		"identifier" : "AS.366",
 		"instructors" : {
 		    "type" : "User",

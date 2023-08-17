@@ -109,7 +109,8 @@ def batch_perform(connection, args):
             ops[props["operationId"]] = props
     for fname in args["inputs"]:
         with open(fname, "rt") as ifd:
-            for operation in json.loads(ifd.read()):
+            text = "\n".join([l for l in ifd if not re.match(r"^\s*\#.*", l)])
+            for operation in json.loads(text):
                 op = ops[operation["operationId"]]
                 for item in operation["items"]:
                     payload = {k : v for k, v in operation.get("defaults", {}).items()}

@@ -48,6 +48,7 @@ class ArticleSerializer(OchreSerializer):
         model = Article
         fields = [
             "title",
+            "abstract",
             "content",
             "ordering",
             "thumbnail",

@@ -8,7 +8,9 @@
     <div
       class="col-md-2 course-listentry-identifier"
       >
-      {{identifier}}
+      <a href="{% url 'course_detail' id %}">
+	{{identifier}}
+      </a>
     </div>
     <div
       class="col-md-8"
@@ -16,7 +18,9 @@
       <div
 	class="course-listentry-title"
 	>
-	{{title}}
+	<a href="{% url 'course_detail' id %}">
+	  {{title}}
+	</a>
       </div>
       <div
 	class="course-listentry-description"

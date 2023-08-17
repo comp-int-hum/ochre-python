@@ -179,7 +179,7 @@ urlpatterns = [
         name="teaching"
     ),
     path(
-        'teaching/<int:id>/',
+        'teaching/<int:pk>/',
         DetailView.as_view(
             template_name="ochre/template_pack/course_detail.html",
             model=Course

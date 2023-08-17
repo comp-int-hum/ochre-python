@@ -12,6 +12,7 @@ class Article(OchreModel):
         verbose_name_plural = "Articles"
         ordering = ["-date"]
     title = TextField()
+    abstract = TextField(blank=True, null=True)
     content = TextField(blank=True, null=True)
     thumbnail = ImageField(upload_to="article_images", null=True)
     is_active = BooleanField(default=False)

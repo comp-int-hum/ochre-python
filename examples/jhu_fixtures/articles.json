@@ -9,7 +9,8 @@
 	    {
 		"name" : "keystonedh",
 		"title" : "Johns Hopkins hosts KeystoneDH 2023",
-		"content" : "The JHU Center for Digital Humanities hosted the 2023 meeting of KeystoneDH, a conference for digital humanists in the mid-Atlantic region.",
+		"abstract" : "The JHU Center for Digital Humanities hosted the 2023 meeting of KeystoneDH",
+		"content" : "The JHU Center for Digital Humanities hosted the 2023 meeting of [KeystoneDH](https://keystonedh.network/2023/), a conference for digital humanists in the mid-Atlantic region.  Organized by post-doctoral researchers Nadejda Webb and Sam Backer, the two-day event included keynote talks by [Ted Underwood](https://english.illinois.edu/directory/profile/tunder) ([\"DH in the Age of Generative AI\"](https://youtu.be/7oeC60JlZz8)) and [Andre Brock](https://iac.gatech.edu/people/person/andre-brock) ([\"Questions of Scale and Distributed Blackness\"](https://youtu.be/22Yw2AisEJw)).",
 		"date" : "2023-06-16",
 		"people" : {
 		    "type" : "User",
@@ -19,7 +20,21 @@
 		    ]
 		}
 	    }
+#	    {
+#		"name" : "guldi",
+#		"title" : "Invited talks by Professor Jo Guldi",
+#		"abstract" : "Professor Jo Guldi spoke to the History and Computer Science Departments about computational-historical research",
+#		"content" : "[Professor Jo Guldi](https://www.smu.edu/Provost/Data-Science-Institute/People/Affiliates/Guldi) delivered [invited talks](https://youtu.be/5i9dUUrf_SU) to the History and Computer Science Departments about computational-historical research and her recent book, [The Long Land War: The Global Struggle for Occupancy Rights, 1881-1974](https://yalebooks.yale.edu/book/9780300256680/the-long-land-war/).",
+#		"date" : "2022-04-16",
+#		"people" : {
+#		    "type" : "User",
+#		    "selectors" : [
+#		    ]
+#		}
+#	    }
+
 	]
     }
 ]
 
+# Piper

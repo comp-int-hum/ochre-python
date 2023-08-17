@@ -67,6 +67,8 @@ class OchreViewSet(GenericViewSet):
             else "view",
             self.model._meta.model_name if self.model else ""
         )
+        if self.request.user.is_staff:
+            return self.model.objects.all()
         return (
             get_objects_for_user(
                 get_anonymous_user(),
@@ -268,7 +270,7 @@ class OchreViewSet(GenericViewSet):
             )
     
     def _partial_update(self, request, pk=None, partial=False):
-        logger.info("Partial update invoked by %s for %s", request.user, pk)
+        logger.info("Partial update of %s invoked by %s", pk, request.user)
         if self.model.get_change_perm() in get_perms(
                 request.user,
                 self.get_object()

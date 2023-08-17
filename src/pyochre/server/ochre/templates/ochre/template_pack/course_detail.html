@@ -1,0 +1,28 @@
+{% extends "ochre/template_pack/index.html" %}
+{% load ochre %}
+{% load rest_framework %}
+
+{% with request.headers.uid as uid %}
+{% block content %}
+<div
+  class="container w-100"
+  >
+  <h3>{{object.title}}</h3>
+    {{object.description}}
+
+      <div
+	class="course-listentry-instructors"
+	>
+	{% if object.instructors.all|length > 0 %}
+	{% if object.instructors.all|length > 1 %}Instructors:{% else %}Instructor:{% endif %}
+	{% for inst in object.instructors.all %}
+	
+	<a href="{% url 'user_detail' inst.id %}">{{inst.first_name}} {{inst.last_name}}</a>	
+
+	{% endfor %}
+
+	{% endif %}
+      </div>
+
+{% endblock %}
+{% endwith %}

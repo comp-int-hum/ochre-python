@@ -11,7 +11,8 @@ class Course(OchreModel):
         verbose_name_plural = "Course"
     title = TextField()
     identifier = CharField(max_length=100, blank=True)
-    description = TextField(blank=True, null=True)
-    is_active = BooleanField(default=False)
-    ordering = IntegerField(default=0)
+    description = TextField(blank=True, null=False, default="")
     instructors = ManyToManyField(User, related_name="teaches")
+
+    def __str__(self):
+        return self.title

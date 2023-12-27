@@ -4,8 +4,8 @@ from django import template
 from django.contrib.contenttypes.models import ContentType
 from guardian.shortcuts import get_perms
 from pyochre.server.ochre.renderers import OchreHTMLFormRenderer
-from pyochre.server.ochre.models import Documentation
-from pyochre.server.ochre.serializers import DocumentationSerializer
+#from pyochre.server.ochre.models import Documentation
+#from pyochre.server.ochre.serializers import DocumentationSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -66,81 +66,81 @@ def ochre_render_form(
         raise e
 
 
-@register.simple_tag(takes_context=True)
-def ochre_get_documentation_object(context, view_name, item):    
-    if isinstance(item, (str, dict)):
-        referent_type = None
-        referent_id = None
-    elif item.is_model() and not item.is_object():
-        referent_type = ContentType.objects.get_for_model(item)
-        referent_id = None
-    elif item.is_object():
-        referent_type = ContentType.objects.get_for_model(item._meta.model)
-        referent_id = item.id
-    else:
-        logger.error("Something strange: %s", item)
-        referent_type = None
-        referent_id = None
-    referent_id = referent_id if referent_id else 0
-    logger.info(
-        "Retrieving documentation for view/model/object '%s/%s/%s'",
-        view_name,
-        referent_type,
-        referent_id
-    )        
-    referent_type_id = referent_type.id if referent_type else None
-    docs = Documentation.objects.filter(
-        view_name=view_name,
-        referent_type=referent_type,
-        referent_id=referent_id
-    )
-    ret_obj = docs[0] if len(docs) > 0 else None
-    if ret_obj:
-        ret_ser = DocumentationSerializer(ret_obj, context=context)
-        can_edit = Documentation.get_add_perm() in get_perms(
-            context["request"].user,
-            ret_obj
-        )
-    else:
-        logger.info("No such documentation, will create a new entry")
-        data = {
-            "view_name": view_name,
-            "referent_type" : referent_type_id,
-            "referent_id" : referent_id,
-            "name" : "_".join(
-                [
-                    str(x) for x in
-                    [
-                        view_name,
-                        referent_type_id,
-                        referent_id
-                    ] if x
-                ]
-            )
-        }
-        ret_ser = DocumentationSerializer(data=data, context=context)
-        ret_ser.is_valid()
-        can_edit = Documentation.get_add_perm() in get_perms(
-            context["request"].user,
-            Documentation
-        )
-    retval = {
-        "object" : ret_obj if ret_obj else Documentation(
-            name="_".join(
-                [
-                    str(x) for x in
-                    [
-                        view_name,
-                        referent_type_id,
-                        referent_id
-                    ] if x
-                ]
-            ),
-            view_name=view_name,
-            referent_type=referent_type,
-            referent_id=referent_id,
-        ),
-        "can_edit" : can_edit,
-        "serializer" : ret_ser
-    }
-    return retval
+# @register.simple_tag(takes_context=True)
+# def ochre_get_documentation_object(context, view_name, item):    
+#     if isinstance(item, (str, dict)):
+#         referent_type = None
+#         referent_id = None
+#     elif item.is_model() and not item.is_object():
+#         referent_type = ContentType.objects.get_for_model(item)
+#         referent_id = None
+#     elif item.is_object():
+#         referent_type = ContentType.objects.get_for_model(item._meta.model)
+#         referent_id = item.id
+#     else:
+#         logger.error("Something strange: %s", item)
+#         referent_type = None
+#         referent_id = None
+#     referent_id = referent_id if referent_id else 0
+#     logger.info(
+#         "Retrieving documentation for view/model/object '%s/%s/%s'",
+#         view_name,
+#         referent_type,
+#         referent_id
+#     )        
+#     referent_type_id = referent_type.id if referent_type else None
+#     docs = Documentation.objects.filter(
+#         view_name=view_name,
+#         referent_type=referent_type,
+#         referent_id=referent_id
+#     )
+#     ret_obj = docs[0] if len(docs) > 0 else None
+#     if ret_obj:
+#         ret_ser = DocumentationSerializer(ret_obj, context=context)
+#         can_edit = Documentation.get_add_perm() in get_perms(
+#             context["request"].user,
+#             ret_obj
+#         )
+#     else:
+#         logger.info("No such documentation, will create a new entry")
+#         data = {
+#             "view_name": view_name,
+#             "referent_type" : referent_type_id,
+#             "referent_id" : referent_id,
+#             "name" : "_".join(
+#                 [
+#                     str(x) for x in
+#                     [
+#                         view_name,
+#                         referent_type_id,
+#                         referent_id
+#                     ] if x
+#                 ]
+#             )
+#         }
+#         ret_ser = DocumentationSerializer(data=data, context=context)
+#         ret_ser.is_valid()
+#         can_edit = Documentation.get_add_perm() in get_perms(
+#             context["request"].user,
+#             Documentation
+#         )
+#     retval = {
+#         "object" : ret_obj if ret_obj else Documentation(
+#             name="_".join(
+#                 [
+#                     str(x) for x in
+#                     [
+#                         view_name,
+#                         referent_type_id,
+#                         referent_id
+#                     ] if x
+#                 ]
+#             ),
+#             view_name=view_name,
+#             referent_type=referent_type,
+#             referent_id=referent_id,
+#         ),
+#         "can_edit" : can_edit,
+#         "serializer" : ret_ser
+#     }
+#     return retval

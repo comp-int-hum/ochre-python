@@ -18,10 +18,8 @@ class CourseViewSet(OchreViewSet):
         component_name="course",
         operation_id_base="course"
     )
-    #detail_template_name = "ochre/template_pack/researchartifact_detail.html"
-    #edit_template_name = "ochre/template_pack/researchartifact_edit.html"
-    list_template_name = "ochre/template_pack/course_list.html"
-
+    listentry_view_template_name = "ochre/template_pack/course_listentry_view.html"
+    
     def get_serializer_class(self):
         return CourseSerializer
 

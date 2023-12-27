@@ -1,7 +1,7 @@
 import logging
 from django.db.models import UniqueConstraint
 from django.urls import path, reverse
-from django.db.models import Model, CharField, DateTimeField, ForeignKey, SET_NULL
+from django.db.models import Model, IntegerField, CharField, DateTimeField, BooleanField, ForeignKey, SET_NULL
 from pyochre.server.ochre.models import MetadataMixin
 
 
@@ -13,7 +13,9 @@ class OchreModel(MetadataMixin, Model):
     created_by = ForeignKey("ochre.User", null=True, on_delete=SET_NULL, editable=False)
     created_at = DateTimeField(auto_now_add=True, editable=False)
     modified_at = DateTimeField(auto_now=True, editable=False)
+    ordering = IntegerField(default=0)
     class Meta:
+        ordering = ["ordering"]
         abstract = True
         constraints = [
             UniqueConstraint(
@@ -52,7 +54,7 @@ class OchreModel(MetadataMixin, Model):
 
     @classmethod
     def get_add_perm(self):
-        return "add_{}".format(self._meta.model_name)
+        return "ochre.add_{}".format(self._meta.model_name)
 
     @classmethod
     def get_delete_perm(self):

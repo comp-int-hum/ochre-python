@@ -5,7 +5,7 @@ import json
 import zipfile
 from importlib.resources import files
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -63,6 +63,7 @@ class OntologyViewSet(OchreViewSet):
         ser = self.get_serializer_class()(resp.content) #data={"graph" : resp.content})
         #if ser.is_valid():
         return Response(ser.data)
+
         #else:
         #    return Response(
         #        ser.errors,

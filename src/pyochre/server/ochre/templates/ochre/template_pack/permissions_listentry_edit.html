@@ -1,0 +1,50 @@
+<form
+  enctype="multipart/form-data"
+  hx-patch="{{url}}"
+  hx-target="this"
+  hx-swap="outerHTML"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "X-CSRFToken" : "{{csrf_token}}", "mode" : "listentry_view"}'
+  >
+
+  {% if user_permissions %}
+  <h4>User permissions</h4>
+  <div class="row">
+    {% for perm, users in user_permissions.items %}
+    <div class="col w-25">      
+      <label for="{{perm}}_user_perm_select-{{uid}}">{{perm|title}}</label>
+      <select class="form-select" multiple aria-label="{{perm}}_user_permissions" id="{{perm}}_user_perm_select-{{uid}}" name="user_{{perm}}">
+	{% for pk, username in all_users %}
+	<option value="{{pk}}" {% if pk in users %}selected{% endif %}>{{username}}</option>
+	{% endfor %}
+      </select>
+    </div>
+    {% endfor %}    
+  </div>
+  {% endif %}
+  
+  {% if group_permissions %}
+  <h4>Group permissions</h4>
+  <div class="row">
+    {% for perm, groups in group_permissions.items %}
+    <div class="col w-25">
+      <label for="{{perm}}_group_perm_select-{{uid}}">{{perm|title}}</label>
+      <select class="form-select" multiple aria-label="{{perm}}_group_permissions" id="{{perm}}_group_perm_select" name="group_{{perm}}">
+	{% for pk, groupname in all_groups %}
+	<option value="{{pk}}" {% if pk in groups %}selected{% endif %}>{{groupname}}</option>
+	{% endfor %}
+      </select>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <button
+    class="{{commit_icon}}"
+    >
+  </button>
+  <button
+    class="{{cancel_icon}}"
+    hx-get="{{object_url}}"
+    hx-headers='{"mode" : "listentry_view"}'
+    >
+  </button>
+</form>

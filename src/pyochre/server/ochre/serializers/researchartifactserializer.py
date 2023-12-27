@@ -15,8 +15,6 @@ class ResearchArtifactSerializer(OchreSerializer):
         lookup_field="id",
         lookup_url_kwarg="pk"
     )
-    #contributors = UserSerializer(many=True, required=False)
-    #related_to = ResearchProjectSerializer(many=True, required=False)
     contributors = HyperlinkedRelatedField(
         many=True,
         view_name="api:user-detail",
@@ -28,10 +26,8 @@ class ResearchArtifactSerializer(OchreSerializer):
         view_name="api:researchproject-detail",
         queryset=ResearchProject.objects.all()
     )
-
     class Meta(OchreSerializer.Meta):
         model = ResearchArtifact
         fields = [            
             f.name for f in ResearchArtifact._meta.fields
-            #if not isinstance(f, ForeignKey)
         ] + ["contributors", "related_to"] + OchreSerializer.Meta.fields

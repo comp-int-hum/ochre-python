@@ -2,30 +2,16 @@
 {% load static %}
 
 {% block banner_image %}
-<img width="1920" height="500" src="{% static 'panel_banner.png' %}" class="card-img" alt="panel discussion" decoding="async" loading="eager" sizes="(max-width: 1920px) 100vw, 1920px" />
+<img width="1920" height="500" src="{% static 'honey_banner.png' %}" class="card-img" alt="panel discussion" decoding="async" loading="eager" sizes="(max-width: 1920px) 100vw, 1920px" />
 {% endblock %}
 
 {% block banner_overlay %}
 {% endblock %}
 
 {% block description %}
-The teaching mission of the <b>Center for Digital Humanities</b> focuses on introducing undergraduate and graduate students working in traditional scholarship to the basic methods of computation.
-{% endblock %}
-
-{% block dynamic_content %}
-{% if dynamic_view %}
-<div
-  class="container w-100 ochre-{{mode}} article-list"
-  >
-<div
-  class="container w-100 ochre-{{mode}}"
-  hx-get="{% url dynamic_view %}"
-  hx-swap="outerHTML"
-  hx-trigger="intersect"
-  hx-headers='{"uid" : "{{uid}}", "Accept" : "text/html include=true", "mode" : "{% if mode %}{{mode}}{% else %}view{% endif %}"}'
-  >
-</div>
-</div>
-{% endif %}
-
+<main class="intro">
+  <div class="container px-2">
+    
+  </div>
+</main>
 {% endblock %}

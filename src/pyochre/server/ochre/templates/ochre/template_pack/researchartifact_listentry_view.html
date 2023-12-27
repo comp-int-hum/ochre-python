@@ -1,0 +1,13 @@
+{% extends "ochre/template_pack/generic_listentry_view.html" %}
+
+{% block content %}
+  <div class="row no-gutters">    
+    <div class="col-8">
+      <div class="card-block px-2">
+        <h5 class="card-title">{% if biburl %}<a href="{{biburl}}">{% endif %}{{title}}{% if biburl %}</a>{% endif %}</h5>
+	<h6 class="card-subtitle">{{author}}, {{year}}{% if journal %}, {{journal}}{% endif %}</h6>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

@@ -1,4 +1,4 @@
-{% extends "ochre/template_pack/jhu.html" %}
+{% extends "ochre/template_pack/index.html" %}
 {% load static %}
 
 {% block banner_image %}
@@ -9,22 +9,9 @@
 {% endblock %}
 
 {% block description %}
-The primary mandate of the <b>Center for Digital Humanities</b> is to research, develop, and apply computational methods to areas of traditional humanistic scholarship.  Below, you can explore some current research projects and associated publications, presentations, and other artifacts.  A full list of such artifacts can be browsed <a href="/research_artifacts/">here</a>.
+<main class="intro">
+  <div class="container px-2">
+    The primary mandate of the <b>Center for Digital Humanities</b> is to research, develop, and apply computational methods to areas of traditional humanistic scholarship.  Below, you can explore some current research projects and associated publications, presentations, and other artifacts.  A full list of such artifacts can be browsed <a href="/research_artifacts/"><b>here</b></a>.
+  </div>
+</main>
 {% endblock %}
-
-
-{% block dynamic_content %}
-<div
-  class="container w-100 ochre-{{mode}} article-list"
-  >
-<div
-  class="container w-100 ochre-{{mode}}"
-  hx-get="{% url dynamic_view %}"
-  hx-swap="outerHTML"
-  hx-trigger="intersect"
-  hx-headers='{"uid" : "{{uid}}", "Accept" : "text/html include=true", "mode" : "{% if mode %}{{mode}}{% else %}view{% endif %}"}'
-  >
-</div>
-</div>
-{% endblock %}
-

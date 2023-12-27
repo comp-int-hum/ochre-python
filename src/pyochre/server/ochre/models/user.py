@@ -24,7 +24,6 @@ class User(AbstractUser, OchreModel):
         blank=True,
         validators=[url_validator]
     )
-    ordering = IntegerField(default=0)    
     photo = ImageField(blank=True, upload_to="user_photos")
     title = CharField(blank=True, max_length=300)
     research_interests = TextField(blank=True, max_length=1000)

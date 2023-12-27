@@ -1,5 +1,11 @@
+{% load ochre %}
+{% load rest_framework %}
+
+{% with request.headers.uid as uid %}
 <div
-  class="article-listentry"
+  class="article-listentry card"
+  hx-target="this"
+  hx-swap="outerHTML"
   >
   <div class="article-date">
     {{date}}
@@ -18,4 +24,18 @@
     <div class="article-snippet">
     </div>
   </div>
+  {% if True %}
+  <div
+    class="btn-group position-absolute top-0 end-0"
+    >
+    <button
+      class="{{edit_icon}}"
+      hx-get="{{url}}"
+      hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "edit"}'	    
+      >
+    </button>
+  </div>
+  {% endif %}
+
 </div>
+{% endwith %}

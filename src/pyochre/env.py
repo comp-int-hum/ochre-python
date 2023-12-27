@@ -88,6 +88,7 @@ env = environ.Env(
     LOCATION_ICON = (str, "bi-geo-alt-fill"),
     HOMEPAGE_ICON = (str, "bi-house-fill"),
     HEADSHOT_ICON = (str, "bi-person-fill"),
+    PERMISSIONS_ICON = (str, "bi-lock")
 )
 
 env.read_env(env("ENVIRONMENT"), overwrite=True)

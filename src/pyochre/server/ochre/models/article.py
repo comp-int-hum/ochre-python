@@ -15,8 +15,6 @@ class Article(OchreModel):
     abstract = TextField(blank=True, null=True)
     content = TextField(blank=True, null=True)
     thumbnail = ImageField(upload_to="article_images", null=True)
-    is_active = BooleanField(default=False)
-    ordering = IntegerField(default=0)
     date = DateField()
     people = ManyToManyField(User, related_name="mentioned_in")
     courses = ManyToManyField(Course, related_name="mentioned_in")

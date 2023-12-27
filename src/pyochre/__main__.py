@@ -101,6 +101,14 @@ def get_match(connection, object_type, payload):
         return matches[0]
     
 def batch_perform(connection, args):
+    if args["full_reset"]:        
+        for model_name in connection.list_urls.keys():
+            if model_name != "Ontology":
+                print(model_name)
+                for item in connection.get_objects(model_name):
+                    if not (model_name == "User" and item["username"] == connection.user):                        
+                        connection.delete(item["url"])
+
     ops = {}
     for path, methods in connection.openapi["paths"].items():
         for method, props in methods.items():
@@ -281,11 +289,12 @@ class Command(object):
             "batchPerform",
             description="Perform actions described in provided JSON file(s)."
         )
+        batch.add_argument("--full_reset", dest="full_reset", action="store_true", help="Delete *all* existing information in the database before performing actions")
         batch.set_defaults(
             action_name="batchPerform",
             callback=batch_perform
         )
-        batch.add_argument(dest="inputs", nargs="+", help="JSON file(s) describing the object to create.")
+        batch.add_argument(dest="inputs", nargs="*", help="JSON file(s) describing the object to create.")
                                 
         regenerate = ops.add_parser(
             "regenerateOntology",

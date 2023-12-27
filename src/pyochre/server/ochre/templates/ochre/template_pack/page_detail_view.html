@@ -1,0 +1,79 @@
+{% load guardian_tags %}
+{% load rest_framework %}
+
+{% with uid=request.headers.uid model=serializer.context.view.get_model obj=serializer.context.view.get_object %}
+
+
+<div
+  class="pagecontent"
+  hx-swap="outerHTML"
+  >
+  {% if banner_image %}
+  <header class="banner mb-0" role="banner" aria-label="top-level banner">
+    <div class="card mb-0">
+      <img width="1920" height="500" src="{{banner_image}}" class="card-img" alt="Banner image" />
+      {% if "change_page" in perms or request.user.is_superuser %}
+      <div
+	class="card-img-overlay"
+	>
+      <button
+	class="{{edit_icon}}"
+	style="background-color:white;"
+	hx-get="{{url}}"
+	hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "detail_edit"}'
+	hx-target="closest .pagecontent"	
+	>	
+      </button>
+      </div>
+      {% endif %}
+      {% if banner_overlay %}
+      <div class="card-img-overlay banner-overlay">	  
+	{% autoescape off %}
+	{% render_markdown banner_overlay %}
+	{% endautoescape %}
+      </div>
+      {% endif %}
+    </div>
+  </header>
+  {% else %}
+  {% if "change_page" in perms or request.user.is_superuser %}
+  <button
+    class="{{edit_icon}}"
+    hx-get="{{url}}"
+    hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "detail_edit"}'
+    hx-target="closest .pagecontent"
+    >
+  </button>
+  {% endif %}
+  {% endif %}
+  
+  {% if description %}
+  <main class="intro mb-0">
+    <div class="container px-2 mb-0">
+      <p>
+	{% render_markdown description %}
+      </p>
+    </div>    
+  </main>
+  {% endif %}
+
+  {% if dynamic_content_view %}
+  <div
+    class="container parent"
+    id="container-{{uid}}"
+
+    >
+    <div
+      class="container w-100 ochre-{{mode}}"
+      hx-get="{% url dynamic_content_view %}"
+      hx-trigger="intersect"
+      hx-headers='{"uid" : "{{uid}}", "Accept" : "text/html include=true", "mode" : "list"}'
+      hx-target="this"
+          hx-swap="outerHTML"
+      >
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% endwith %}

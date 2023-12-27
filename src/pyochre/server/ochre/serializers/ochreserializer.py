@@ -13,6 +13,10 @@ class OchreSerializer(ModelSerializer):
     creator_url = SerializerMethodField(
         help_text="URL of the user that created this object."
     )
+    permissions_url = SerializerMethodField(
+        help_text="URL of the user that created this object."
+    )
+    
     force = BooleanField(
         required=False,
         write_only=True,
@@ -26,12 +30,18 @@ class OchreSerializer(ModelSerializer):
         help_text="The ordering priority of this object when displayed in a list."
     )    
     def get_creator_url(self, instance):
-        if instance:
+        if instance and instance.created_by:
             return reverse(
                 "api:user-detail",
                 args=(instance.created_by.id,),
                 request=self.context["request"]
             )
+        else:
+            return ""        
+
+    def get_permissions_url(self, instance):
+        if instance:
+            return instance.get_permissions_url()
         else:
             return ""
 
@@ -63,6 +73,6 @@ class OchreSerializer(ModelSerializer):
             "url",
             "force",
             "creator_url",
-            "is_active",
+            "permissions_url",
             "id"
         ]

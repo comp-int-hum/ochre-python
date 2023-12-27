@@ -1,5 +1,4 @@
 import logging
-from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.decorators import action
 from pyochre.server.ochre.viewsets import OchreViewSet
 from pyochre.server.ochre.serializers import ResearchProjectSerializer, PermissionsSerializer
@@ -18,8 +17,8 @@ class ResearchProjectViewSet(OchreViewSet):
        component_name="researchproject",
        operation_id_base="researchproject",
     )
-    list_template_name = "ochre/template_pack/researchproject_list.html"
-
+    listentry_view_template_name = "ochre/template_pack/researchproject_listentry_view.html"
+    
     def get_serializer_class(self):
         return ResearchProjectSerializer
 
@@ -27,8 +26,6 @@ class ResearchProjectViewSet(OchreViewSet):
         return self._list(request)
 
     def retrieve(self, request, pk=None):
-        """
-        """
         return self._retrieve(request, pk=pk)
 
     def destroy(self, request, pk=None):

@@ -1,7 +1,7 @@
 import logging
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from rest_framework.viewsets import ModelViewSet, ViewSet, GenericViewSet
 from rest_framework import exceptions, status
 from rest_framework.response import Response
@@ -29,32 +29,39 @@ class OchreViewSet(GenericViewSet):
         JSONRenderer,
         OchreTemplateHTMLRenderer
     ]
-    detail_template_name = "ochre/template_pack/generic_detail.html"
-    edit_template_name = "ochre/template_pack/generic_edit.html"
-    create_template_name = "ochre/template_pack/generic_create.html"    
+    detail_view_template_name = "ochre/template_pack/generic_detail_view.html"
+    detail_edit_template_name = "ochre/template_pack/generic_detail_edit.html"
+    detail_create_template_name = "ochre/template_pack/generic_detail_create.html"
+    list_template_name = "ochre/template_pack/generic_list.html"
+    listentry_permissions_template_name = "ochre/template_pack/generic_listentry_permissions.html"
+    listentry_view_template_name = "ochre/template_pack/generic_listentry_view.html"
+    listentry_edit_template_name = "ochre/template_pack/generic_listentry_edit.html"
+    listentry_create_template_name = "ochre/template_pack/generic_listentry_create.html"
+    listentry_delete_template_name = "ochre/template_pack/generic_listentry_delete.html"
     #permission_classes = [OchrePermissions]
     #filter_backends = [ObjectPermissionsFilter]
-    #list_template_name = "ochre/template_pack/ochre.html"
-    list_template_name = "ochre/template_pack/accordion.html"
+    #list_template_name = "ochre/template_pack/ochre.html"    
     accordion_header_template_name = "ochre/template_pack/accordion_header.html"
     accordion_content_template_name = "ochre/template_pack/accordion_content.html"
 
     def __init__(self, *argv, **argd):
         super(OchreViewSet, self).__init__(*argv, **argd)    
 
+    def get_model(self):
+        return self.model
+        
     def get_template_names(self):
         if self.template_override:
             return [self.template_override]
-        if self.mode == "edit":
-            retval = [self.edit_template_name]
-        elif self.request.headers.get("mode") == "create":
-            retval = [self.create_template_name]            
-        elif self.action == "list":
-            retval = [self.list_template_name]
-        elif self.action == "retrieve":
-            retval = [self.detail_template_name]
+        name = getattr(self, "{}_template_name".format(self.mode), None)
+        if name:
+            retval = [name]
         else:
-            retval = [self.detail_template_name]
+            logger.warn(
+                "No template corresponding to mode '%s', using detail view",
+                self.mode
+            )
+            retval = [self.detail_view_template_name]
         logger.info("Using template '%s' for %s on %s", retval[0], self.action, self.model)
         return retval
     
@@ -93,7 +100,8 @@ class OchreViewSet(GenericViewSet):
         if self.kwargs[lookup_url_kwarg] == "None":
             return None
         filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
-        obj = get_object_or_404(queryset, **filter_kwargs)        
+        obj = get_object_or_404(queryset, **filter_kwargs)
+        self.check_object_permissions(self.request, obj)
         return obj
 
     def initialize_request(self, request, *argv, **argd):
@@ -152,18 +160,20 @@ class OchreViewSet(GenericViewSet):
         return context
 
     def _list(self, request):
-        logger.info("List invoked by %s", request.user)
-        ser = self.get_serializer_class()(
-            #ser = scl(
-            self.get_queryset(),
-            many=True,
-            context={"request" : request}
-        )
-        #if request.accepted_renderer.format == "ochre":
-        #    context = self.get_renderer_context()
-        #    return Response(context)
-        #print(ser.data)
-        return Response(ser.data)
+        if self.mode == "listentry_create":
+            logger.info("Request for blank object invoked by %s", request.user)
+            ser = self.get_serializer_class()(
+                context={"request" : request}
+            )
+            return Response(ser.data)
+        else:
+            logger.info("List invoked by %s", request.user)
+            ser = self.get_serializer_class()(
+                self.get_queryset(),
+                many=True,
+                context={"request" : request}
+            )
+            return Response(ser.data)
         
     def _create(self, request):
         logger.info(
@@ -189,6 +199,7 @@ class OchreViewSet(GenericViewSet):
                         obj,
                         context={"request" : request}
                     )
+                    self.kwargs["pk"] = str(obj.id)
                     return Response(resp_ser.data)
                 else:
                     return Response(
@@ -202,15 +213,6 @@ class OchreViewSet(GenericViewSet):
                 )
                 raise e
             pk = retval.data["id"]
-            # if request.accepted_renderer.format == "ochre":
-            #     retval = HttpResponse()
-            #     retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "create", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}", "model_url" : "{model_url}"}}}}""".format(
-            #         app_label=self.model._meta.app_label,
-            #         model_name=self.model._meta.model_name,
-            #         pk=pk,
-            #         model_url=self.model.get_list_url()
-            #     )                
-            # return retval
         else:
             raise exceptions.PermissionDenied(
                 detail="{} does not have permission to create {}".format(
@@ -222,6 +224,7 @@ class OchreViewSet(GenericViewSet):
 
     def _retrieve(self, request, pk=None):
         obj = self.get_object()
+        
         logger.info("Retrieve of %s invoked by %s", obj, request.user)
         ser = self.get_serializer_class()(obj, context={"request" : request})
         logger.info("Using serializer class:  %s", type(ser).__name__)
@@ -232,16 +235,22 @@ class OchreViewSet(GenericViewSet):
         obj = self.get_queryset().get(id=pk)
         string_rep = str(obj)
         obj.delete()
-        retval = JsonResponse(
-            {
-                "description" : "Deleted object '{}'".format(string_rep),
-            }
-        )
+
         if request.accepted_renderer.format == "ochre":
-            retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "delete", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
-                app_label=self.model._meta.app_label,
-                model_name=self.model._meta.model_name,
-                pk=pk
+            retval = HttpResponse()
+            # intention here: remove other occurrences of the object from the
+            # webpage (perhaps replace with timed alert)
+            #
+            #retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "delete", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
+            #app_label=self.model._meta.app_label,
+            #    model_name=self.model._meta.model_name,
+            #    pk=pk
+            #)
+        else:
+            retval = JsonResponse(
+                {
+                    "description" : "Deleted object '{}'".format(string_rep),
+                }
             )
         return retval
 
@@ -276,6 +285,7 @@ class OchreViewSet(GenericViewSet):
                 self.get_object()
         ) or request.user.is_staff:
             logger.info("Permission verified")
+            print(request.data)
             obj = self.get_queryset().get(id=pk)
             ser = self.get_serializer_class()(
                 obj,
@@ -284,23 +294,8 @@ class OchreViewSet(GenericViewSet):
                 context={"request" : request}
             )
             if ser.is_valid():
-                #retval = super(OchreViewSet, self).update(request, pk, partial=True)
-                #return retval
-                #print(ser.validated_data)
-                #return Response(ser.save())
-                nobj = ser.partial_update(obj, request.data)
-                nser = self.get_serializer_class()(obj, context={"request" : request})
-                return Response(nser.data)
-                #retval.headers["HX-Redirect"] = obj.get_absolute_url()
-                #print(retval)
-                
-                #retval = super(OchreViewSet, self).update(request, pk)
-                #retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "update", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
-                #    app_label=self.model._meta.app_label,
-                #    model_name=self.model._meta.model_name,
-                #    pk=pk
-                #)                
-                return retval
+                ser.save()
+                return Response(ser.data)
             else:
                 logger.error("Errors in partial update: %s", ser.errors)
                 return Response(
@@ -331,13 +326,15 @@ class OchreViewSet(GenericViewSet):
         )
         if ser.is_valid():
             data = {k : v for k, v in ser.data.items()}
+            obj = self.model.objects.get(id=pk)
+            data["object_url"] = obj.get_absolute_url()
+            data["url"] = obj.get_permissions_url()
             if request.method == "PATCH":
                 data["user_permissions"] = {}
                 data["group_permissions"] = {}
                 for k in request.data.keys():
                     etype, ptype = k.split("_")
                     data["{}_permissions".format(etype)][ptype] = [int(x) for x in request.data.getlist(k)]
-                obj = self.model.objects.get(id=pk)
                 for ptype in all_permissions:
                     entries = data.get("user_permissions", {}).get(ptype, [])                    
                     perm = "{}_{}".format(ptype, self.model._meta.model_name)
@@ -354,12 +351,15 @@ class OchreViewSet(GenericViewSet):
                             assign_perm(perm, g, obj)
                         else:
                             remove_perm(perm, g, obj)
-                return Response(ser.data, status=status.HTTP_200_OK)
+                resp = HttpResponseRedirect(obj.get_absolute_url())
+                resp["mode"] = "listentry_view"
+                return resp #Response(ser.data, status=status.HTTP_200_OK)
             elif request.method == "GET":
                 data["all_users"] = [[u.id, u.username] for u in User.objects.all()]
                 data["all_groups"] = [[g.id, g.name] for g in Group.objects.all()]
                 data["all_permissions"] = ["delete", "view", "change"]
-                return Response(data, template_name="ochre/template_pack/permissions.html")
+
+                return Response(data, template_name="ochre/template_pack/permissions_listentry_edit.html")
         else:
             return Response(
                 ser.errors,

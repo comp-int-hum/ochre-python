@@ -4,7 +4,7 @@
   hx-patch="{{url}}"
   hx-target="this"
   hx-swap="outerHTML"
-  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "view", "X-CSRFToken" : "{{csrf_token}}"'
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "view", "X-CSRFToken" : "{{csrf_token}}", "template" : "ochre/template_pack/user_listentry.html"}'
   >
   <div class="card">
     {% render_form serializer %}

@@ -15,8 +15,6 @@ class ResearchProject(OchreModel):
     abstract = TextField(blank=True, null=True)
     content = TextField(blank=True, null=True)
     thumbnail = ImageField(upload_to="researchproject_images", null=True)
-    is_active = BooleanField(default=False)
-    ordering = IntegerField(default=0)
     researchers = ManyToManyField(User, related_name="participates_in")
     
     def __str__(self):

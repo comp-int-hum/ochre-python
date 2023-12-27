@@ -3,7 +3,7 @@ from .primarysourceviewset import PrimarySourceViewSet
 from .materialviewset import MaterialViewSet
 from .ontologyviewset import OntologyViewSet
 from .permissionsviewset import PermissionsViewSet
-from .documentationviewset import DocumentationViewSet
+#from .documentationviewset import DocumentationViewSet
 from .userviewset import UserViewSet
 from .machinelearningmodelviewset import MachineLearningModelViewSet
 from .queryviewset import QueryViewSet
@@ -13,3 +13,4 @@ from .researchartifactviewset import ResearchArtifactViewSet
 from .researchprojectviewset import ResearchProjectViewSet
 from .courseviewset import CourseViewSet
 from .annotationviewset import AnnotationViewSet
+from .pageviewset import PageViewSet

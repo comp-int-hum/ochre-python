@@ -18,9 +18,7 @@ class ResearchArtifactViewSet(OchreViewSet):
        component_name="researchartifact",
        operation_id_base="researchartifact",
     )
-    detail_template_name = "ochre/template_pack/researchartifact_detail.html"
-    #edit_template_name = "ochre/template_pack/researchartifact_edit.html"
-    list_template_name = "ochre/template_pack/researchartifact_list.html"
+    listentry_view_template_name = "ochre/template_pack/researchartifact_listentry_view.html"
 
     def get_serializer_class(self):
         return ResearchArtifactSerializer
@@ -29,8 +27,6 @@ class ResearchArtifactViewSet(OchreViewSet):
         return self._list(request)
 
     def retrieve(self, request, pk=None):
-        """
-        """
         return self._retrieve(request, pk=pk)
 
     def destroy(self, request, pk=None):

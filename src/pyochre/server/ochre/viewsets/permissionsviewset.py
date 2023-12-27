@@ -5,13 +5,13 @@ from rest_framework.schemas.openapi import AutoSchema
 from rest_framework.viewsets import ViewSet
 from guardian.shortcuts import get_objects_for_user, get_users_with_perms, get_groups_with_perms
 from pyochre.server.ochre.autoschemas import OchreAutoSchema
-
+from pyochre.server.ochre.viewsets import OchreViewSet
 
 logger = logging.getLogger(__name__)
 
 
-class PermissionsViewSet(ViewSet):
-    template_name = "ochre/permissions.html"
+class PermissionsViewSet(OchreViewSet):
+    #template_name = "ochre/permissions.html"
     schema = OchreAutoSchema(
         tags=["permissions"],
         component_name="permissions",

@@ -1,0 +1,40 @@
+{% load ochre %}
+{% load rest_framework %}
+{% load guardian_tags %}
+
+{% with uid=request.headers.uid model=serializer.context.view.get_model %}
+
+<form
+  enctype="multipart/form-data"
+  hx-post="{{model.get_create_url}}"
+  hx-target="this"
+  hx-swap="outerHTML"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "X-CSRFToken" : "{{csrf_token}}", "mode" : "listentry_view"}'
+  >
+  <div
+    class="card"
+    >
+    <div
+      class="card-header"
+      >
+      <div
+	class="btn-group w-25"
+	>
+	<button
+	  class="{{commit_icon}}"
+	  >
+	</button>
+	<button
+	  class="{{cancel_icon}}"
+	  onclick="event.target.parentNode.parentNode.parentNode.parentNode.remove()"
+	  >
+	</button>	
+      </div>
+    </div>
+      {% render_form serializer %}
+  </div>
+</form>
+
+
+{% endwith %}
+

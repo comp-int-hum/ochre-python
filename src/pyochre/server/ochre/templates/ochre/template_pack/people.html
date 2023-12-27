@@ -1,9 +1,1 @@
-{% for person in items %}
-<div
-  hx-get="{{person.get_absolute_url}}"
-  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "view"}'
-  hx-trigger="intersect"
-  hx-swap="outerHTML"
-  >
-</div>
-{% endfor %}
+{% extends "ochre/template_pack/index.html" %}

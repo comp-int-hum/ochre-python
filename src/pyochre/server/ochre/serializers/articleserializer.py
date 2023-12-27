@@ -2,7 +2,7 @@ import logging
 from rest_framework.serializers import HyperlinkedIdentityField, DateField, HyperlinkedRelatedField
 from pyochre.server.ochre.models import Article, ResearchArtifact, User, ResearchProject, Course
 from pyochre.server.ochre.serializers import OchreSerializer
-#, UserSerializer, ResearchProjectSerializer, CourseSerializer, ResearchArtifactSerializer
+from pyochre.server.ochre.fields import MonacoEditorField
 
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,6 @@ class ArticleSerializer(OchreSerializer):
         help_text="URL of this article."
     )
     date = DateField(
-        format="%B %d, %Y"
     )
     people = HyperlinkedRelatedField(
         many=True,
@@ -39,11 +38,13 @@ class ArticleSerializer(OchreSerializer):
         view_name="api:researchartifact-detail",
         queryset=ResearchArtifact.objects.all()
     )
-
-    #people = UserSerializer(many=True, required=False)
-    #researchprojects = ResearchProjectSerializer(many=True, required=False)
-    #courses = CourseSerializer(many=True, required=False)
-    #researchartifacts = ResearchArtifactSerializer(many=True, required=False)
+    content = MonacoEditorField(
+        label="Full description (may use Markdown)",
+        language="markdown",
+        property_field="content",
+        allow_blank=True,
+        required=False,
+    )
     class Meta(OchreSerializer.Meta):
         model = Article
         fields = [

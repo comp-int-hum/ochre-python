@@ -14,8 +14,10 @@ from .researchartifactinteractiveserializer import ResearchArtifactInteractiveSe
 
 from .articleserializer import ArticleSerializer
 
-from .documentationserializer import DocumentationSerializer
-from .documentationinteractiveserializer import DocumentationInteractiveSerializer
+#from .documentationserializer import DocumentationSerializer
+#from .documentationinteractiveserializer import DocumentationInteractiveSerializer
+
+from .pageserializer import PageSerializer
 
 #from .slideserializer import SlideSerializer
 #from .slideinteractiveserializer import SlideInteractiveSerializer

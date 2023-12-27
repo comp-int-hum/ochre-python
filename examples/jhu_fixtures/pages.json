@@ -1,0 +1,56 @@
+[
+    {
+	"operationId" : "createpage",
+	"defaults" : {
+	    "force" : true,
+	    "is_active" : true
+	},
+	"items" : [
+	    {
+		"name" : "index",
+		"dynamic_content_view" : "api:article-list",
+		"banner_image" : {"path" : "examples/jhu_static_overrides/index_banner.png"},
+		"banner_overlay" : "<h1>Explore interactions between human and computational intelligence</h1>",
+		"description" : "The <b>Center for Digital Humanities</b> focuses on the development and application of machine learning models to areas of traditional scholarship, and the relationships between computational and human understanding.",
+		"is_index" : true
+	    },
+	    {
+		"name" : "About",
+		"banner_image" : {"path" : "examples/jhu_static_overrides/about_banner.png"},
+		"banner_overlay" : "<blockquote><p>The higher places...in the coming years are for those who succeed in bringing the methods of one science to the investigation of another.</p>    <span>&mdash;Charles Sanders Peirce, as quoted by Richard Macksey in his opening remarks to <i>The Languages of Criticism and the Sciences of Man</i></span></blockquote>",
+		"description" : "The Johns Hopkins Center for Digital Humanities (CDH) was established to capitalize on several unique academic and practical strengths of the university and take a distinctive leading role among its peers at the intersection of computational and humanistic scholarship. This involves a particular focus on the development, application, and justification of computational intelligence, to create insights in traditional humanistic domains while also directly driving research in the machine learning community. On the computational side, we focus on areas such as:\n\n* Unsupervised machine learning and discovery\n* What happens when we let a computational model infer its own definition of \"interesting\"?\n* Knowledge representation and augmentation\n* Can we productively represent the primary sources of a domain alongside the variety of conceptual frameworks that different scholars bring to bear on them?\n* Interpretable models for scholars\n* How can meaningful insight move dynamically between human and computational models of the world?\n\nThe CDH is closely linked to the Computer Science department and Center for Language and Speech Processing, one of the nation's pre-eminent machine learning research groups focused on computational models of human language and understanding. Johns Hopkins, a historical center of gravity for the evolution of semiotics and structuralism and debates surrounding these and other topics at the intersection of science and the humanities, is in a unique position to consider the unique and shared strengths of human and computational intelligence, while pursuing applied research that incorporates both.",
+		"ordering" : 0,
+		"is_top_level" : true
+	    },
+	    {
+		"name" : "People",
+		"dynamic_content_view" : "api:user-list",
+		"ordering" : 1,
+		"is_top_level" : true		
+	    },
+	    {
+		"name" : "research_artifacts",
+		"dynamic_content_view" : "api:researchartifact-list",
+		"ordering" : 0,
+		"is_top_level" : false
+	    },
+	    {
+		"name" : "Research",
+		"banner_image" : {"path" : "examples/jhu_static_overrides/research_banner.png"},		
+		"dynamic_content_view" : "api:researchproject-list",
+		"description" : "The primary mandate of the <b>Center for Digital Humanities</b> is to research, develop, and apply computational methods to areas of traditional humanistic scholarship. Below, you can explore some current research projects and associated publications, presentations, and other artifacts. A full list of such artifacts can be browsed <a href=\"/research_artifacts/\"><b>here</b></a>.",
+		"ordering" : 2,
+		"is_top_level" : true		
+	    },
+	    {
+		"name" : "Teaching",
+		"banner_image" : {"path" : "examples/jhu_static_overrides/teaching_banner.png"},		
+		"dynamic_content_view" : "api:course-list",
+		"description" : "The teaching mission of the <b>Center for Digital Humanities</b> focuses on introducing undergraduate and graduate students working in traditional scholarship to the basic methods of computation.",
+		"ordering" : 3,
+		"is_top_level" : true
+	    }
+	]
+    }
+]
+

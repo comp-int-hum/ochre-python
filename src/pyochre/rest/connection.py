@@ -49,9 +49,9 @@ class Connection(Session):
         return resp
 
     def get_objects(self, model_name):
-        return self.get(self.endpoints[model_name])
+        return self.get(self.list_urls[model_name]).json()
         
-    def get(self, url, data=None, expected=None, follow_next=True):
+    def get(self, url, data=None, expected=None, follow_next=False):
         if follow_next:
             resp = self.action("get", url, data=data, expected=expected)
             retval = {k : v for k, v in resp.items()}

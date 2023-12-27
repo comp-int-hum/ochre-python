@@ -1,0 +1,50 @@
+{% extends "ochre/template_pack/generic_listentry_view.html" %}
+
+{% load rest_framework %}
+
+
+
+  {% block content %}
+  <div
+    class="row g-0"
+    >
+    <div
+      class="col-md-2 course-listentry-identifier"
+      >
+      <a href="{% url 'course_detail' id %}">
+	{{identifier}}
+      </a>
+    </div>
+    <div
+      class="col-md-8"
+      >
+      <div
+	class="course-listentry-title"
+	>
+	<a href="{% url 'course_detail' id %}">
+	  {{title}}
+	</a>
+      </div>
+      <div
+	class="course-listentry-description"
+	>
+	{% render_markdown description %}
+      </div>
+      <div
+	class="course-listentry-instructors"
+	>
+	{% if instructors|length > 0 %}
+	{% if instructors|length > 1 %}Instructors:{% else %}Instructor:{% endif %}
+	{% with field=serializer.fields.instructors %}
+	{% for select in field.iter_options %}
+        {% if select.value|as_string in instructors|as_list_of_strings %}
+	
+	<a href="{% url 'user_detail' select.display_text.id %}">{{select.display_text}}</a>	
+	{% endif %}
+	{% endfor %}
+	{% endwith %}
+	{% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -72,8 +72,8 @@ class ResearchArtifact(OchreModel):
     recording = FileField(upload_to="researchartifact/recordings", null=True)
     description = TextField(blank=True, null=True)
     abstract = TextField(blank=True, null=True)
-    ordering = IntegerField(default=0)
-    is_active = BooleanField(default=False)
+    
+
     contributors = ManyToManyField(User, related_name="contributed_to")
     related_to = ManyToManyField(ResearchProject, related_name="produced")
     def __str__(self):

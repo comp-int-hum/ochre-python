@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from django.conf import settings
 from pairtree import PairtreeStorageFactory
 import magic
-from rest_framework.serializers import CharField, IntegerField, SerializerMethodField, Serializer, SerializerMethodField, SlugRelatedField
+from rest_framework.serializers import CharField, IntegerField, SerializerMethodField, Serializer, SerializerMethodField, SlugRelatedField, HyperlinkedIdentityField
 from guardian.shortcuts import get_perms, get_objects_for_user, get_anonymous_user, get_groups_with_perms, get_users_with_perms
 from pyochre.server.ochre.models import User
 
@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 class PermissionsSerializer(Serializer):
     user_permissions = SerializerMethodField()
     group_permissions = SerializerMethodField()
-    
     def get_user_permissions(self, obj):
         self.model = self.context["model"]
         obj = self.model.objects.get(id=self.context["pk"])
@@ -51,3 +50,4 @@ class PermissionsSerializer(Serializer):
                 retval[perm] = retval.get(perm, [])
                 retval[perm].append(gid)
         return retval
+    

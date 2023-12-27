@@ -45,6 +45,7 @@ EMAIL_ICON = env("EMAIL_ICON")
 LOCATION_ICON = env("LOCATION_ICON")
 HOMEPAGE_ICON = env("HOMEPAGE_ICON")
 HEADSHOT_ICON = env("HEADSHOT_ICON")
+PERMISSIONS_ICON = env("PERMISSIONS_ICON")
 
 # NOTE: For development you can follow the README instructions for running the needed backends locally,
 #       and set these to True, otherwise the framework will use hacks to simulate the behavior
@@ -308,7 +309,7 @@ TEMPLATES = [
                         "django.template.loaders.filesystem.Loader",
                         [env("TEMPLATE_OVERRIDES_DIR")]
                     )
-                ] if env("TEMPLATE_OVERRIDES_DIR") else []
+                ] if "TEMPLATE_OVERRIDES_DIR" in env else []
             ) + [
                 'django.template.loaders.app_directories.Loader',
                 'django.template.loaders.filesystem.Loader',

@@ -1,69 +1,35 @@
 {% load ochre %}
-{% with request.headers.uid as uid %}
+{% load guardian_tags %}
 
 {% for item in items %}
-{% join uid forloop.counter as next_uid %}
+{% with uid=request.headers.uid model=serializer.context.view.get_model %}
 <div
   hx-get="{{item.url}}"
-  hx-headers='{"uid" : "{{next_uid}}", "Accept" : "text/html include=true", "mode" : "view"}'
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "listentry_view"}'
   hx-trigger="intersect"
   hx-swap="outerHTML"
   >
 </div>
+{% endwith %}
 {% endfor %}
 
-  {% comment %}
-<div class="container w-75">
-  {% if model.get_add_perm in perms %}
+{% block add_object %}
+{% with uid=request.headers.uid model=serializer.context.view.get_model %}
 
 
-  {% if serializer.creation_methods|length > 1 %}
-  <div class="dropdown">
-    <button
-      class="btn dropdown-toggle ochre-modal ochre-interactive {{create_icon}}"
-      type="button"
-      data-bs-toggle="dropdown"
-      id="modal_dropdown-{{uid}}"
-      >
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="create_modal_dropdown-{{uid}}">
-      {% for method in serializer.creation_methods %}
-      {% join uid forloop.counter as next_uid %}
-      <li>
-	<button
-	  class="dropdown-item"
-	  type="button"
-	  data-bs-toggle="modal"
-	  data-bs-target="#create_modal-{{next_uid}}"
-	  >
-	  {{method.title}}
-	</button>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% else %}
-  {% join uid 1 as next_uid %}
-  <button
-  class="btn ochre-modal ochre-interactive {{create_icon}}"
-  type="button"
-  data-bs-toggle="modal"
-  data-bs-target="#modal-{{next_uid}}"
-  title="{{method.title}}"
-  id="modal_button-{{next_uid}}"
+
+{% if model.get_add_perm in perms or request.user.is_superuser or request.user.is_staff %}
+
+<button
+  class="{{create_icon}}"
+  hx-get="{{model.get_create_url}}"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "listentry_create"}'
+  hx-target="this"
+  hx-swap="beforebegin"  
   >
-  </button>
-  {% endif %}
-
-
-  {% for method in serializer.creation_methods %}
-  {% join uid forloop.counter as next_uid %}
-  {% include "ochre/template_pack/modal.html" with uid=next_uid csrf_token=csrf_token item=model serializer=serializer url=method.url title=method.title mode="create" method="post" %}
-  {% endfor %}
-
-
-
+</button>
 {% endif %}
-</div>
-  {% endcomment %}
 {% endwith %}
+{% endblock %}
+
+

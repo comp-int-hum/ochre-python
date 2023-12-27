@@ -8,7 +8,14 @@ from pyochre.server.ochre.fields import MonacoEditorField
 logger = logging.getLogger(__name__)
 
 
-class QuerySerializer(Serializer):
+class QuerySerializer(OchreSerializer):
+    url = HyperlinkedIdentityField(
+        view_name="api:query-detail",
+        lookup_field="id",
+        lookup_url_kwarg="pk",
+        read_only=True,
+        help_text="URL of this query."
+    )
     name = CharField(
         help_text="Names must be unique for the user and type of object."
     )

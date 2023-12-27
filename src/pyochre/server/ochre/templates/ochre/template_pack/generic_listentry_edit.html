@@ -1,0 +1,43 @@
+{% load rest_framework %}
+<form
+  enctype="multipart/form-data"
+  hx-patch="{{url}}"
+  hx-target="this"
+  hx-swap="outerHTML"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "X-CSRFToken" : "{{csrf_token}}", "mode" : "listentry_view"}'
+  >
+  <div
+    class="card"
+    >
+    <div
+      class="card-header"
+      >
+      <h2>{{serializer.instance}}</h2>
+      <div
+	class="btn-group w-25"
+	>
+	<button
+	  class="{{commit_icon}}"
+	  >
+	</button>
+	{% if serializer.instance != request.user %}
+	<button
+	  class="{{delete_icon}}"
+	  hx-delete="{{url}}"
+	  hx-confirm="Are you sure you want to delete '{{serializer.instance}}'?"
+	  hx-headers='{"mode" : "listentry_delete"}'
+	  >
+	</button>
+	{% endif %}
+	<button
+	  class="{{cancel_icon}}"
+	  hx-get="{{url}}"
+	  hx-headers='{"mode" : "listentry_view"}'
+	  >
+	</button>
+	
+      </div>
+    </div>
+      {% render_form serializer %}
+  </div>
+</form>

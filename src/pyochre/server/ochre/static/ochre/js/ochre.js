@@ -504,10 +504,33 @@ function ochreSetup(root, htmxSwap){
 			    tabCompletion: "on",
 			    wordWrap: true,
 			    codeLens: false,
+			    minimap: false,
 			    readOnly: readOnly,
 			    domReadOnly: readOnly
 			}
-		    );		
+		    );
+		    if(language == "markdown"){
+			editor.addAction({
+			    id: "upload-image",
+			    label: "Upload or link existing image",
+			    precondition: null,
+			    keybindingContext: null,
+			    contextMenuGroupId: "navigation",
+			    run: function (ed){
+				alert("test");
+			    }
+			});
+			editor.addAction({
+			    id: "upload-file",
+			    label: "Upload or link existing file",
+			    precondition: null,
+			    keybindingContext: null,
+			    contextMenuGroupId: "navigation",
+			    run: function (ed){
+				var t = alert("test");
+			    }
+			});
+		    }
 		    el.addEventListener(
 			"keyup",
 			(event) => {

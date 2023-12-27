@@ -8,13 +8,14 @@
 
 {% block content %}
 
+{% comment %}
 {% addtoblock "css" %}
 <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/bootstrap-tweaks.css" %}"/>
 <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/prettify.css" %}"/>
 <link rel="stylesheet" type="text/css" href="{% static "rest_framework/css/default.css" %}"/>
 {% if code_style %}<style>{{ code_style }}</style>{% endif %}
 {% endaddtoblock %}
-
+{% endcomment %}
 	  
 <!-- Content -->
 <div id="content" role="main" aria-label="{% trans "content" %}">
@@ -172,30 +173,3 @@
 {% endif %}
 
 {% endblock %}
-
-
-{% comment %}
-{% block script %}
-<script>
-  window.drf = {
-      csrfHeaderName: "{{ csrf_header_name|default:'X-CSRFToken' }}",
-      csrfToken: "{% if request %}{{ csrf_token }}{% endif %}"
-  };
-</script>
-<script src="{% static "rest_framework/js/jquery-3.5.1.min.js" %}"></script>
-<script src="{% static "rest_framework/js/ajax-form.js" %}"></script>
-<script src="{% static "rest_framework/js/csrf.js" %}"></script>
-<script src="{% static "rest_framework/js/bootstrap.min.js" %}"></script>
-<script src="{% static "rest_framework/js/prettify-min.js" %}"></script>
-<script src="{% static "rest_framework/js/default.js" %}"></script>
-<script>
-  $(document).ready(function() {
-      $('form').ajaxForm();
-  });
-</script>
-{% endblock %}
-
-</body>
-{% endblock %}
-</html>
-{% endcomment %}

@@ -5,6 +5,16 @@
   hx-swap="outerHTML"
   hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "X-CSRFToken" : "{{csrf_token}}", "mode" : "listentry_view"}'
   >
+  <button
+    class="{{commit_icon}}"
+    >
+  </button>
+  <button
+    class="{{cancel_icon}}"
+    hx-get="{{object_url}}"
+    hx-headers='{"mode" : "listentry_view"}'
+    >
+  </button>
 
   {% if user_permissions %}
   <h4>User permissions</h4>
@@ -37,14 +47,4 @@
     {% endfor %}
   </div>
   {% endif %}
-  <button
-    class="{{commit_icon}}"
-    >
-  </button>
-  <button
-    class="{{cancel_icon}}"
-    hx-get="{{object_url}}"
-    hx-headers='{"mode" : "listentry_view"}'
-    >
-  </button>
 </form>

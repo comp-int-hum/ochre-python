@@ -14,3 +14,4 @@ from .researchprojectviewset import ResearchProjectViewSet
 from .courseviewset import CourseViewSet
 from .annotationviewset import AnnotationViewSet
 from .pageviewset import PageViewSet
+from .fileviewset import FileViewSet

@@ -18,7 +18,7 @@ from .articleserializer import ArticleSerializer
 #from .documentationinteractiveserializer import DocumentationInteractiveSerializer
 
 from .pageserializer import PageSerializer
-
+from .fileserializer import FileSerializer
 #from .slideserializer import SlideSerializer
 #from .slideinteractiveserializer import SlideInteractiveSerializer
 #from .slideuploadserializer import SlideUploadSerializer

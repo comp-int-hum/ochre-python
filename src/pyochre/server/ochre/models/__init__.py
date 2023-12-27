@@ -14,3 +14,4 @@ from .course import Course
 from .article import Article
 #from .banner import Banner
 from .page import Page
+from .file import File

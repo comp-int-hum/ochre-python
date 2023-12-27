@@ -17,7 +17,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import ModelSerializer
 from pyochre.server.ochre.forms import UserCreateForm
 from pyochre.server.ochre.routers import OchreRouter
-from pyochre.server.ochre.viewsets import OchreViewSet, PrimarySourceViewSet, MaterialViewSet, UserViewSet, MachineLearningModelViewSet, QueryViewSet, ArticleViewSet, ResearchArtifactViewSet, AnnotationViewSet, PermissionsViewSet, OntologyViewSet, CourseViewSet, ResearchProjectViewSet, PageViewSet
+from pyochre.server.ochre.viewsets import OchreViewSet, PrimarySourceViewSet, MaterialViewSet, UserViewSet, MachineLearningModelViewSet, QueryViewSet, ArticleViewSet, ResearchArtifactViewSet, AnnotationViewSet, PermissionsViewSet, OntologyViewSet, CourseViewSet, ResearchProjectViewSet, PageViewSet, FileViewSet
 from pyochre.server.ochre.models import ResearchArtifact, Article, Course, ResearchProject, Page
 from pyochre.server.ochre.serializers import ResearchArtifactSerializer
 from pyochre.server.ochre.schemagenerators import OchreSchemaGenerator
@@ -60,7 +60,8 @@ for vs in [
         PermissionsViewSet,
         OntologyViewSet,
         ResearchProjectViewSet,
-        CourseViewSet
+        CourseViewSet,
+        FileViewSet
         ]:    
     name = vs.schema.component_name
     router.register(name, vs, name)
@@ -68,18 +69,6 @@ for vs in [
 
 app_name = "ochre"
 urlpatterns = [
-
-    # path(
-    #     '',
-    #     TemplateView.as_view(
-    #         template_name="ochre/template_pack/index.html",
-    #         extra_context={
-    #             "page_name" : "index"
-    #         }
-    #     ),
-    #     name="index"
-    # ),
-    
     path(
         'articles/',
         TemplateView.as_view(
@@ -100,31 +89,6 @@ urlpatterns = [
         ),
         name="article_detail"
     ),
-#     path(
-#         'about/',
-#         TemplateView.as_view(
-#             template_name="ochre/template_pack/about.html",
-#             extra_context={
-#                 "banner_image_filename" : "main_banner.png",
-#                 "banner_overlay" : """<blockquote><p>The higher places...in the coming years are for those who succeed in bringing the methods of one science to the investigation of another.</p>
-#     <span>&mdash;Charles Sanders Peirce, as quoted by Richard Macksey in his opening remarks to <i>The Languages of Criticism and the Sciences of Man</i></span>
-# </blockquote>"""
-
-#             }
-#         ),
-#         name="about"
-#     ),
-    # path(
-    #     'people/',
-    #     TemplateView.as_view(
-    #         template_name="ochre/template_pack/people.html",
-    #         extra_context={
-    #             "dynamic_content_view" : "api:user-list",
-    #             "uid" : "people",
-    #         }
-    #     ),
-    #     name="user_list"
-    # ),
     path(
         'people/<int:pk>/',
         DetailView.as_view(
@@ -133,19 +97,6 @@ urlpatterns = [
         ),
         name="user_detail"
     ),
-    # path(
-    #     'research/',
-    #     TemplateView.as_view(
-    #         template_name="ochre/template_pack/research.html",
-    #         extra_context={
-    #             "dynamic_content_view" : "api:researchproject-list",
-    #             #"archival_link" : "/researchprojects/"
-    #             "uid" : "researchprojects",
-    #             "banner_image_filename" : "research_banner.png"
-    #         }            
-    #     ),
-    #     name="research"
-    # ),
     path(
         'research/<int:pk>/',
         DetailView.as_view(
@@ -166,6 +117,17 @@ urlpatterns = [
         name="researchartifact_list"
     ),
     path(
+        'files/',
+        TemplateView.as_view(
+            template_name="ochre/template_pack/index.html",
+            extra_context={
+                "dynamic_content_view" : "api:file-list",
+                "uid" : "files"
+            }
+        ),
+        name="file_list"
+    ),
+    path(
         'research_artifacts/<int:pk>/',
         DetailView.as_view(
             template_name="ochre/template_pack/researchartifact_detail.html",
@@ -173,18 +135,6 @@ urlpatterns = [
         ),
         name="researchartifact_detail"
     ),
-    # path(
-    #     'teaching/',
-    #     TemplateView.as_view(
-    #         template_name="ochre/template_pack/teaching.html",
-    #         extra_context={
-    #             "dynamic_content_view" : "api:course-list",
-    #             "uid" : "teaching",
-    #             "banner_image_filename" : "teaching_banner.png"                
-    #         }
-    #     ),
-    #     name="teaching"
-    # ),
     path(
         'teaching/<int:pk>/',
         DetailView.as_view(
@@ -193,30 +143,6 @@ urlpatterns = [
         ),
         name="course_detail"
     ),
-
-    # path(
-    #     "archive/<int:pk>/",
-    #     TemplateView.as_view(
-    #         template_name="ochre/template_pack/ochre.html",
-    #         extra_context={
-    #             "view_name" : "api:article-detail",
-    #             "uid" : "archive",
-    #             "mode" : "archive"                
-    #         }
-    #     ),
-    #     name="archive_detail"
-    # ),
-    # path(
-    #     'research/',
-    #     TemplateView.as_view(
-    #         template_name="ochre/template_pack/ochre.html",
-    #         extra_context={                
-    #             "view_name" : "api:researchartifact-list",
-    #             "uid" : "research",
-    #         }
-    #     ),
-    #     name="researchartifact_list"
-    # ),
 
     # OCHRE
     path(
@@ -283,16 +209,14 @@ urlpatterns = [
         TemplateView.as_view(
             template_name="ochre/template_pack/index.html",
         ),
-    ),
-    
+    ),    
     # path(
     #     'sitemap/',
     #     TemplateView.as_view(
     #         template_name="ochre/template_pack/index.html",
     #     ),
     #     name="index"
-    # ),
-    
+    # )
 ]
 
 

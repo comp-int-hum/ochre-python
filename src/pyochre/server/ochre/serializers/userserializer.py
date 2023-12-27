@@ -40,7 +40,7 @@ class UserSerializer(OchreSerializer):
             "phone",
             "id",
             "biography",
-            "email"
+            "email"            
         ]
         
     def creation_methods(self):

@@ -1,7 +1,7 @@
 import logging
 from datetime import date
 from django.db.models import UniqueConstraint
-from django.db.models import FileField
+from django.db.models import FileField, BooleanField
 from pyochre.server.ochre.models import OchreModel, User
 
 
@@ -20,6 +20,7 @@ class File(OchreModel):
         ]
 
     item = FileField(upload_to="user_uploads", null=False)
-
+    is_image = BooleanField(default=False)
+    
     def __str__(self):
         return self.name

@@ -517,7 +517,38 @@ function ochreSetup(root, htmxSwap){
 			    keybindingContext: null,
 			    contextMenuGroupId: "navigation",
 			    run: function (ed){
-				alert("test");
+				var dialog = document.createElement("dialog");
+				var div = document.createElement("div");
+				div.setAttribute("hx-get", "/api/file/");
+				div.setAttribute("hx-headers", "{\"Accept\" : \"text/html include=true\", \"mode\" : \"list\"}");
+				div.setAttribute("hx-trigger", "intersect");
+				div.setAttribute("hx-swap", "outerHTML");
+				htmx.process(div);
+				dialog.appendChild(div);
+				document.body.appendChild(dialog);
+				dialog.addEventListener("close", () => {
+				    if(dialog.returnValue){
+					console.error(dialog.returnValue);
+					var model = ed.getModel();
+					var pos = ed.getPosition();
+					model.pushEditOperations(
+					    [],
+					    [
+						{
+						    range: {
+							startColumn: pos.column,
+							endColumn: pos.column,
+							startLineNumber: pos.lineNumber,
+							endLineNumber: pos.lineNumber},
+						    text: "![](" + dialog.returnValue + ")"
+						}
+					    ],
+					    () => null
+					);
+				    }
+				    
+				});
+				dialog.showModal();
 			    }
 			});
 			editor.addAction({
@@ -527,7 +558,38 @@ function ochreSetup(root, htmxSwap){
 			    keybindingContext: null,
 			    contextMenuGroupId: "navigation",
 			    run: function (ed){
-				var t = alert("test");
+				var dialog = document.createElement("dialog");
+				var div = document.createElement("div");
+				div.setAttribute("hx-get", "/api/file/");
+				div.setAttribute("hx-headers", "{\"Accept\" : \"text/html include=true\", \"mode\" : \"list\"}");
+				div.setAttribute("hx-trigger", "intersect");
+				div.setAttribute("hx-swap", "outerHTML");
+				htmx.process(div);
+				dialog.appendChild(div);
+				document.body.appendChild(dialog);
+				dialog.addEventListener("close", () => {
+				    if(dialog.returnValue){
+					console.error(dialog.returnValue);
+					var model = ed.getModel();
+					var pos = ed.getPosition();
+					model.pushEditOperations(
+					    [],
+					    [
+						{
+						    range: {
+							startColumn: pos.column,
+							endColumn: pos.column,
+							startLineNumber: pos.lineNumber,
+							endLineNumber: pos.lineNumber},
+						    text: "[](" + dialog.returnValue + ")"
+						}
+					    ],
+					    () => null
+					);
+				    }
+				    
+				});
+				dialog.showModal();
 			    }
 			});
 		    }

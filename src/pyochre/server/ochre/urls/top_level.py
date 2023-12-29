@@ -105,28 +105,28 @@ urlpatterns = [
         ),
         name="researchproject_detail"
     ),
-    path(
-        'research_artifacts/',
-        TemplateView.as_view(
-            template_name="ochre/template_pack/index.html",
-            extra_context={
-                "dynamic_content_view" : "api:researchartifact-list",
-                "uid" : "artifacts"
-            }
-        ),
-        name="researchartifact_list"
-    ),
-    path(
-        'files/',
-        TemplateView.as_view(
-            template_name="ochre/template_pack/index.html",
-            extra_context={
-                "dynamic_content_view" : "api:file-list",
-                "uid" : "files"
-            }
-        ),
-        name="file_list"
-    ),
+    # path(
+    #     'research_artifacts/',
+    #     TemplateView.as_view(
+    #         template_name="ochre/template_pack/index.html",
+    #         extra_context={
+    #             "dynamic_content_view" : "api:researchartifact-list",
+    #             "uid" : "artifacts"
+    #         }
+    #     ),
+    #     name="researchartifact_list"
+    # ),
+    # path(
+    #     'files/',
+    #     TemplateView.as_view(
+    #         template_name="ochre/template_pack/index.html",
+    #         extra_context={
+    #             "dynamic_content_view" : "api:file-list",
+    #             "uid" : "files"
+    #         }
+    #     ),
+    #     name="file_list"
+    # ),
     path(
         'research_artifacts/<int:pk>/',
         DetailView.as_view(

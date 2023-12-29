@@ -1,0 +1,24 @@
+{% extends "ochre/template_pack/generic_listentry_view.html" %}
+{% load ochre %}
+{% load rest_framework %}
+
+{% block content %}
+<div
+  class="article-listentry card"
+  hx-target="this"
+  hx-swap="outerHTML"
+  >
+  <div class="file-name">    
+    <button type="submit" value="{{item}}"><h5>{{name}}</h5></button>
+  </div>
+  <div
+    class="file-listentry-content"
+    >
+    {% if is_image %}
+    <img src="{{item}}" style="max-height:12rem;" />
+    {% else %}
+    {{item}}    
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

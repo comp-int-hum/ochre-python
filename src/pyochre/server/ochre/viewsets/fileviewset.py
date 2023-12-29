@@ -7,6 +7,7 @@ from pyochre.server.ochre.serializers import FileSerializer, PermissionsSerializ
 from pyochre.server.ochre.models import File
 from pyochre.server.ochre.autoschemas import OchreAutoSchema
 from pyochre.server.ochre.renderers import OchreTemplateHTMLRenderer
+import magic
 
 
 logger = logging.getLogger(__name__)
@@ -19,20 +20,12 @@ class FileViewSet(OchreViewSet):
         component_name="file",
         operation_id_base="file",
     )
-    #listentry_view_template_name = "ochre/template_pack/file_listentry_view.html"
+    list_template_name = "ochre/template_pack/file_list.html"
+    listentry_view_template_name = "ochre/template_pack/file_listentry_view.html"
+    listentry_create_template_name = "ochre/template_pack/file_listentry_create.html"
     
     def get_serializer_class(self):
-        print(213231231312)
         return FileSerializer
-
-    # def get_template_names(self):
-    #     if self.request.headers.get("mode") == "archive":
-    #         if self.action == "list":
-    #             return ["ochre/template_pack/archive_list.html"]
-    #         elif self.action == "retrieve":
-    #             return ["ochre/template_pack/archive_detail.html"]
-    #     else:
-    #         return super(FileViewSet, self).get_template_names()
     
     def list(self, request, pk=None):
         return self._list(request)
@@ -44,7 +37,14 @@ class FileViewSet(OchreViewSet):
         return self._destroy(request, pk)
 
     def create(self, request, pk=None):
-        return self._create(request)
+        retval = self._create(request)
+        f = File.objects.get(id=retval.data["id"])
+        with f.item.open(mode="rb") as ifd:
+            tp = magic.from_buffer(ifd.read(2048), mime=True)
+        if tp.startswith("image"):
+            f.is_image = True
+            f.save()
+        return retval
 
     def partial_update(self, request, pk=None):
         return self._partial_update(request, pk)

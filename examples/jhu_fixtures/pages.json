@@ -29,12 +29,6 @@
 		"is_top_level" : true		
 	    },
 	    {
-		"name" : "research_artifacts",
-		"dynamic_content_view" : "api:researchartifact-list",
-		"ordering" : 0,
-		"is_top_level" : false
-	    },
-	    {
 		"name" : "Research",
 		"banner_image" : {"path" : "examples/jhu_static_files/research_banner.png"},		
 		"dynamic_content_view" : "api:researchproject-list",
@@ -49,7 +43,18 @@
 		"description" : "The teaching mission of the <b>Center for Digital Humanities</b> focuses on introducing undergraduate and graduate students working in traditional scholarship to the basic methods of computation.",
 		"ordering" : 3,
 		"is_top_level" : true
+	    },
+	    {
+		"name" : "files",
+		"dynamic_content_view" : "api:file-list",
+		"is_top_level" : false
+	    },
+	    {
+		"name" : "research_artifacts",
+		"dynamic_content_view" : "api:researchartifact-list",
+		"is_top_level" : false		
 	    }
+	    
 	]
     }
 ]

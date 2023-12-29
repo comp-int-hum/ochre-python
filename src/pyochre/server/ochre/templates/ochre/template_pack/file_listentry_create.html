@@ -1,10 +1,8 @@
+{% extends "ochre/template_pack/generic_listentry_create.html" %}
 {% load ochre %}
 {% load rest_framework %}
-{% load guardian_tags %}
-
 
 {% block content %}
-{% with uid=request.headers.uid model=serializer.context.view.get_model %}
 
 <form
   enctype="multipart/form-data"
@@ -33,9 +31,8 @@
 	</button>	
       </div>
     </div>
-      {% render_form serializer %}
+    
   </div>
 </form>
 
-{% endwith %}
 {% endblock %}

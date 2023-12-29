@@ -1,0 +1,39 @@
+{% load ochre %}
+{% load guardian_tags %}
+
+{% if model.get_add_perm in perms or request.user.is_superuser or request.user.is_staff %}
+<h3>Select a file (or upload a new one at the end of the list)</h3>
+{% else %}
+<h3>Select a file</h3>
+{% endif %}
+
+<form method="dialog">
+
+{% for item in items %}
+{% with uid=request.headers.uid model=serializer.context.view.get_model %}
+<div
+  hx-get="{{item.url}}"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "listentry_view"}'
+  hx-trigger="intersect"
+  hx-swap="outerHTML"
+  >
+</div>
+{% endwith %}
+{% endfor %}
+
+
+{% with uid=request.headers.uid model=serializer.context.view.get_model %}
+{% if model.get_add_perm in perms or request.user.is_superuser or request.user.is_staff %}
+<button
+  class="{{create_icon}}"
+  hx-get="{{model.get_create_url}}"
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "listentry_create"}'
+  hx-target="this"
+  hx-swap="outerHTML"
+  hx-trigger="intersect"
+  >
+</button>
+{% endif %}
+{% endwith %}
+
+</form>

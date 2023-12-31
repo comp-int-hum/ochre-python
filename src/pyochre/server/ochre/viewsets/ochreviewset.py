@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class OchreViewSet(GenericViewSet):
+    serializer = None
     content_negotiation_class = OchreContentNegotiation
     renderer_classes = [
         BrowsableAPIRenderer,
@@ -159,6 +160,8 @@ class OchreViewSet(GenericViewSet):
         logger.info("Accepted renderer: %s", self.request.accepted_renderer)
         context["viewset"] = self
         context["request"] = self.request
+        if self.serializer:
+            context["serializer"] = self.serializer
         return context
 
     def _list(self, request):
@@ -207,13 +210,10 @@ class OchreViewSet(GenericViewSet):
                         resp_ser.data
                     )
                 else:
-                    #print(ser.data)
                     logger.error("Errors in create: %s", ser.errors)
+                    self.serializer = ser
                     return Response(
-                        #ser.data,
-                        {"serializer" : ser},
-                        #ser.data, #.errors,                     
-                        #errors,
+                        ser.errors,
                         status=status.HTTP_400_BAD_REQUEST,
                     )
             except Exception as e:
@@ -256,29 +256,29 @@ class OchreViewSet(GenericViewSet):
         retval = HttpResponse()
         return retval
 
-    def _update(self, request, pk=None, partial=False):
-        logger.info("Update invoked by %s for %s", request.user, pk)
-        if self.model.get_change_perm() in get_perms(
-                request.user,
-                self.get_object()
-        ) or request.user.is_staff:
-            logger.info("Permission verified")
-            retval = super(OchreViewSet, self).update(request, pk)
-            retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "update", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
-                app_label=self.model._meta.app_label,
-                model_name=self.model._meta.model_name,
-                pk=pk
-            )                
-            return retval
-        else:
-            raise exceptions.PermissionDenied(
-                detail="{} does not have permission to change {} object {}".format(
-                    request.user,
-                    self.model._meta.model_name,
-                    pk
-                ),
-                code=status.HTTP_403_FORBIDDEN
-            )
+    # def _update(self, request, pk=None, partial=False):
+    #     logger.info("Update invoked by %s for %s", request.user, pk)
+    #     if self.model.get_change_perm() in get_perms(
+    #             request.user,
+    #             self.get_object()
+    #     ) or request.user.is_staff:
+    #         logger.info("Permission verified")
+    #         retval = super(OchreViewSet, self).update(request, pk)
+    #         retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "update", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
+    #             app_label=self.model._meta.app_label,
+    #             model_name=self.model._meta.model_name,
+    #             pk=pk
+    #         )                
+    #         return retval
+    #     else:
+    #         raise exceptions.PermissionDenied(
+    #             detail="{} does not have permission to change {} object {}".format(
+    #                 request.user,
+    #                 self.model._meta.model_name,
+    #                 pk
+    #             ),
+    #             code=status.HTTP_403_FORBIDDEN
+    #         )
     
     def _partial_update(self, request, pk=None, partial=False):
         logger.info("Partial update of %s invoked by %s", pk, request.user)
@@ -292,21 +292,18 @@ class OchreViewSet(GenericViewSet):
                 obj,
                 data=request.data,
                 partial=True,
-                context={"request" : request}
+                context={"request" : request, "view" : self}
             )
             if ser.is_valid():
                 ser.save()
                 self.interaction_mode = "view"
                 return Response(
                     ser.data,
-                    #template_name=self.get_template_names()[0].replace("edit", "view")
                 )
             else:
                 logger.error("Errors in partial update: %s", ser.errors)
-                #ser = self.get_serializer_class()(obj, context={"request" : request})
-
+                self.serializer = ser
                 return Response(
-                    {"serializer" : ser},                    
                     ser.errors,
                     status=status.HTTP_400_BAD_REQUEST,
                 )

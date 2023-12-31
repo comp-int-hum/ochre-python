@@ -1,6 +1,6 @@
 [
     {
-	"operationId" : "partialUpdateuser",
+	"operationId" : "createuser",
 	"defaults" : {
 	    "is_active" : true
 	},

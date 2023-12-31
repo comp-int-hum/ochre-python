@@ -16,7 +16,6 @@ class OchreSerializer(ModelSerializer):
     permissions_url = SerializerMethodField(
         help_text="URL of the user that created this object."
     )
-    
     force = BooleanField(
         required=False,
         write_only=True,
@@ -24,7 +23,9 @@ class OchreSerializer(ModelSerializer):
         default=False,
         help_text="Overwrite any existing object of the same type, name, and creator."
     )
-    name = CharField()
+    name = CharField(
+        help_text="A unique name for this object, typically just a unique lowercase string."
+    )
     ordering = IntegerField(
         default=0,
         help_text="The ordering priority of this object when displayed in a list."

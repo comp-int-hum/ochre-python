@@ -1,7 +1,8 @@
 {% load rest_framework %}
+{% with uid=request.headers.uid model=serializer.context.view.get_model %}
 <form
   enctype="multipart/form-data"
-  hx-patch="{{url}}"
+  hx-patch="{{serializer.instance.get_absolute_url}}"
   hx-target="this"
   hx-swap="outerHTML"
   hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "X-CSRFToken" : "{{csrf_token}}", "interaction-mode" : "edit", "interaction-context" : "listentry"}'
@@ -39,7 +40,8 @@
 	
       </div>
     </div>
-      {% render_form serializer %}
+      {% render_form serializer template_pack="ochre/template_pack" %}
   </div>
   {% endblock %}
 </form>
+{% endwith %}

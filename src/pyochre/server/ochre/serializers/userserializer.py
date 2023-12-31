@@ -15,7 +15,7 @@ class UserSerializer(OchreSerializer):
         lookup_url_kwarg="pk"
     )
     biography = MonacoEditorField(
-        label="Longer biography (may use Markdown)",
+        label="Longer biography",
         language="markdown",
         property_field="biography",
         allow_blank=True,
@@ -28,7 +28,7 @@ class UserSerializer(OchreSerializer):
     )
     class Meta:
         model = User
-        fields = OchreSerializer.Meta.fields + [
+        fields = [
             "username",
             "first_name",
             "last_name",
@@ -41,7 +41,7 @@ class UserSerializer(OchreSerializer):
             "id",
             "biography",
             "email"            
-        ]
+        ] + [x for x in OchreSerializer.Meta.fields if x != "name"]
         
     def creation_methods(self):
         return [

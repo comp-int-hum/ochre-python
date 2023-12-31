@@ -49,7 +49,7 @@ class User(AbstractUser, OchreModel):
     )
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["first_name", "last_name", "email"]
-    
+
     def set_password(self, raw_password):
         if settings.USE_LDAP:
             ld = ldap.initialize(settings.AUTH_LDAP_SERVER_URI)

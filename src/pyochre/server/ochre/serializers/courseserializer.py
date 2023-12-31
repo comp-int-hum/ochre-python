@@ -44,7 +44,7 @@ class CourseSerializer(OchreSerializer):
         queryset=User.objects.all()
     )
     description = MonacoEditorField(
-        label="Description (may use Markdown)",
+        label="Description",
         language="markdown",
         property_field="description",
         allow_blank=True,

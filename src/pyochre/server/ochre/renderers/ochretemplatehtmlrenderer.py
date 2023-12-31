@@ -23,13 +23,8 @@ class OchreTemplateHTMLRenderer(TemplateHTMLRenderer):
             data,
             renderer_context
         )
-        #print(renderer_context)
-        #print(context)
-
         if not isinstance(context, dict):
             context = {"items" : context}
         if "serializer" not in context:
             context["serializer"] = renderer_context.get("serializer")
-        for k in context["serializer"]:
-            print(k)
         return context

@@ -7,7 +7,9 @@
   class="container"
   >
   <h4>{{object.title}}</h4>
+  {% if object.content %}
   {% render_markdown object.content %}
+  {% endif %}
   {% if object.people.all|length > 0 or object.courses.all|length > 0 or object.researchartifacts.all|length > 0 or object.researchprojects.all|length > 0 %}
   <h5>Mentioned in this article:</h5>
   <ul>

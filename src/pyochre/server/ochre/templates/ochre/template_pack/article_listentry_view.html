@@ -1,12 +1,6 @@
-{% load ochre %}
-{% load rest_framework %}
+{% extends "ochre/template_pack/generic_listentry_view.html" %}
 
-{% with request.headers.uid as uid %}
-<div
-  class="article-listentry card"
-  hx-target="this"
-  hx-swap="outerHTML"
-  >
+{% block content %}
   <div class="article-date">
     {{date}}
   </div>
@@ -24,18 +18,4 @@
     <div class="article-snippet">
     </div>
   </div>
-  {% if True %}
-  <div
-    class="btn-group position-absolute top-0 end-0"
-    >
-    <button
-      class="{{edit_icon}}"
-      hx-get="{{url}}"
-      hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "interaction-mode" : "edit", "interaction-context" : "listentry"}'	    
-      >
-    </button>
-  </div>
-  {% endif %}
-
-</div>
-{% endwith %}
+{% endblock %}

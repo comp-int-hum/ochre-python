@@ -1,10 +1,8 @@
 {% load rest_framework %}
-{% if style.tab_view %}
-{% include "ochre/template_pack/tabs.html" with tabs=form style=style uid=style.uid %}
-{% else %}
+
 {% for field in form %}
 {% if not field.read_only %}
 {% render_field field style=style %}
 {% endif %}
 {% endfor %}
-{% endif %}
+

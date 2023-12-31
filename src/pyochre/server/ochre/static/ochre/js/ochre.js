@@ -520,7 +520,7 @@ function ochreSetup(root, htmxSwap){
 				var dialog = document.createElement("dialog");
 				var div = document.createElement("div");
 				div.setAttribute("hx-get", "/api/file/");
-				div.setAttribute("hx-headers", "{\"Accept\" : \"text/html include=true\", \"mode\" : \"list\"}");
+				div.setAttribute("hx-headers", "{\"Accept\" : \"text/html include=true\", \"interaction-mode\" : \"view\", \"interaction-context\" : \"list\"}");
 				div.setAttribute("hx-trigger", "intersect");
 				div.setAttribute("hx-swap", "outerHTML");
 				htmx.process(div);
@@ -561,7 +561,7 @@ function ochreSetup(root, htmxSwap){
 				var dialog = document.createElement("dialog");
 				var div = document.createElement("div");
 				div.setAttribute("hx-get", "/api/file/");
-				div.setAttribute("hx-headers", "{\"Accept\" : \"text/html include=true\", \"mode\" : \"list\"}");
+				div.setAttribute("hx-headers", "{\"Accept\" : \"text/html include=true\", \"interaction-context\" : \"list\", \"interaction-mode\" : \"view\"}");
 				div.setAttribute("hx-trigger", "intersect");
 				div.setAttribute("hx-swap", "outerHTML");
 				htmx.process(div);
@@ -860,3 +860,16 @@ function handleOchreEvent(event){
     }
 */
 }
+
+
+
+
+document.body.addEventListener('htmx:beforeSwap', function(evt) {
+    //console.error(evt);
+  // Allow 422 and 400 responses to swap
+  // We treat these as form validation errors
+  if (evt.detail.xhr.status === 422 || evt.detail.xhr.status === 400) {
+    evt.detail.shouldSwap = true;
+    evt.detail.isError = false;
+  }
+});

@@ -31,7 +31,7 @@
     <button
       class="{{edit_icon}}"
       hx-get="{{url}}"
-      hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "listentry_edit"}'	    
+      hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "interaction-mode" : "edit", "interaction-context" : "listentry"}'	    
       >
     </button>
   </div>

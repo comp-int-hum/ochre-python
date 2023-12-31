@@ -6,6 +6,9 @@
 	display: none;
     }
 }
+.has-error {
+    color: red;
+}
 img.large-headshot {
     width: 250px;
 }

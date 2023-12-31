@@ -32,15 +32,12 @@ class OchreViewSet(GenericViewSet):
     detail_view_template_name = "ochre/template_pack/generic_detail_view.html"
     detail_edit_template_name = "ochre/template_pack/generic_detail_edit.html"
     detail_create_template_name = "ochre/template_pack/generic_detail_create.html"
-    list_template_name = "ochre/template_pack/generic_list.html"
+    list_view_template_name = "ochre/template_pack/generic_list_view.html"
     listentry_permissions_template_name = "ochre/template_pack/generic_listentry_permissions.html"
     listentry_view_template_name = "ochre/template_pack/generic_listentry_view.html"
     listentry_edit_template_name = "ochre/template_pack/generic_listentry_edit.html"
     listentry_create_template_name = "ochre/template_pack/generic_listentry_create.html"
     listentry_delete_template_name = "ochre/template_pack/generic_listentry_delete.html"
-    #permission_classes = [OchrePermissions]
-    #filter_backends = [ObjectPermissionsFilter]
-    #list_template_name = "ochre/template_pack/ochre.html"    
     accordion_header_template_name = "ochre/template_pack/accordion_header.html"
     accordion_content_template_name = "ochre/template_pack/accordion_content.html"
 
@@ -50,16 +47,19 @@ class OchreViewSet(GenericViewSet):
     def get_model(self):
         return self.model
         
-    def get_template_names(self):
+    def get_template_names(self, interaction_mode=None, interaction_context=None):
+        om = interaction_mode if interaction_mode else self.interaction_mode
+        oc = interaction_context if interaction_context else self.interaction_context
         if self.template_override:
             return [self.template_override]
-        name = getattr(self, "{}_template_name".format(self.mode), None)
+        name = getattr(self, "{}_{}_template_name".format(oc, om), None)
         if name:
             retval = [name]
         else:
             logger.warn(
-                "No template corresponding to mode '%s', using detail view",
-                self.mode
+                "No template corresponding to mode '%s' and context '%s', using detail view",
+                om,
+                oc
             )
             retval = [self.detail_view_template_name]
         logger.info("Using template '%s' for %s on %s", retval[0], self.action, self.model)
@@ -118,7 +118,10 @@ class OchreViewSet(GenericViewSet):
         self.uid = self.request.headers.get("uid", "1")
         self.template_override = self.request.headers.get("template")
         #self.scope = "list" if self.action == "list" else "detail"
-        self.mode = self.request.headers.get("mode", "view")
+        #self.mode = self.request.headers.get("mode", "view")
+        #print(self.request.headers, self.request)
+        self.interaction_mode = self.request.headers.get("interaction-mode", "view")
+        self.interaction_context = self.request.headers.get("interaction-context", "detail")
         #self.location = self.request.headers.get("location", "standalone")
         self.method = self.request.method
         self.from_htmx = self.request.headers.get("Hx-Request", False) and True
@@ -132,7 +135,6 @@ class OchreViewSet(GenericViewSet):
 
     def get_renderer_context(self, *argv, **argd):
         context = super(OchreViewSet, self).get_renderer_context(*argv, **argd)
-        context["mode"] = self.mode
         if self.model:
             context["model"] = self.model
             context["model_name"] = self.model._meta.verbose_name.title()
@@ -160,7 +162,7 @@ class OchreViewSet(GenericViewSet):
         return context
 
     def _list(self, request):
-        if self.mode == "listentry_create":
+        if self.interaction_mode == "create":
             logger.info("Request for blank object invoked by %s", request.user)
             ser = self.get_serializer_class()(
                 context={"request" : request}
@@ -191,7 +193,7 @@ class OchreViewSet(GenericViewSet):
             try:
                 ser = self.get_serializer_class()(
                     data=request.data,
-                    context={"request" : request}
+                    context={"request" : request, "view" : self}
                 )
                 if ser.is_valid():
                     obj = ser.create(ser.validated_data)
@@ -200,11 +202,19 @@ class OchreViewSet(GenericViewSet):
                         context={"request" : request}
                     )
                     self.kwargs["pk"] = str(obj.id)
-                    return Response(resp_ser.data)
-                else:
+                    self.interaction_mode = "view"                    
                     return Response(
-                        ser.errors,
-                        status=status.HTTP_400_BAD_REQUEST
+                        resp_ser.data
+                    )
+                else:
+                    #print(ser.data)
+                    logger.error("Errors in create: %s", ser.errors)
+                    return Response(
+                        #ser.data,
+                        {"serializer" : ser},
+                        #ser.data, #.errors,                     
+                        #errors,
+                        status=status.HTTP_400_BAD_REQUEST,
                     )
             except Exception as e:
                 logging.warn(
@@ -234,24 +244,16 @@ class OchreViewSet(GenericViewSet):
         logger.info("Delete invoked by %s for %s", request.user, pk)
         obj = self.get_queryset().get(id=pk)
         string_rep = str(obj)
+        # intention here: remove other occurrences of the object from the
+        # webpage (perhaps replace with timed alert)
+        #
+        #retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "delete", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
+        #app_label=self.model._meta.app_label,
+        #    model_name=self.model._meta.model_name,
+        #    pk=pk
+        #)
         obj.delete()
-
-        if request.accepted_renderer.format == "ochre":
-            retval = HttpResponse()
-            # intention here: remove other occurrences of the object from the
-            # webpage (perhaps replace with timed alert)
-            #
-            #retval.headers["HX-Trigger"] = """{{"ochreEvent" : {{"event_type" : "delete", "model_class" : "{app_label}-{model_name}", "object_class" : "{app_label}-{model_name}-{pk}"}}}}""".format(
-            #app_label=self.model._meta.app_label,
-            #    model_name=self.model._meta.model_name,
-            #    pk=pk
-            #)
-        else:
-            retval = JsonResponse(
-                {
-                    "description" : "Deleted object '{}'".format(string_rep),
-                }
-            )
+        retval = HttpResponse()
         return retval
 
     def _update(self, request, pk=None, partial=False):
@@ -285,7 +287,6 @@ class OchreViewSet(GenericViewSet):
                 self.get_object()
         ) or request.user.is_staff:
             logger.info("Permission verified")
-            print(request.data)
             obj = self.get_queryset().get(id=pk)
             ser = self.get_serializer_class()(
                 obj,
@@ -295,12 +296,19 @@ class OchreViewSet(GenericViewSet):
             )
             if ser.is_valid():
                 ser.save()
-                return Response(ser.data)
+                self.interaction_mode = "view"
+                return Response(
+                    ser.data,
+                    #template_name=self.get_template_names()[0].replace("edit", "view")
+                )
             else:
                 logger.error("Errors in partial update: %s", ser.errors)
+                #ser = self.get_serializer_class()(obj, context={"request" : request})
+
                 return Response(
+                    {"serializer" : ser},                    
                     ser.errors,
-                    status=status.HTTP_400_BAD_REQUEST
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
 
         else:
@@ -352,7 +360,8 @@ class OchreViewSet(GenericViewSet):
                         else:
                             remove_perm(perm, g, obj)
                 resp = HttpResponseRedirect(obj.get_absolute_url())
-                resp["mode"] = "listentry_view"
+                resp["interaction-mode"] = "view"
+                resp["interaction-context"] = "listentry"
                 return resp #Response(ser.data, status=status.HTTP_200_OK)
             elif request.method == "GET":
                 data["all_users"] = [[u.id, u.username] for u in User.objects.all()]

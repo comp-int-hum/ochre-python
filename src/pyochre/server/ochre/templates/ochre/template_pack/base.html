@@ -105,7 +105,7 @@
 	    {% for page in pages %}
 	    {% if page.is_top_level and not page.is_index %}
 	    <li class="nav-item">
-	      <a class="nav-link {% if top_level == page.name %}active{% endif %}" href="/{{page.name}}/">
+	      <a class="nav-link {% if current_page == page.name %}active{% endif %}" href="/{{page.name}}/">
 		{{page.name}}
 	      </a>
 	    </li>
@@ -113,13 +113,13 @@
 	    {% endfor %}
 
 	  <li class="nav-item dropdown">
-	    <a class="nav-link dropdown-toggle {% if top_level in apps or top_level == 'manage' %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-	      OCHRE{% if top_level in apps %}[{{ interaction_name }}]{% endif %}
+	    <a class="nav-link dropdown-toggle {% if current_page in apps %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+	      OCHRE{% if current_page in apps %}[{{ interaction_name }}]{% endif %}
 	    </a>
 	    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	      {% for k, v in apps.items %}
 	      <li>
-		<a class="dropdown-item {% if top_level == k %}active{% endif %}" href="/{{k}}/">
+		<a class="dropdown-item {% if current_page == k %}active{% endif %}" href="/{{k}}/">
 		  {{v}}
 		</a>
 	      </li>
@@ -138,14 +138,12 @@
 
     {% block content %}
 
-
-    
     {% for page in pages %}
     
-    {% if page.name == page_name %}
+    {% if current_page == page.name %}
     <div
       hx-get="{% url 'api:page-detail' page.id %}"
-      hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "detail_view"}'
+      hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "interaction-mode" : "view", "interaction-context" : "detail"}'
       hx-trigger="intersect"
       hx-swap="outerHTML"
       >

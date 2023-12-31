@@ -3,7 +3,7 @@
   hx-patch="{{url}}"
   hx-target="this"
   hx-swap="outerHTML"
-  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "X-CSRFToken" : "{{csrf_token}}", "mode" : "listentry_view"}'
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "X-CSRFToken" : "{{csrf_token}}", "interaction-mode" : "view", "interaction-context" : "listentry"}'
   >
   <button
     class="{{commit_icon}}"
@@ -12,7 +12,7 @@
   <button
     class="{{cancel_icon}}"
     hx-get="{{object_url}}"
-    hx-headers='{"mode" : "listentry_view"}'
+    hx-headers='{"interaction-mode" : "view", "interaction-context" : "listentry"}'
     >
   </button>
 

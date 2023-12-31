@@ -20,7 +20,7 @@
 	class="{{edit_icon}}"
 	style="background-color:white;"
 	hx-get="{{url}}"
-	hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "detail_edit"}'
+	hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "interaction-mode" : "edit", "interaction-context" : "detail"}'
 	hx-target="closest .pagecontent"	
 	>	
       </button>
@@ -40,7 +40,7 @@
   <button
     class="{{edit_icon}}"
     hx-get="{{url}}"
-    hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "detail_edit"}'
+    hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "interaction-mode" : "edit", "interaction-context" : "detail"}'
     hx-target="closest .pagecontent"
     >
   </button>
@@ -66,10 +66,10 @@
     <div
       class="container w-100 ochre-{{mode}}"
       hx-get="{% url dynamic_content_view %}"
-      hx-trigger="intersect"
-      hx-headers='{"uid" : "{{uid}}", "Accept" : "text/html include=true", "mode" : "list"}'
+      hx-trigger="load"
+      hx-headers='{"uid" : "{{uid}}", "Accept" : "text/html include=true", "interaction-mode" : "view", "interaction-context" : "list"}'
       hx-target="this"
-          hx-swap="outerHTML"
+      hx-swap="outerHTML"
       >
     </div>
   </div>

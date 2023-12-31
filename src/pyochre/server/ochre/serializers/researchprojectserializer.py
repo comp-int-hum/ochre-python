@@ -23,7 +23,7 @@ class ResearchProjectSerializer(OchreSerializer):
         lookup_url_kwarg="pk"
     )
     content = MonacoEditorField(
-        label="Full description (may use Markdown)",
+        label="Full description",
         language="markdown",
         property_field="content",
         allow_blank=True,

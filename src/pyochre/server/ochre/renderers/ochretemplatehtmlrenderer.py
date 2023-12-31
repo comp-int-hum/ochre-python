@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class OchreTemplateHTMLRenderer(TemplateHTMLRenderer):
-    format = "ochre"
+    #format = "ochre"
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         return super(OchreTemplateHTMLRenderer, self).render(
@@ -23,7 +23,13 @@ class OchreTemplateHTMLRenderer(TemplateHTMLRenderer):
             data,
             renderer_context
         )
+        #print(renderer_context)
+        #print(context)
+
         if not isinstance(context, dict):
             context = {"items" : context}
-        context["serializer"] = renderer_context.get("serializer")
+        if "serializer" not in context:
+            context["serializer"] = renderer_context.get("serializer")
+        for k in context["serializer"]:
+            print(k)
         return context

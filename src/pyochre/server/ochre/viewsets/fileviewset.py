@@ -20,9 +20,8 @@ class FileViewSet(OchreViewSet):
         component_name="file",
         operation_id_base="file",
     )
-    list_template_name = "ochre/template_pack/file_list.html"
+    list_view_template_name = "ochre/template_pack/file_list_view.html"
     listentry_view_template_name = "ochre/template_pack/file_listentry_view.html"
-    listentry_create_template_name = "ochre/template_pack/file_listentry_create.html"
     
     def get_serializer_class(self):
         return FileSerializer
@@ -38,12 +37,13 @@ class FileViewSet(OchreViewSet):
 
     def create(self, request, pk=None):
         retval = self._create(request)
-        f = File.objects.get(id=retval.data["id"])
-        with f.item.open(mode="rb") as ifd:
-            tp = magic.from_buffer(ifd.read(2048), mime=True)
-        if tp.startswith("image"):
-            f.is_image = True
-            f.save()
+        if "id" in retval.data:
+            f = File.objects.get(id=retval.data["id"])
+            with f.item.open(mode="rb") as ifd:
+                tp = magic.from_buffer(ifd.read(2048), mime=True)
+            if tp.startswith("image"):
+                f.is_image = True
+                f.save()
         return retval
 
     def partial_update(self, request, pk=None):

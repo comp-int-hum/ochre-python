@@ -1,0 +1,38 @@
+{% extends "ochre/template_pack/index.html" %}
+{% load ochre %}
+{% load rest_framework %}
+
+{% with request.headers.uid as uid %}
+{% block content %}
+<div
+  class="container"
+  >
+  <h3>{{object.title}}</h3>
+  {% if object.content %}
+  {% render_markdown object.content %}
+  {% endif %}
+  {% if object.researchers.all|length > 0 %}  
+  <h4>Researchers</h4>
+  <ul>
+    {% for res in object.researchers.all %}
+    <li>
+      <a href="{% url 'user_detail' res.id %}">{{res.first_name}} {{res.last_name}}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if object.produced.all|length > 0 %}
+  <h4>Outcomes</h4>
+  <ul>
+    {% for res in object.produced.all %}
+    <li>
+      <a href="{% url 'researchartifact_detail' res.id %}">{{res.title}}</a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+
+{% endblock %}
+{% endwith %}

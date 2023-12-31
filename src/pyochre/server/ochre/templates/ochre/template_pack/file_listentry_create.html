@@ -9,7 +9,7 @@
   hx-post="{{model.get_create_url}}"
   hx-target="this"
   hx-swap="outerHTML"
-  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "X-CSRFToken" : "{{csrf_token}}", "mode" : "listentry_view"}'
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "X-CSRFToken" : "{{csrf_token}}", "interaction-mode" : "view", "interaction-context" : "listentry"}'
   >
   <div
     class="card"
@@ -31,7 +31,7 @@
 	</button>	
       </div>
     </div>
-    
+    {% render_form serializer %}    
   </div>
 </form>
 

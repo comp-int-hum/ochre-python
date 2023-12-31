@@ -1,24 +1,20 @@
 import logging
 from django.conf import settings
-#from django.contrib.flatpages.models import FlatPage
-from pyochre.server.ochre.models import Page #Banner #User, Documentation
-from guardian.shortcuts import get_perms, get_objects_for_user, get_anonymous_user, get_groups_with_perms, get_users_with_perms, remove_perm, assign_perm
+from pyochre.server.ochre.models import Page
+from guardian.shortcuts import get_objects_for_user
 
 
 logger = logging.getLogger(__name__)
 
 
 def app_directory(request):
-    top_level = request.path.lstrip("/").split("/")[0]
-    top_level = top_level if top_level else "index"
-
+    current_page = request.path.rstrip("/").split("/")[-1]
+    current_page = current_page if current_page else "index"
     return {
         "apps" : settings.APPS,
-        "builtin_pages" : settings.BUILTIN_PAGES,
         "messages" : [],
-        "top_level" : top_level,
-        "page_name" : top_level,
-        "interaction_name" : settings.APPS.get(top_level, "Ontology" if top_level == "ontology" else "API"),
+        "current_page" : current_page,
+        "interaction_name" : settings.APPS.get(current_page, "Ontology" if current_page == "ontology" else "API"),
         "create_icon" : settings.CREATE_ICON,
         "cancel_icon" : settings.CANCEL_ICON,
         "commit_icon" : settings.COMMIT_ICON,

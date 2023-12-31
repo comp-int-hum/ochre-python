@@ -1,4 +1,3 @@
-
 import logging
 from django.contrib.auth import get_user_model
 from django.contrib.auth.views import PasswordResetView
@@ -12,6 +11,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.views.generic import TemplateView, DetailView
 from django_registration.backends.activation.views import RegistrationView
 from django.conf.urls.static import static
+from django.contrib.sitemaps.views import sitemap
 from rest_framework.schemas import get_schema_view
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import ModelSerializer
@@ -42,8 +42,6 @@ class CustomPasswordResetView(PasswordResetView):
         ).dispatch(*argv, **argd)
 
 # TODO: actions for cleaning, backup, getting namespace
-    
-
 router = OchreRouter()
 for vs in [
         ArticleViewSet,
@@ -55,8 +53,6 @@ for vs in [
         MaterialViewSet,
         UserViewSet,
         PageViewSet,
-        #DocumentationViewSet,
-        #ContentType,
         PermissionsViewSet,
         OntologyViewSet,
         ResearchProjectViewSet,
@@ -70,21 +66,9 @@ for vs in [
 app_name = "ochre"
 urlpatterns = [
     path(
-        'articles/',
-        TemplateView.as_view(
-            template_name="ochre/template_pack/ochre.html",
-            extra_context={
-                "view_name" : "api:article-list",
-                "uid" : "articles",
-                "mode" : "articles"
-            }
-        ),
-        name="article_list"
-    ),    
-    path(
         'articles/<int:pk>/',
         DetailView.as_view(
-            template_name="ochre/template_pack/article_detail.html",
+            template_name="ochre/template_pack/article_detail_view.html",
             model=Article
         ),
         name="article_detail"
@@ -92,7 +76,7 @@ urlpatterns = [
     path(
         'people/<int:pk>/',
         DetailView.as_view(
-            template_name="ochre/template_pack/user_detail.html",
+            template_name="ochre/template_pack/user_detail_view.html",
             model=User
         ),
         name="user_detail"
@@ -100,33 +84,11 @@ urlpatterns = [
     path(
         'research/<int:pk>/',
         DetailView.as_view(
-            template_name="ochre/template_pack/researchproject_detail.html",
+            template_name="ochre/template_pack/researchproject_detail_view.html",
             model=ResearchProject
         ),
         name="researchproject_detail"
     ),
-    # path(
-    #     'research_artifacts/',
-    #     TemplateView.as_view(
-    #         template_name="ochre/template_pack/index.html",
-    #         extra_context={
-    #             "dynamic_content_view" : "api:researchartifact-list",
-    #             "uid" : "artifacts"
-    #         }
-    #     ),
-    #     name="researchartifact_list"
-    # ),
-    # path(
-    #     'files/',
-    #     TemplateView.as_view(
-    #         template_name="ochre/template_pack/index.html",
-    #         extra_context={
-    #             "dynamic_content_view" : "api:file-list",
-    #             "uid" : "files"
-    #         }
-    #     ),
-    #     name="file_list"
-    # ),
     path(
         'research_artifacts/<int:pk>/',
         DetailView.as_view(
@@ -138,7 +100,7 @@ urlpatterns = [
     path(
         'teaching/<int:pk>/',
         DetailView.as_view(
-            template_name="ochre/template_pack/course_detail.html",
+            template_name="ochre/template_pack/course_detail_view.html",
             model=Course
         ),
         name="course_detail"
@@ -204,19 +166,18 @@ urlpatterns = [
         ),
         name='ontology'
     ),
+    # path(
+    #     'sitemap.xml',
+    #     sitemap,
+    #     {"sitemaps": {}},
+    #     name="django.contrib.sitemaps.views.sitemap",
+    # ),    
     re_path(
         '^(\w+/)?$',
         TemplateView.as_view(
             template_name="ochre/template_pack/index.html",
         ),
-    ),    
-    # path(
-    #     'sitemap/',
-    #     TemplateView.as_view(
-    #         template_name="ochre/template_pack/index.html",
-    #     ),
-    #     name="index"
-    # )
+    )    
 ]
 
 

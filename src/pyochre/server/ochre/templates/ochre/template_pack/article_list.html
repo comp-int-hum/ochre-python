@@ -5,7 +5,7 @@
 {% for item in items %}
 <div
   hx-get="{{item.url}}"
-  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "mode" : "listentry_view"}'
+  hx-headers='{"uid" : "{{uid}}_{{index}}", "Accept" : "text/html include=true", "interaction-mode" : "view", "interaction-context" : "listentry"}'
   hx-trigger="intersect"
   hx-swap="outerHTML"
   >

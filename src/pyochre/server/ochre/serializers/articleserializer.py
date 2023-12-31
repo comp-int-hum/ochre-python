@@ -39,7 +39,7 @@ class ArticleSerializer(OchreSerializer):
         queryset=ResearchArtifact.objects.all()
     )
     content = MonacoEditorField(
-        label="Full description (may use Markdown)",
+        label="Full description",
         language="markdown",
         property_field="content",
         allow_blank=True,

@@ -14,16 +14,16 @@ OCHRE_NAMESPACE = env("OCHRE_NAMESPACE")
 
 ONTOLOGY_URI = "{}ontology".format(OCHRE_NAMESPACE)
 
-BUILTIN_PAGES = {
-    "about" : "About",
-    "people" : "People",
-    "research" : "Research",
-    "teaching" : "Teaching",
-    #"events" : "Events"
-    #"api" : "API",
-    #"ontology" : "Ontology",
-    #"wiki" : "Wiki"
-}
+# BUILTIN_PAGES = {
+#     "about" : "About",
+#     "people" : "People",
+#     "research" : "Research",
+#     "teaching" : "Teaching",
+#     #"events" : "Events"
+#     #"api" : "API",
+#     #"ontology" : "Ontology",
+#     #"wiki" : "Wiki"
+# }
 
 APPS = {
     "primary_sources" : "Primary sources",
@@ -217,6 +217,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',    
     'django.contrib.messages',
     'django.contrib.sites',
+    'django.contrib.sitemaps',
     'django.contrib.flatpages',
     'debug_toolbar',
     'mptt',

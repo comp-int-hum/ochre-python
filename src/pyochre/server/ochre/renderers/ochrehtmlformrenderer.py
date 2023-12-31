@@ -30,6 +30,7 @@ class OchreHTMLFormRenderer(HTMLFormRenderer):
     
     def render_field(self, field, parent_style, *argv, **argd):
         field.context["request"] = self.request
+        print(field, parent_style, argv, argd)
         retval = super(OchreHTMLFormRenderer, self).render_field(
             field,
             parent_style,

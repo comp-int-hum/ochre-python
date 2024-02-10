@@ -46,6 +46,7 @@ LOCATION_ICON = env("LOCATION_ICON")
 HOMEPAGE_ICON = env("HOMEPAGE_ICON")
 HEADSHOT_ICON = env("HEADSHOT_ICON")
 PERMISSIONS_ICON = env("PERMISSIONS_ICON")
+BROWSER_TAB_ICON = env("BROWSER_TAB_ICON")
 
 # NOTE: For development you can follow the README instructions for running the needed backends locally,
 #       and set these to True, otherwise the framework will use hacks to simulate the behavior

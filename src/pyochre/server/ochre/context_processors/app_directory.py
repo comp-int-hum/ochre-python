@@ -28,5 +28,6 @@ def app_directory(request):
         "homepage_icon" : settings.HOMEPAGE_ICON,
         "headshot_icon" : settings.HEADSHOT_ICON,
         "permissions_icon" : settings.PERMISSIONS_ICON,
-        "pages" : get_objects_for_user(request.user, "view_page", klass=Page)
+        "pages" : get_objects_for_user(request.user, "view_page", klass=Page),
+        "brower_tab_icon" : settings.BROWSER_TAB_ICON
     }
